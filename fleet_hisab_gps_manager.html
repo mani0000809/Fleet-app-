@@ -93,8 +93,8 @@
         <input type="password" id="setupPassword" required minlength="4" placeholder="Kam se kam 4 akshar" class="w-full px-3.5 py-3 rounded-2xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none focus:border-amber-500" />
       </div>
       <div class="flex items-center gap-2 pt-1">
-        <input type="checkbox" id="setupLoadDemo" checked class="w-4 h-4 accent-amber-500 rounded" />
-        <label for="setupLoadDemo" class="text-xs text-slate-300">Sample gaadi aur hisab data ke saath shuru karein</label>
+        
+      
       </div>
       <button type="submit" class="w-full py-3.5 rounded-2xl bg-amber-500 text-slate-950 font-extrabold text-sm hover:bg-amber-400 active:scale-98 transition shadow-lg">
         App Shuru Karein →
@@ -630,7 +630,7 @@
       const businessName = document.getElementById('setupBusinessName').value.trim();
       const username = document.getElementById('setupUsername').value.trim();
       const password = document.getElementById('setupPassword').value.trim();
-      const loadDemo = document.getElementById('setupLoadDemo').checked;
+      
 
       appState.auth = { businessName, username, password };
       if (loadDemo) {
