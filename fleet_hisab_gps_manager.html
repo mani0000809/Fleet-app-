@@ -1,0 +1,1796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>Fleet Hisab & GPS Manager</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #e2e8f0;
+      overscroll-behavior-y: none;
+    }
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.85); opacity: 0.9; }
+      70% { transform: scale(1.9); opacity: 0; }
+      100% { transform: scale(1.9); opacity: 0; }
+    }
+    .gps-pulse {
+      animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+    @media print {
+      body * {
+        visibility: hidden !important;
+      }
+      #printReportArea, #printReportArea * {
+        visibility: visible !important;
+      }
+      #printReportArea {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+        padding: 16px !important;
+        display: block !important;
+      }
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased select-none">
+
+  <!-- Toast Banner -->
+  <div id="toastBox" class="fixed top-16 left-1/2 -translate-x-1/2 z-[70] hidden max-w-xs w-11/12 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-2xl border border-slate-700 text-center"></div>
+
+  <!-- ================= AUTH / LOCK SCREEN ================= -->
+  <div id="authScreen" class="max-w-md mx-auto min-h-screen bg-slate-950 text-white flex flex-col justify-between p-6 shadow-2xl hidden">
+    <div class="pt-6 space-y-2 text-center">
+      <div class="w-16 h-16 rounded-3xl bg-amber-500 text-slate-950 flex items-center justify-center text-3xl font-extrabold mx-auto shadow-lg shadow-amber-500/20">
+        🚛
+      </div>
+      <h1 id="authAppTitle" class="text-xl font-extrabold tracking-tight pt-2">Fleet Hisab Pro</h1>
+      <p id="authSubtitle" class="text-xs text-slate-400">Apne business ka surakshit offline ledger & GPS app</p>
+    </div>
+
+    <!-- First-Time Setup Form -->
+    <form id="setupForm" onsubmit="handleInitialSetup(event)" class="bg-slate-900 border border-slate-800 p-5 rounded-3xl space-y-4 shadow-xl hidden">
+      <div class="border-b border-slate-800 pb-2.5">
+        <h2 class="text-sm font-bold text-amber-400">Pehli Baar App Setup Karein</h2>
+        <p class="text-[11px] text-slate-400">Apna Business Name, Username aur Password set karein</p>
+      </div>
+      <div>
+        <label class="block text-[11px] font-semibold text-slate-300 mb-1">Transport / Business Name *</label>
+        <input type="text" id="setupBusinessName" required placeholder="e.g., Malik Transport Service" class="w-full px-3.5 py-3 rounded-2xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none focus:border-amber-500" />
+      </div>
+      <div>
+        <label class="block text-[11px] font-semibold text-slate-300 mb-1">Admin Username *</label>
+        <input type="text" id="setupUsername" required autocomplete="off" placeholder="Apna username banayein" class="w-full px-3.5 py-3 rounded-2xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none focus:border-amber-500" />
+      </div>
+      <div>
+        <label class="block text-[11px] font-semibold text-slate-300 mb-1">Password *</label>
+        <input type="password" id="setupPassword" required minlength="4" placeholder="Kam se kam 4 akshar" class="w-full px-3.5 py-3 rounded-2xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none focus:border-amber-500" />
+      </div>
+      <div class="flex items-center gap-2 pt-1">
+        <input type="checkbox" id="setupLoadDemo" checked class="w-4 h-4 accent-amber-500 rounded" />
+        <label for="setupLoadDemo" class="text-xs text-slate-300">Sample gaadi aur hisab data ke saath shuru karein</label>
+      </div>
+      <button type="submit" class="w-full py-3.5 rounded-2xl bg-amber-500 text-slate-950 font-extrabold text-sm hover:bg-amber-400 active:scale-98 transition shadow-lg">
+        App Shuru Karein →
+      </button>
+    </form>
+
+    <!-- Login Form -->
+    <form id="loginForm" onsubmit="handleLogin(event)" class="bg-slate-900 border border-slate-800 p-5 rounded-3xl space-y-4 shadow-xl hidden">
+      <div class="border-b border-slate-800 pb-2.5 flex items-center justify-between">
+        <div>
+          <h2 class="text-sm font-bold text-white">App Locked Hai 🔒</h2>
+          <p class="text-[11px] text-slate-400">Kholne ke liye username aur password daalein</p>
+        </div>
+        <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-bold">Offline Safe</span>
+      </div>
+      <div>
+        <label class="block text-[11px] font-semibold text-slate-300 mb-1">Username</label>
+        <input type="text" id="loginUsername" required autocomplete="off" placeholder="Apna username likhein" class="w-full px-3.5 py-3 rounded-2xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none focus:border-amber-500" />
+      </div>
+      <div>
+        <label class="block text-[11px] font-semibold text-slate-300 mb-1">Password</label>
+        <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full px-3.5 py-3 rounded-2xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none focus:border-amber-500" />
+      </div>
+      <p id="loginError" class="text-xs text-rose-400 font-semibold hidden">Galat Username ya Password! Dobara koshish karein.</p>
+      <button type="submit" class="w-full py-3.5 rounded-2xl bg-amber-500 text-slate-950 font-extrabold text-sm hover:bg-amber-400 active:scale-98 transition shadow-lg">
+        Unlock App 🔓
+      </button>
+    </form>
+
+    <div class="text-center pb-4">
+      <p class="text-[11px] text-slate-500">100% Phone Storage • Zero-Delete Audit Protection</p>
+    </div>
+  </div>
+
+  <!-- ================= MAIN NATIVE APP SHELL ================= -->
+  <div id="mainAppShell" class="max-w-md mx-auto min-h-screen bg-slate-50 shadow-2xl relative flex flex-col pb-24 border-x border-slate-200 hidden">
+
+    <!-- Top Native App Bar -->
+    <header class="sticky top-0 z-30 bg-slate-900 text-white px-4 py-3 rounded-b-3xl shadow-md">
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div class="w-10 h-10 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center font-extrabold text-lg shrink-0 shadow">
+            🚛
+          </div>
+          <div class="min-w-0">
+            <h1 id="headerBusinessName" class="text-sm font-extrabold tracking-tight truncate">Fleet Hisab Pro</h1>
+            <p class="text-[11px] text-slate-400 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
+              <span>Single-Phone Safe • No-Delete</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 shrink-0">
+          <button onclick="lockApp()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 transition text-amber-400 text-xs font-bold flex items-center gap-1" title="App Lock Karein">
+            <span>🔒</span>
+            <span>Lock</span>
+          </button>
+          <button onclick="openModal('settingsModal')" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 transition text-slate-200" title="Settings & Backup">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dynamic Tab Viewport -->
+    <main id="mainContent" class="flex-1 p-4 space-y-4">
+      <!-- Rendered via JS -->
+    </main>
+
+    <!-- Bottom Native Tab Navigation Bar -->
+    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white/95 backdrop-blur-md border-t border-slate-200 px-2 py-2 z-30 flex justify-around items-center shadow-[0_-6px_20px_rgba(15,23,42,0.08)]">
+      <button onclick="switchTab('dashboard')" data-tab="dashboard" class="nav-btn flex flex-col items-center justify-center py-1.5 px-3 rounded-2xl transition">
+        <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+        <span class="text-[11px] font-bold">Home</span>
+      </button>
+
+      <button onclick="switchTab('vehicles')" data-tab="vehicles" class="nav-btn flex flex-col items-center justify-center py-1.5 px-3 rounded-2xl transition">
+        <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
+        </svg>
+        <span class="text-[11px] font-bold">Gaadi & GPS</span>
+      </button>
+
+      <button onclick="switchTab('trips')" data-tab="trips" class="nav-btn flex flex-col items-center justify-center py-1.5 px-3 rounded-2xl transition">
+        <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        </svg>
+        <span class="text-[11px] font-bold">Hisab</span>
+      </button>
+
+      <button onclick="switchTab('customers')" data-tab="customers" class="nav-btn flex flex-col items-center justify-center py-1.5 px-3 rounded-2xl transition">
+        <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        <span class="text-[11px] font-bold">Customers</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- 1. Add Vehicle Modal -->
+  <div id="addVehicleModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden items-end sm:items-center justify-center p-3">
+    <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl space-y-4">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h3 class="text-base font-extrabold text-slate-900">Nayi Gaadi Add Karein</h3>
+        <button onclick="closeModal('addVehicleModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
+      </div>
+      <form onsubmit="handleAddVehicle(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Gaadi Number *</label>
+          <input type="text" id="vNumber" required placeholder="e.g., HR-10-GA-4521" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm uppercase focus:outline-none focus:border-amber-500" />
+        </div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Model / Type *</label>
+            <input type="text" id="vModel" required placeholder="Tata Ace / Bolero" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-amber-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Driver Name *</label>
+            <input type="text" id="vDriver" required placeholder="Ramesh Kumar" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-amber-500" />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">RC / Insurance Expiry</label>
+            <input type="date" id="vExpiry" value="2027-11-30" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs bg-white" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">GPS Tracker ID</label>
+            <input type="text" id="vGpsId" placeholder="IMEI / GPS ID" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm" />
+          </div>
+        </div>
+        <button type="submit" class="w-full py-3.5 rounded-2xl bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 active:scale-98 transition">
+          + Save Gaadi
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Add Customer Modal -->
+  <div id="addCustomerModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden items-end sm:items-center justify-center p-3">
+    <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl space-y-4">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h3 class="text-base font-extrabold text-slate-900">Naya Customer / Party</h3>
+        <button onclick="closeModal('addCustomerModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
+      </div>
+      <form onsubmit="handleAddCustomer(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Customer / Party Name *</label>
+          <input type="text" id="cName" required placeholder="e.g., Sharma Traders" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-amber-500" />
+        </div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Mobile Number *</label>
+            <input type="tel" id="cPhone" required placeholder="98120XXXXX" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-amber-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">City / Address</label>
+            <input type="text" id="cCity" placeholder="Sonipat / Delhi" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-amber-500" />
+          </div>
+        </div>
+        <button type="submit" class="w-full py-3.5 rounded-2xl bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 transition">
+          + Save Party
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Customer Ledger & Receive Payment Modal -->
+  <div id="customerLedgerModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden items-end sm:items-center justify-center p-3">
+    <div id="customerLedgerContent" class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl max-h-[88vh] overflow-y-auto space-y-4">
+      <!-- Populated dynamically -->
+    </div>
+  </div>
+
+  <!-- 4. Void / Cancel Entry Modal (Zero-Delete Audit Trail) -->
+  <div id="voidModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden items-end sm:items-center justify-center p-3">
+    <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl space-y-4">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <div>
+          <h3 class="text-base font-extrabold text-rose-600">Entry Cancel / Void Karein</h3>
+          <p class="text-[11px] text-slate-500">Data delete nahi hoga — history mein 'Cancelled' dikhega</p>
+        </div>
+        <button onclick="closeModal('voidModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
+      </div>
+      <form onsubmit="confirmVoidEntry(event)" class="space-y-3">
+        <input type="hidden" id="voidType" />
+        <input type="hidden" id="voidTargetId" />
+        <div id="voidSummaryBox" class="p-3 rounded-2xl bg-rose-50 border border-rose-200 text-xs text-rose-900 font-medium"></div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Cancel Karne Ka Kaaran (Reason) *</label>
+          <input type="text" id="voidReasonInput" required placeholder="e.g., Galat amount likha gaya / Duplicate entry" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-rose-500" />
+        </div>
+        <button type="submit" class="w-full py-3 rounded-2xl bg-rose-600 text-white font-bold text-sm hover:bg-rose-700 transition">
+          रद्द करें (Confirm Void)
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. Daily & Monthly PDF / WhatsApp Report Modal -->
+  <div id="reportModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden items-end sm:items-center justify-center p-3">
+    <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <div>
+          <h3 class="text-base font-extrabold text-slate-900">Hisab PDF & WhatsApp Report</h3>
+          <p class="text-[11px] text-slate-500">Daily ya Monthly report download karke WhatsApp par bhejein</p>
+        </div>
+        <button onclick="closeModal('reportModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
+      </div>
+
+      <!-- Mode Switcher: Daily vs Monthly -->
+      <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-2xl">
+        <button type="button" id="repModeDailyBtn" onclick="setReportMode('daily')" class="py-2 rounded-xl text-xs font-extrabold transition">
+          📅 Daily Hisab
+        </button>
+        <button type="button" id="repModeMonthlyBtn" onclick="setReportMode('monthly')" class="py-2 rounded-xl text-xs font-extrabold transition">
+          🗓️ Monthly Hisab
+        </button>
+      </div>
+
+      <!-- Date / Month Picker -->
+      <div id="dailyPickerWrap">
+        <label class="block text-xs font-bold text-slate-600 mb-1">Tareekh Chunein (Date)</label>
+        <input type="date" id="reportDateInput" onchange="renderReportPreview()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold bg-white" />
+      </div>
+      <div id="monthlyPickerWrap" class="hidden">
+        <label class="block text-xs font-bold text-slate-600 mb-1">Mahina Chunein (Month)</label>
+        <input type="month" id="reportMonthInput" onchange="renderReportPreview()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold bg-white" />
+      </div>
+
+      <!-- Live Summary Preview Card -->
+      <div id="reportPreviewCard" class="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 space-y-2.5 text-xs">
+        <!-- Populated dynamically -->
+      </div>
+
+      <!-- Action Buttons: PDF Download + WhatsApp Share -->
+      <div class="grid grid-cols-2 gap-2.5 pt-1">
+        <button onclick="downloadReportPDF()" class="py-3.5 px-3 rounded-2xl bg-slate-900 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow active:scale-98 transition">
+          <span>📄</span> PDF Download
+        </button>
+        <button onclick="shareReportWhatsApp()" class="py-3.5 px-3 rounded-2xl bg-emerald-600 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow active:scale-98 transition">
+          <span>💬</span> WhatsApp Hisab
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Settings, Security & Backup Modal -->
+  <div id="settingsModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden items-end sm:items-center justify-center p-3">
+    <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h3 class="text-base font-extrabold text-slate-900">App Settings & Backup</h3>
+        <button onclick="closeModal('settingsModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
+      </div>
+
+      <!-- Business & Login Credentials -->
+      <form onsubmit="handleUpdateCredentials(event)" class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2.5">
+        <h4 class="text-xs font-extrabold text-slate-800">🔐 Business Name & Password Badlein</h4>
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-600 mb-1">Business Name</label>
+          <input type="text" id="setBusinessInput" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white font-semibold" />
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Username</label>
+            <input type="text" id="setUserInput" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white font-semibold" />
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Naya Password</label>
+            <input type="password" id="setPassInput" required minlength="4" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white font-semibold" />
+          </div>
+        </div>
+        <button type="submit" class="w-full py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition">
+          Save Login Details
+        </button>
+      </form>
+
+      <!-- GPS Tracker API Settings -->
+      <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <h4 class="text-xs font-extrabold text-slate-800">🛰️ Existing GPS Tracker API</h4>
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Connected</span>
+        </div>
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-600 mb-1">GPS Company / Platform</label>
+          <input type="text" id="gpsProviderInput" placeholder="Tracksolid / WheelsEye / Letstrack" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white" />
+        </div>
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-600 mb-1">API Endpoint URL</label>
+          <input type="text" id="gpsEndpointInput" placeholder="https://api.gps-server.in/v1/live" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white" />
+        </div>
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-600 mb-1">API Key / Token</label>
+          <input type="password" id="gpsKeyInput" placeholder="••••••••••••" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white" />
+        </div>
+        <button onclick="saveGpsConfig()" class="w-full py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400 transition">
+          Save GPS Config
+        </button>
+      </div>
+
+      <!-- Data Backup & Excel Export -->
+      <div class="bg-emerald-50/70 p-3.5 rounded-2xl border border-emerald-200 space-y-2.5">
+        <h4 class="text-xs font-extrabold text-emerald-900">💾 Data Suraksha & Backup</h4>
+        <p class="text-[11px] text-emerald-800 leading-relaxed">
+          Is app mein delete ka option nahi hai. Phone badalne se pehle JSON backup download kar lein.
+        </p>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="exportTripsCSV()" class="py-2.5 px-3 rounded-xl bg-white border border-emerald-300 text-emerald-900 font-bold text-xs hover:bg-emerald-100 transition">
+            📊 Excel (CSV)
+          </button>
+          <button onclick="exportJsonBackup()" class="py-2.5 px-3 rounded-xl bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800 transition">
+            ⬇️ JSON Backup
+          </button>
+        </div>
+        <div class="pt-1">
+          <label class="block text-[11px] font-bold text-emerald-900 mb-1">Purana Backup Restore Karein (.json)</label>
+          <input type="file" accept=".json" onchange="importJsonBackup(event)" class="w-full text-xs text-slate-600 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-900 file:text-white" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden Clean Print / PDF Container -->
+  <div id="printReportArea" class="hidden"></div>
+
+  <script>
+    // ================= STORAGE & DEFAULT DATA =================
+    const STORAGE_KEY = 'gaadihisab_single_phone_v2';
+    const SESSION_UNLOCK_KEY = 'gaadihisab_unlocked_session';
+
+    function getTodayISO() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const d = String(now.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function getCurrentMonthISO() {
+      return getTodayISO().slice(0, 7);
+    }
+
+    const SAMPLE_DATA = () => {
+      const today = getTodayISO();
+      return {
+        vehicles: [
+          {
+            id: 'v1',
+            number: 'HR-10-GA-4521',
+            model: 'Tata 407 Gold',
+            driver: 'Ramesh Kumar',
+            status: 'On Trip',
+            expiry: '2027-11-15',
+            gpsId: 'GPS-8841',
+            gps: {
+              moving: 'Moving',
+              speed: 56,
+              ignition: true,
+              location: 'NH-44 Murthal Toll Plaza, Sonipat',
+              updated: 'Just now',
+              x: 62,
+              y: 36
+            }
+          },
+          {
+            id: 'v2',
+            number: 'HR-10-BC-8890',
+            model: 'Mahindra Bolero Pik-Up',
+            driver: 'Suresh Yadav',
+            status: 'Available',
+            expiry: '2027-08-20',
+            gpsId: 'GPS-8842',
+            gps: {
+              moving: 'Stopped',
+              speed: 0,
+              ignition: false,
+              location: 'Transport Nagar Parking, Sonipat',
+              updated: '3 mins ago',
+              x: 34,
+              y: 62
+            }
+          },
+          {
+            id: 'v3',
+            number: 'DL-1L-AA-3219',
+            model: 'Eicher Pro 2049',
+            driver: 'Vikram Singh',
+            status: 'On Trip',
+            expiry: '2027-05-10',
+            gpsId: 'GPS-8843',
+            gps: {
+              moving: 'Idle',
+              speed: 0,
+              ignition: true,
+              location: 'Azadpur Mandi Gate 2, Delhi',
+              updated: '1 min ago',
+              x: 74,
+              y: 74
+            }
+          }
+        ],
+        customers: [
+          { id: 'c1', name: 'Aggarwal Agro Traders', phone: '9812045112', city: 'Sonipat' },
+          { id: 'c2', name: 'Rao Building Materials', phone: '9899123401', city: 'Narela, Delhi' },
+          { id: 'c3', name: 'Kissan Cold Storage', phone: '9416088721', city: 'Panipat' }
+        ],
+        trips: [
+          {
+            id: 't101',
+            date: today,
+            vehicleId: 'v1',
+            customerId: 'c1',
+            route: 'Sonipat → Azadpur Mandi',
+            fare: 8500,
+            advance: 4000,
+            diesel: 2200,
+            toll: 450,
+            bhatta: 600,
+            voided: false,
+            voidReason: ''
+          },
+          {
+            id: 't102',
+            date: today,
+            vehicleId: 'v3',
+            customerId: 'c2',
+            route: 'Kundli → Gurugram Sec-37',
+            fare: 12000,
+            advance: 7000,
+            diesel: 3400,
+            toll: 800,
+            bhatta: 900,
+            voided: false,
+            voidReason: ''
+          }
+        ],
+        payments: [
+          {
+            id: 'p201',
+            date: today,
+            customerId: 'c1',
+            amount: 3000,
+            note: 'UPI Jama',
+            voided: false,
+            voidReason: ''
+          }
+        ]
+      };
+    };
+
+    let appState = loadAppState();
+    let activeTab = 'dashboard';
+    let showGpsMap = true;
+    let selectedVehicleGpsId = 'v1';
+    let reportMode = 'daily'; // 'daily' | 'monthly'
+
+    function loadAppState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          return JSON.parse(raw);
+        }
+      } catch (err) {
+        console.error('State load error:', err);
+      }
+      return {
+        auth: null, // { businessName, username, password }
+        gpsConfig: {
+          provider: 'Tracksolid / Fleet GPS',
+          endpoint: 'https://api.gps-server.in/v1/live',
+          apiKey: ''
+        },
+        vehicles: [],
+        customers: [],
+        trips: [],
+        payments: []
+      };
+    }
+
+    function saveAppState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (err) {
+        console.error('State save error:', err);
+      }
+    }
+
+    // ================= AUTHENTICATION & LOCKING =================
+    function checkAuthBoot() {
+      const authScreen = document.getElementById('authScreen');
+      const mainShell = document.getElementById('mainAppShell');
+      const setupForm = document.getElementById('setupForm');
+      const loginForm = document.getElementById('loginForm');
+
+      if (!appState.auth) {
+        // First time setup
+        authScreen.classList.remove('hidden');
+        mainShell.classList.add('hidden');
+        setupForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+        return;
+      }
+
+      const isUnlocked = sessionStorage.getItem(SESSION_UNLOCK_KEY) === 'true';
+      if (!isUnlocked) {
+        document.getElementById('authAppTitle').textContent = appState.auth.businessName;
+        authScreen.classList.remove('hidden');
+        mainShell.classList.add('hidden');
+        setupForm.classList.add('hidden');
+        loginForm.classList.remove('hidden');
+      } else {
+        authScreen.classList.add('hidden');
+        mainShell.classList.remove('hidden');
+        document.getElementById('headerBusinessName').textContent = appState.auth.businessName;
+        if (!selectedVehicleGpsId && appState.vehicles.length > 0) {
+          selectedVehicleGpsId = appState.vehicles[0].id;
+        }
+        renderApp();
+      }
+    }
+
+    function handleInitialSetup(e) {
+      e.preventDefault();
+      const businessName = document.getElementById('setupBusinessName').value.trim();
+      const username = document.getElementById('setupUsername').value.trim();
+      const password = document.getElementById('setupPassword').value.trim();
+      const loadDemo = document.getElementById('setupLoadDemo').checked;
+
+      appState.auth = { businessName, username, password };
+      if (loadDemo) {
+        const sample = SAMPLE_DATA();
+        appState.vehicles = sample.vehicles;
+        appState.customers = sample.customers;
+        appState.trips = sample.trips;
+        appState.payments = sample.payments;
+      }
+      saveAppState();
+      sessionStorage.setItem(SESSION_UNLOCK_KEY, 'true');
+      checkAuthBoot();
+      showToast('App Setup Complete! Swagat Hai');
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const u = document.getElementById('loginUsername').value.trim();
+      const p = document.getElementById('loginPassword').value.trim();
+      const errEl = document.getElementById('loginError');
+
+      if (appState.auth && u.toLowerCase() === appState.auth.username.toLowerCase() && p === appState.auth.password) {
+        errEl.classList.add('hidden');
+        document.getElementById('loginPassword').value = '';
+        sessionStorage.setItem(SESSION_UNLOCK_KEY, 'true');
+        checkAuthBoot();
+        showToast('App Unlocked 🔓');
+      } else {
+        errEl.classList.remove('hidden');
+      }
+    }
+
+    function lockApp() {
+      sessionStorage.removeItem(SESSION_UNLOCK_KEY);
+      checkAuthBoot();
+      showToast('App Lock Ho Gaya 🔒');
+    }
+
+    // ================= HELPERS & CALCULATIONS =================
+    function formatINR(num) {
+      const val = Number(num) || 0;
+      return '₹' + val.toLocaleString('en-IN');
+    }
+
+    function showToast(msg) {
+      const box = document.getElementById('toastBox');
+      box.textContent = msg;
+      box.classList.remove('hidden');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        box.classList.add('hidden');
+      }, 2600);
+    }
+
+    function openModal(id) {
+      if (id === 'settingsModal') {
+        document.getElementById('setBusinessInput').value = appState.auth?.businessName || '';
+        document.getElementById('setUserInput').value = appState.auth?.username || '';
+        document.getElementById('setPassInput').value = appState.auth?.password || '';
+        document.getElementById('gpsProviderInput').value = appState.gpsConfig.provider || '';
+        document.getElementById('gpsEndpointInput').value = appState.gpsConfig.endpoint || '';
+        document.getElementById('gpsKeyInput').value = appState.gpsConfig.apiKey || '';
+      }
+      const el = document.getElementById(id);
+      el.classList.remove('hidden');
+      el.classList.add('flex');
+    }
+
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      el.classList.add('hidden');
+      el.classList.remove('flex');
+    }
+
+    function getVehicle(id) {
+      return appState.vehicles.find(v => v.id === id) || { number: 'Unknown', model: '', driver: '' };
+    }
+
+    function getCustomer(id) {
+      return appState.customers.find(c => c.id === id) || { name: 'Unknown Party', phone: '', city: '' };
+    }
+
+    function getCustomerStats(customerId) {
+      const activeTrips = appState.trips.filter(t => t.customerId === customerId && !t.voided);
+      const activePayments = appState.payments.filter(p => p.customerId === customerId && !p.voided);
+
+      const totalBilled = activeTrips.reduce((sum, t) => sum + Number(t.fare), 0);
+      const advancePaid = activeTrips.reduce((sum, t) => sum + Number(t.advance), 0);
+      const ledgerPaid = activePayments.reduce((sum, p) => sum + Number(p.amount), 0);
+      const totalPaid = advancePaid + ledgerPaid;
+      const pending = Math.max(0, totalBilled - totalPaid);
+
+      return { totalBilled, totalPaid, pending, activeTripsCount: activeTrips.length };
+    }
+
+    function getOverallTotals() {
+      const activeTrips = appState.trips.filter(t => !t.voided);
+      let totalRevenue = 0;
+      let totalExpenses = 0;
+      activeTrips.forEach(t => {
+        totalRevenue += Number(t.fare);
+        totalExpenses += Number(t.diesel) + Number(t.toll) + Number(t.bhatta);
+      });
+      const netProfit = totalRevenue - totalExpenses;
+      const totalPending = appState.customers.reduce((sum, c) => sum + getCustomerStats(c.id).pending, 0);
+      return { totalRevenue, totalExpenses, netProfit, totalPending, activeTripsCount: activeTrips.length };
+    }
+
+    // ================= NAVIGATION =================
+    function switchTab(tab) {
+      activeTab = tab;
+      renderApp();
+    }
+
+    function updateNavHighlight() {
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        const isActive = btn.dataset.tab === activeTab;
+        btn.className = isActive
+          ? 'nav-btn flex flex-col items-center justify-center py-1.5 px-3.5 rounded-2xl bg-amber-100 text-amber-900 font-extrabold transition'
+          : 'nav-btn flex flex-col items-center justify-center py-1.5 px-3.5 rounded-2xl text-slate-500 hover:text-slate-900 transition';
+      });
+    }
+
+    // ================= TAB 1: HOME DASHBOARD =================
+    function renderDashboard() {
+      const { totalRevenue, totalExpenses, netProfit, totalPending, activeTripsCount } = getOverallTotals();
+      const today = getTodayISO();
+      const todayTrips = appState.trips.filter(t => t.date === today && !t.voided);
+      const todayIncome = todayTrips.reduce((s, t) => s + Number(t.fare), 0);
+      const todayExp = todayTrips.reduce((s, t) => s + Number(t.diesel) + Number(t.toll) + Number(t.bhatta), 0);
+
+      const availCount = appState.vehicles.filter(v => v.status === 'Available').length;
+      const onTripCount = appState.vehicles.filter(v => v.status === 'On Trip').length;
+      const maintCount = appState.vehicles.filter(v => v.status === 'Maintenance').length;
+
+      return `
+        <!-- Today's Highlight Strip -->
+        <section class="bg-slate-900 text-white p-4 rounded-3xl shadow-md space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-[10px] uppercase tracking-wider font-bold text-amber-400">Aaj Ka Hisab (${today})</span>
+              <h2 class="text-lg font-extrabold mt-0.5">Kamai: ${formatINR(todayIncome)}</h2>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] text-slate-400 block">Aaj Ki Bachat</span>
+              <strong class="text-sm font-extrabold text-emerald-400">${formatINR(todayIncome - todayExp)}</strong>
+            </div>
+          </div>
+
+          <!-- Daily & Monthly PDF + WhatsApp Quick Bar -->
+          <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800">
+            <button onclick="openReportModal('daily')" class="py-2.5 px-3 rounded-2xl bg-amber-500 text-slate-950 font-extrabold text-xs flex items-center justify-center gap-1.5 active:scale-98 transition shadow">
+              <span>📄</span> Daily Hisab PDF
+            </button>
+            <button onclick="openReportModal('monthly')" class="py-2.5 px-3 rounded-2xl bg-slate-800 text-white border border-slate-700 font-bold text-xs flex items-center justify-center gap-1.5 active:scale-98 transition">
+              <span>🗓️</span> Monthly PDF
+            </button>
+          </div>
+        </section>
+
+        <!-- Overall Business Summary Cards -->
+        <section class="grid grid-cols-2 gap-3">
+          <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-xs">
+            <p class="text-[11px] font-bold text-slate-500 uppercase">Total Kamai</p>
+            <p class="text-lg font-extrabold text-slate-900 mt-1">${formatINR(totalRevenue)}</p>
+            <span class="text-[11px] text-emerald-600 font-semibold">${activeTripsCount} Active Trips</span>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-xs">
+            <p class="text-[11px] font-bold text-slate-500 uppercase">Total Kharcha</p>
+            <p class="text-lg font-extrabold text-rose-600 mt-1">${formatINR(totalExpenses)}</p>
+            <span class="text-[11px] text-slate-500 font-medium">Diesel, Toll & Bhatta</span>
+          </div>
+
+          <div class="bg-gradient-to-br from-emerald-600 to-teal-700 text-white p-3.5 rounded-2xl shadow-sm">
+            <p class="text-[11px] font-bold text-emerald-100 uppercase">Net Bachat (Profit)</p>
+            <p class="text-lg font-extrabold mt-1">${formatINR(netProfit)}</p>
+            <span class="text-[11px] text-emerald-100">Clear Margin</span>
+          </div>
+
+          <div onclick="switchTab('customers')" class="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl shadow-xs cursor-pointer active:scale-98 transition">
+            <p class="text-[11px] font-bold text-amber-800 uppercase">Market Udhaar</p>
+            <p class="text-lg font-extrabold text-amber-950 mt-1">${formatINR(totalPending)}</p>
+            <span class="text-[11px] text-amber-800 font-bold underline">Khata Dekhein →</span>
+          </div>
+        </section>
+
+        <!-- Fleet Status Summary -->
+        <section class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-xs">
+          <div class="flex items-center justify-between mb-2.5">
+            <h2 class="text-xs font-extrabold text-slate-800 uppercase">Gaadiyon Ki Sthiti (${appState.vehicles.length})</h2>
+            <button onclick="switchTab('vehicles')" class="text-xs font-bold text-blue-600">Live GPS →</button>
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-2.5">
+              <p class="text-base font-extrabold text-emerald-700">${availCount}</p>
+              <p class="text-[11px] font-semibold text-emerald-800">Available</p>
+            </div>
+            <div class="bg-blue-50 border border-blue-100 rounded-xl p-2.5">
+              <p class="text-base font-extrabold text-blue-700">${onTripCount}</p>
+              <p class="text-[11px] font-semibold text-blue-800">On Trip</p>
+            </div>
+            <div class="bg-rose-50 border border-rose-100 rounded-xl p-2.5">
+              <p class="text-base font-extrabold text-rose-700">${maintCount}</p>
+              <p class="text-[11px] font-semibold text-rose-800">Maintenance</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Quick Entry Buttons -->
+        <section class="grid grid-cols-2 gap-3">
+          <button onclick="switchTab('trips')" class="py-3.5 px-4 rounded-2xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center gap-2 shadow active:scale-98 transition">
+            <span>➕</span> Nayi Trip Entry
+          </button>
+          <button onclick="switchTab('customers')" class="py-3.5 px-4 rounded-2xl bg-amber-500 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow active:scale-98 transition">
+            <span>💰</span> Payment Jama
+          </button>
+        </section>
+      `;
+    }
+
+    // ================= TAB 2: GAADIYAN & LIVE GPS =================
+    function renderVehicles() {
+      const selectedV = getVehicle(selectedVehicleGpsId) || appState.vehicles[0];
+
+      return `
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-base font-extrabold text-slate-900">Gaadiyan & Live GPS</h2>
+            <p class="text-[11px] text-slate-500">${appState.gpsConfig.provider || 'GPS Tracker'}</p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="toggleGpsMap()" class="px-3 py-2 rounded-xl text-xs font-bold border ${showGpsMap ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-700 border-slate-300'} transition">
+              ${showGpsMap ? 'Hide Map' : 'Show Map'}
+            </button>
+            <button onclick="openModal('addVehicleModal')" class="px-3 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold shadow">
+              + Gaadi
+            </button>
+          </div>
+        </div>
+
+        ${showGpsMap && appState.vehicles.length > 0 ? `
+          <section class="bg-slate-900 rounded-3xl overflow-hidden shadow-lg border border-slate-800 text-white">
+            <div class="px-3.5 py-2.5 bg-slate-800/90 flex items-center justify-between border-b border-slate-700">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="text-xs font-bold">Live GPS Location</span>
+              </div>
+              <button onclick="simulateGpsRefresh()" class="px-2.5 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 text-[11px] font-bold text-amber-400 active:scale-95 transition">
+                ↻ Refresh GPS
+              </button>
+            </div>
+
+            <div class="relative h-52 w-full bg-[#1e293b] overflow-hidden">
+              <svg class="w-full h-full opacity-35" viewBox="0 0 400 240" preserveAspectRatio="none">
+                <path d="M0 40 H400 M0 80 H400 M0 120 H400 M0 160 H400 M0 200 H400 M50 0 V240 M100 0 V240 M150 0 V240 M200 0 V240 M250 0 V240 M300 0 V240 M350 0 V240" stroke="#475569" stroke-width="0.7" />
+                <path d="M 20 220 Q 140 130 380 30" stroke="#f59e0b" stroke-width="4" fill="none" stroke-dasharray="6 4" />
+                <path d="M 40 30 C 150 90, 220 160, 360 210" stroke="#38bdf8" stroke-width="3" fill="none" />
+              </svg>
+
+              ${appState.vehicles.map(v => {
+                const isSelected = selectedV && v.id === selectedV.id;
+                const pinColor = v.gps.moving === 'Moving' ? 'bg-emerald-500' : (v.gps.moving === 'Idle' ? 'bg-amber-500' : 'bg-rose-500');
+                return `
+                  <button onclick="selectVehicleGps('${v.id}')" style="left: ${v.gps.x}%; top: ${v.gps.y}%;" class="absolute -translate-x-1/2 -translate-y-1/2 focus:outline-none">
+                    ${v.gps.moving === 'Moving' ? `<span class="absolute inset-0 rounded-full ${pinColor} gps-pulse"></span>` : ''}
+                    <div class="relative px-2 py-1 rounded-full ${isSelected ? 'bg-white text-slate-950 ring-2 ring-amber-400 scale-110' : pinColor + ' text-white'} text-[10px] font-extrabold shadow-lg flex items-center gap-1 transition">
+                      <span>🚛</span>
+                      <span>${v.number.slice(-4)}</span>
+                    </div>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+
+            ${selectedV ? `
+              <div class="p-3.5 bg-slate-900 border-t border-slate-800 space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="text-xs font-extrabold text-amber-400">${selectedV.number}</span>
+                    <span class="text-[11px] text-slate-400 ml-1">(${selectedV.driver})</span>
+                  </div>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${selectedV.gps.moving === 'Moving' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'}">
+                    ${selectedV.gps.moving} • ${selectedV.gps.speed} km/h
+                  </span>
+                </div>
+                <p class="text-xs text-slate-200">📍 ${selectedV.gps.location}</p>
+                <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-800">
+                  <span>Ignition: <strong class="${selectedV.gps.ignition ? 'text-emerald-400' : 'text-rose-400'}">${selectedV.gps.ignition ? 'ON' : 'OFF'}</strong></span>
+                  <span>Updated: ${selectedV.gps.updated}</span>
+                </div>
+              </div>
+            ` : ''}
+          </section>
+        ` : ''}
+
+        <!-- Vehicle List -->
+        <section class="space-y-3">
+          ${appState.vehicles.length === 0 ? `
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 text-center space-y-2">
+              <p class="text-sm font-bold text-slate-700">Abhi koi gaadi add nahi hai</p>
+              <button onclick="openModal('addVehicleModal')" class="px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold">+ Pehli Gaadi Add Karein</button>
+            </div>
+          ` : appState.vehicles.map(v => {
+            const statusStyles = {
+              'Available': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+              'On Trip': 'bg-blue-100 text-blue-800 border-blue-200',
+              'Maintenance': 'bg-rose-100 text-rose-800 border-rose-200'
+            };
+            return `
+              <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-2.5">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h3 class="text-sm font-extrabold text-slate-900">${v.number}</h3>
+                      <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-600">${v.gpsId}</span>
+                    </div>
+                    <p class="text-xs text-slate-600 font-medium mt-0.5">${v.model} • Driver: <strong class="text-slate-900">${v.driver}</strong></p>
+                  </div>
+                  <button onclick="cycleVehicleStatus('${v.id}')" class="px-2.5 py-1 rounded-full text-[11px] font-bold border ${statusStyles[v.status]} active:scale-95 transition">
+                    ${v.status} ↻
+                  </button>
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-[11px]">
+                  <span class="text-slate-500">📄 RC/Ins Expiry: <strong>${v.expiry || 'N/A'}</strong></span>
+                  <button onclick="focusVehicleOnMap('${v.id}')" class="text-blue-600 font-bold">📍 Track GPS</button>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </section>
+      `;
+    }
+
+    // ================= TAB 3: HISAB & TRIPS =================
+    function renderTrips() {
+      const today = getTodayISO();
+
+      return `
+        <div class="flex items-center justify-between gap-2">
+          <div>
+            <h2 class="text-base font-extrabold text-slate-900">Trip Hisab & Profit</h2>
+            <p class="text-[11px] text-slate-500">Zero-Delete Safe Register</p>
+          </div>
+          <div class="flex gap-1.5">
+            <button onclick="openReportModal('daily')" class="px-2.5 py-2 rounded-xl bg-amber-500 text-slate-950 font-extrabold text-[11px] shadow">
+              📄 Daily PDF
+            </button>
+            <button onclick="openReportModal('monthly')" class="px-2.5 py-2 rounded-xl bg-slate-900 text-white font-bold text-[11px] shadow">
+              🗓️ Monthly
+            </button>
+          </div>
+        </div>
+
+        <!-- Add Trip Form -->
+        <form onsubmit="handleAddTrip(event)" class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+          <div class="grid grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Gaadi Chunein *</label>
+              <select id="tVehicle" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold bg-white">
+                ${appState.vehicles.map(v => `<option value="${v.id}">${v.number}</option>`).join('')}
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Customer / Party *</label>
+              <select id="tCustomer" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold bg-white">
+                ${appState.customers.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2.5">
+            <div class="col-span-2">
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Route / Maal Details *</label>
+              <input type="text" id="tRoute" required placeholder="Sonipat → Jaipur" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs focus:outline-none focus:border-amber-500" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Date</label>
+              <input type="date" id="tDate" value="${today}" class="w-full px-2.5 py-2.5 rounded-xl border border-slate-300 text-xs bg-white" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-[11px] font-bold text-emerald-700 mb-1">Kul Kiraya / Fare (₹) *</label>
+              <input type="number" id="tFare" required min="0" oninput="recalcTripPreview()" placeholder="10000" class="w-full px-3 py-2.5 rounded-xl border border-emerald-300 bg-emerald-50/40 text-sm font-bold text-slate-900" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-blue-700 mb-1">Advance Mila (₹)</label>
+              <input type="number" id="tAdvance" min="0" value="0" oninput="recalcTripPreview()" class="w-full px-3 py-2.5 rounded-xl border border-blue-300 bg-blue-50/40 text-sm font-bold text-slate-900" />
+            </div>
+          </div>
+
+          <div>
+            <p class="text-[11px] font-bold text-rose-700 mb-1">Trip Kharcha (Expenses ₹)</p>
+            <div class="grid grid-cols-3 gap-2">
+              <div>
+                <label class="block text-[10px] text-slate-500 mb-0.5">Diesel</label>
+                <input type="number" id="tDiesel" min="0" value="0" oninput="recalcTripPreview()" class="w-full px-2.5 py-2 rounded-xl border border-slate-300 text-xs font-semibold" />
+              </div>
+              <div>
+                <label class="block text-[10px] text-slate-500 mb-0.5">Toll / Fastag</label>
+                <input type="number" id="tToll" min="0" value="0" oninput="recalcTripPreview()" class="w-full px-2.5 py-2 rounded-xl border border-slate-300 text-xs font-semibold" />
+              </div>
+              <div>
+                <label class="block text-[10px] text-slate-500 mb-0.5">Driver Bhatta</label>
+                <input type="number" id="tBhatta" min="0" value="0" oninput="recalcTripPreview()" class="w-full px-2.5 py-2 rounded-xl border border-slate-300 text-xs font-semibold" />
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-900 text-white p-3 rounded-2xl flex items-center justify-between text-xs">
+            <div>
+              <span class="text-slate-400 block text-[10px]">Net Trip Bachat</span>
+              <strong id="previewProfit" class="text-sm font-extrabold text-emerald-400">₹0</strong>
+            </div>
+            <div class="text-right">
+              <span class="text-slate-400 block text-[10px]">Customer Baaki (Due)</span>
+              <strong id="previewDue" class="text-sm font-extrabold text-amber-400">₹0</strong>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full py-3.5 rounded-2xl bg-amber-500 text-slate-950 font-extrabold text-xs hover:bg-amber-400 active:scale-98 transition shadow">
+            ✓ Save Trip Hisab
+          </button>
+        </form>
+
+        <!-- Trip Register (Zero-Delete with Void Option) -->
+        <section class="space-y-2.5 pt-1">
+          <h3 class="text-xs font-extrabold text-slate-700 uppercase">Trip Register (${appState.trips.length})</h3>
+          ${appState.trips.map(t => {
+            const v = getVehicle(t.vehicleId);
+            const c = getCustomer(t.customerId);
+            const exp = Number(t.diesel) + Number(t.toll) + Number(t.bhatta);
+            const profit = Number(t.fare) - exp;
+            return `
+              <div class="bg-white p-3.5 rounded-2xl border ${t.voided ? 'border-rose-200 bg-rose-50/40 opacity-85' : 'border-slate-200'} shadow-xs space-y-2">
+                <div class="flex items-start justify-between gap-2">
+                  <div>
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                      <span class="text-xs font-extrabold ${t.voided ? 'line-through text-slate-500' : 'text-slate-900'}">${t.route}</span>
+                      ${t.voided ? `<span class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 text-[10px] font-extrabold">Cancelled / Void</span>` : ''}
+                    </div>
+                    <p class="text-[11px] text-slate-500 mt-0.5">${v.number} • ${c.name} • ${t.date}</p>
+                    ${t.voided ? `<p class="text-[10px] text-rose-600 font-semibold mt-1">Kaaran: ${t.voidReason}</p>` : ''}
+                  </div>
+                  ${!t.voided ? `
+                    <button onclick="openVoidModal('trip', '${t.id}')" class="px-2.5 py-1 rounded-xl bg-rose-50 text-rose-600 border border-rose-200 text-[10px] font-bold shrink-0">
+                      रद्द करें
+                    </button>
+                  ` : ''}
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-100 text-[11px]">
+                  <div>
+                    <span class="text-slate-400 block text-[10px]">Kiraya / Adv</span>
+                    <strong class="text-slate-800">${formatINR(t.fare)}</strong>
+                    <span class="text-slate-500 block text-[10px]">Adv: ${formatINR(t.advance)}</span>
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block text-[10px]">Kharcha</span>
+                    <strong class="text-rose-600">${formatINR(exp)}</strong>
+                    <span class="text-slate-500 block text-[10px]">D:${t.diesel} T:${t.toll}</span>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-slate-400 block text-[10px]">Net Bachat</span>
+                    <strong class="${profit >= 0 ? 'text-emerald-600' : 'text-rose-600'}">${formatINR(profit)}</strong>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </section>
+      `;
+    }
+
+    // ================= TAB 4: CUSTOMERS (PARTY LEDGER) =================
+    function renderCustomers() {
+      return `
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-base font-extrabold text-slate-900">Customers & Udhaar Khata</h2>
+            <p class="text-[11px] text-slate-500">Party par click karke '+ Jama' entry karein</p>
+          </div>
+          <button onclick="openModal('addCustomerModal')" class="px-3.5 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold shadow">
+            + Party
+          </button>
+        </div>
+
+        <section class="space-y-3">
+          ${appState.customers.map(c => {
+            const stats = getCustomerStats(c.id);
+            return `
+              <div onclick="openCustomerLedger('${c.id}')" class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs cursor-pointer hover:border-amber-400 active:scale-99 transition space-y-3">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <h3 class="text-sm font-extrabold text-slate-900">${c.name}</h3>
+                    <p class="text-xs text-slate-500">📞 ${c.phone} • ${c.city || 'Local'}</p>
+                  </div>
+                  <span class="px-2.5 py-1 rounded-full text-xs font-extrabold ${stats.pending > 0 ? 'bg-amber-100 text-amber-900' : 'bg-emerald-100 text-emerald-700'}">
+                    ${stats.pending > 0 ? 'Udhaar: ' + formatINR(stats.pending) : 'Clear ✓'}
+                  </span>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 pt-2.5 border-t border-slate-100 text-[11px]">
+                  <div>
+                    <span class="text-slate-400 block text-[10px]">Active Trips</span>
+                    <strong class="text-slate-800">${stats.activeTripsCount}</strong>
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block text-[10px]">Total Bill</span>
+                    <strong class="text-slate-800">${formatINR(stats.totalBilled)}</strong>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-slate-400 block text-[10px]">Total Jama</span>
+                    <strong class="text-emerald-600">${formatINR(stats.totalPaid)}</strong>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </section>
+      `;
+    }
+
+    // ================= INTERACTIVE ACTIONS =================
+    function toggleGpsMap() {
+      showGpsMap = !showGpsMap;
+      renderApp();
+    }
+
+    function selectVehicleGps(id) {
+      selectedVehicleGpsId = id;
+      renderApp();
+    }
+
+    function focusVehicleOnMap(id) {
+      selectedVehicleGpsId = id;
+      showGpsMap = true;
+      renderApp();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function simulateGpsRefresh() {
+      appState.vehicles.forEach(v => {
+        if (v.status === 'On Trip') {
+          v.gps.speed = Math.floor(40 + Math.random() * 28);
+          v.gps.moving = 'Moving';
+          v.gps.ignition = true;
+          v.gps.x = Math.min(85, Math.max(15, v.gps.x + Math.floor(Math.random() * 10 - 5)));
+          v.gps.y = Math.min(82, Math.max(18, v.gps.y + Math.floor(Math.random() * 10 - 5)));
+          v.gps.updated = 'Just now';
+        }
+      });
+      saveAppState();
+      renderApp();
+      showToast('GPS Location Updated');
+    }
+
+    function cycleVehicleStatus(id) {
+      const order = ['Available', 'On Trip', 'Maintenance'];
+      const v = appState.vehicles.find(item => item.id === id);
+      if (!v) return;
+      v.status = order[(order.indexOf(v.status) + 1) % order.length];
+      if (v.status === 'On Trip') {
+        v.gps.moving = 'Moving';
+        v.gps.speed = 48;
+        v.gps.ignition = true;
+      } else {
+        v.gps.moving = 'Stopped';
+        v.gps.speed = 0;
+        v.gps.ignition = false;
+      }
+      saveAppState();
+      renderApp();
+      showToast(`${v.number} → ${v.status}`);
+    }
+
+    function handleAddVehicle(e) {
+      e.preventDefault();
+      const number = document.getElementById('vNumber').value.trim().toUpperCase();
+      const model = document.getElementById('vModel').value.trim();
+      const driver = document.getElementById('vDriver').value.trim();
+      const expiry = document.getElementById('vExpiry').value;
+      const gpsId = document.getElementById('vGpsId').value.trim() || ('GPS-' + Math.floor(1000 + Math.random() * 9000));
+
+      const newV = {
+        id: 'v' + Date.now(),
+        number,
+        model,
+        driver,
+        status: 'Available',
+        expiry,
+        gpsId,
+        gps: {
+          moving: 'Stopped',
+          speed: 0,
+          ignition: false,
+          location: 'Base Yard Parking',
+          updated: 'Just now',
+          x: 45 + Math.floor(Math.random() * 20),
+          y: 45 + Math.floor(Math.random() * 20)
+        }
+      };
+      appState.vehicles.unshift(newV);
+      selectedVehicleGpsId = newV.id;
+      saveAppState();
+      closeModal('addVehicleModal');
+      e.target.reset();
+      renderApp();
+      showToast('Nayi Gaadi Save Ho Gayi!');
+    }
+
+    function handleAddCustomer(e) {
+      e.preventDefault();
+      const name = document.getElementById('cName').value.trim();
+      const phone = document.getElementById('cPhone').value.trim();
+      const city = document.getElementById('cCity').value.trim();
+
+      appState.customers.unshift({
+        id: 'c' + Date.now(),
+        name,
+        phone,
+        city
+      });
+      saveAppState();
+      closeModal('addCustomerModal');
+      e.target.reset();
+      renderApp();
+      showToast('Naya Customer Add Ho Gaya!');
+    }
+
+    function recalcTripPreview() {
+      const fare = Number(document.getElementById('tFare')?.value) || 0;
+      const adv = Number(document.getElementById('tAdvance')?.value) || 0;
+      const diesel = Number(document.getElementById('tDiesel')?.value) || 0;
+      const toll = Number(document.getElementById('tToll')?.value) || 0;
+      const bhatta = Number(document.getElementById('tBhatta')?.value) || 0;
+
+      const profit = fare - (diesel + toll + bhatta);
+      const due = Math.max(0, fare - adv);
+
+      const pEl = document.getElementById('previewProfit');
+      const dEl = document.getElementById('previewDue');
+      if (pEl) {
+        pEl.textContent = formatINR(profit);
+        pEl.className = `text-sm font-extrabold ${profit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+      }
+      if (dEl) dEl.textContent = formatINR(due);
+    }
+
+    function handleAddTrip(e) {
+      e.preventDefault();
+      if (appState.vehicles.length === 0 || appState.customers.length === 0) {
+        showToast('Pehle kam se kam 1 Gaadi aur 1 Customer add karein');
+        return;
+      }
+      const vehicleId = document.getElementById('tVehicle').value;
+      const customerId = document.getElementById('tCustomer').value;
+      const route = document.getElementById('tRoute').value.trim();
+      const date = document.getElementById('tDate').value || getTodayISO();
+      const fare = Number(document.getElementById('tFare').value) || 0;
+      const advance = Number(document.getElementById('tAdvance').value) || 0;
+      const diesel = Number(document.getElementById('tDiesel').value) || 0;
+      const toll = Number(document.getElementById('tToll').value) || 0;
+      const bhatta = Number(document.getElementById('tBhatta').value) || 0;
+
+      appState.trips.unshift({
+        id: 't' + Date.now(),
+        date,
+        vehicleId,
+        customerId,
+        route,
+        fare,
+        advance,
+        diesel,
+        toll,
+        bhatta,
+        voided: false,
+        voidReason: ''
+      });
+      saveAppState();
+      renderApp();
+      showToast('Trip Hisab Save Ho Gaya!');
+    }
+
+    // ================= ZERO-DELETE VOID SYSTEM =================
+    function openVoidModal(type, targetId) {
+      document.getElementById('voidType').value = type;
+      document.getElementById('voidTargetId').value = targetId;
+      document.getElementById('voidReasonInput').value = '';
+
+      const box = document.getElementById('voidSummaryBox');
+      if (type === 'trip') {
+        const t = appState.trips.find(item => item.id === targetId);
+        box.textContent = t ? `Trip: ${t.route} (${t.date}) • Kiraya: ${formatINR(t.fare)}` : '';
+      } else {
+        const p = appState.payments.find(item => item.id === targetId);
+        box.textContent = p ? `Payment Jama: ${formatINR(p.amount)} (${p.date}) • ${p.note || ''}` : '';
+      }
+      openModal('voidModal');
+    }
+
+    function confirmVoidEntry(e) {
+      e.preventDefault();
+      const type = document.getElementById('voidType').value;
+      const id = document.getElementById('voidTargetId').value;
+      const reason = document.getElementById('voidReasonInput').value.trim();
+
+      if (type === 'trip') {
+        const t = appState.trips.find(item => item.id === id);
+        if (t) {
+          t.voided = true;
+          t.voidReason = reason;
+        }
+      } else {
+        const p = appState.payments.find(item => item.id === id);
+        if (p) {
+          p.voided = true;
+          p.voidReason = reason;
+        }
+      }
+      saveAppState();
+      closeModal('voidModal');
+      renderApp();
+      if (type === 'payment') {
+        const p = appState.payments.find(item => item.id === id);
+        if (p) openCustomerLedger(p.customerId);
+      }
+      showToast('Entry Cancelled (Audit Record Safe)');
+    }
+
+    // ================= CUSTOMER LEDGER & PAYMENT JAMA =================
+    function openCustomerLedger(customerId) {
+      const cust = getCustomer(customerId);
+      const stats = getCustomerStats(customerId);
+      const custTrips = appState.trips.filter(t => t.customerId === customerId);
+      const custPayments = appState.payments.filter(p => p.customerId === customerId);
+
+      const content = document.getElementById('customerLedgerContent');
+      content.innerHTML = `
+        <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+          <div>
+            <h3 class="text-base font-extrabold text-slate-900">${cust.name}</h3>
+            <p class="text-xs text-slate-500">📞 ${cust.phone} • ${cust.city || ''}</p>
+          </div>
+          <button onclick="closeModal('customerLedgerModal')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 bg-slate-50 p-3 rounded-2xl border border-slate-200 text-center">
+          <div>
+            <span class="text-[10px] text-slate-500 block">Total Bill</span>
+            <strong class="text-xs font-extrabold text-slate-900">${formatINR(stats.totalBilled)}</strong>
+          </div>
+          <div>
+            <span class="text-[10px] text-slate-500 block">Total Jama</span>
+            <strong class="text-xs font-extrabold text-emerald-600">${formatINR(stats.totalPaid)}</strong>
+          </div>
+          <div>
+            <span class="text-[10px] text-slate-500 block">Baaki Udhaar</span>
+            <strong class="text-xs font-extrabold text-amber-800">${formatINR(stats.pending)}</strong>
+          </div>
+        </div>
+
+        <!-- Receive Payment (+ Jama) -->
+        <form onsubmit="handleReceivePayment(event, '${cust.id}')" class="bg-amber-50 p-3.5 rounded-2xl border border-amber-200 space-y-2.5">
+          <label class="block text-xs font-extrabold text-amber-950">+ Nayi Payment Jama Karein (₹)</label>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="number" id="payAmountInput" required min="1" placeholder="Amount ₹" class="px-3 py-2 rounded-xl border border-amber-300 bg-white text-sm font-bold" />
+            <input type="text" id="payNoteInput" placeholder="Cash / UPI / Cheque" class="px-3 py-2 rounded-xl border border-amber-300 bg-white text-xs" />
+          </div>
+          <button type="submit" class="w-full py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition">
+            + Payment Jama Save Karein
+          </button>
+        </form>
+
+        <!-- Payment History -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-extrabold text-slate-700 uppercase">Jama Payments (${custPayments.length})</h4>
+          ${custPayments.length === 0 ? `<p class="text-xs text-slate-400">Abhi koi alag jama entry nahi hai.</p>` : custPayments.map(p => `
+            <div class="p-3 rounded-xl border ${p.voided ? 'border-rose-200 bg-rose-50/40' : 'border-slate-200'} flex justify-between items-center text-xs">
+              <div>
+                <p class="font-bold ${p.voided ? 'line-through text-slate-400' : 'text-emerald-700'}">${formatINR(p.amount)} (${p.note || 'Jama'})</p>
+                <p class="text-[10px] text-slate-500">${p.date}</p>
+                ${p.voided ? `<p class="text-[10px] text-rose-600 font-semibold">Cancelled: ${p.voidReason}</p>` : ''}
+              </div>
+              ${!p.voided ? `
+                <button onclick="openVoidModal('payment', '${p.id}')" class="px-2 py-1 rounded-lg bg-rose-50 text-rose-600 text-[10px] font-bold">रद्द करें</button>
+              ` : `<span class="text-[10px] font-bold text-rose-600">Void</span>`}
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- Party Trips -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-extrabold text-slate-700 uppercase">Party Trips (${custTrips.length})</h4>
+          ${custTrips.map(t => `
+            <div class="p-3 rounded-xl border ${t.voided ? 'border-rose-200 opacity-70' : 'border-slate-200'} flex justify-between items-center text-xs">
+              <div>
+                <p class="font-bold ${t.voided ? 'line-through' : 'text-slate-800'}">${t.route}</p>
+                <p class="text-[10px] text-slate-500">${t.date} • ${getVehicle(t.vehicleId).number}</p>
+              </div>
+              <div class="text-right">
+                <p class="font-bold text-slate-900">${formatINR(t.fare)}</p>
+                <p class="text-[10px] text-emerald-600">Adv: ${formatINR(t.advance)}</p>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      openModal('customerLedgerModal');
+    }
+
+    function handleReceivePayment(e, customerId) {
+      e.preventDefault();
+      const amount = Number(document.getElementById('payAmountInput').value) || 0;
+      const note = document.getElementById('payNoteInput').value.trim() || 'Cash / UPI';
+      if (amount <= 0) return;
+
+      appState.payments.unshift({
+        id: 'p' + Date.now(),
+        date: getTodayISO(),
+        customerId,
+        amount,
+        note,
+        voided: false,
+        voidReason: ''
+      });
+      saveAppState();
+      renderApp();
+      openCustomerLedger(customerId);
+      showToast(`${formatINR(amount)} Jama Save Ho Gaya!`);
+    }
+
+    // ================= DAILY & MONTHLY PDF + WHATSAPP EXPORT =================
+    function openReportModal(mode = 'daily') {
+      document.getElementById('reportDateInput').value = getTodayISO();
+      document.getElementById('reportMonthInput').value = getCurrentMonthISO();
+      setReportMode(mode);
+      openModal('reportModal');
+    }
+
+    function setReportMode(mode) {
+      reportMode = mode;
+      const dailyBtn = document.getElementById('repModeDailyBtn');
+      const monthlyBtn = document.getElementById('repModeMonthlyBtn');
+      const dailyWrap = document.getElementById('dailyPickerWrap');
+      const monthlyWrap = document.getElementById('monthlyPickerWrap');
+
+      if (mode === 'daily') {
+        dailyBtn.className = 'py-2 rounded-xl text-xs font-extrabold bg-slate-900 text-white shadow transition';
+        monthlyBtn.className = 'py-2 rounded-xl text-xs font-bold text-slate-600 transition';
+        dailyWrap.classList.remove('hidden');
+        monthlyWrap.classList.add('hidden');
+      } else {
+        monthlyBtn.className = 'py-2 rounded-xl text-xs font-extrabold bg-slate-900 text-white shadow transition';
+        dailyBtn.className = 'py-2 rounded-xl text-xs font-bold text-slate-600 transition';
+        monthlyWrap.classList.remove('hidden');
+        dailyWrap.classList.add('hidden');
+      }
+      renderReportPreview();
+    }
+
+    function getFilteredReportData() {
+      const isDaily = reportMode === 'daily';
+      const periodKey = isDaily
+        ? (document.getElementById('reportDateInput').value || getTodayISO())
+        : (document.getElementById('reportMonthInput').value || getCurrentMonthISO());
+
+      const matchPeriod = (dateStr) => isDaily ? dateStr === periodKey : (dateStr || '').startsWith(periodKey);
+
+      const allPeriodTrips = appState.trips.filter(t => matchPeriod(t.date));
+      const activeTrips = allPeriodTrips.filter(t => !t.voided);
+      const voidTrips = allPeriodTrips.filter(t => t.voided);
+
+      const allPeriodPayments = appState.payments.filter(p => matchPeriod(p.date));
+      const activePayments = allPeriodPayments.filter(p => !p.voided);
+
+      const income = activeTrips.reduce((s, t) => s + Number(t.fare), 0);
+      const expenses = activeTrips.reduce((s, t) => s + Number(t.diesel) + Number(t.toll) + Number(t.bhatta), 0);
+      const advanceTotal = activeTrips.reduce((s, t) => s + Number(t.advance), 0);
+      const jamaTotal = activePayments.reduce((s, p) => s + Number(p.amount), 0);
+      const profit = income - expenses;
+      const totalMarketUdhaar = getOverallTotals().totalPending;
+
+      return {
+        isDaily,
+        periodKey,
+        activeTrips,
+        voidTrips,
+        activePayments,
+        income,
+        expenses,
+        advanceTotal,
+        jamaTotal,
+        profit,
+        totalMarketUdhaar
+      };
+    }
+
+    function renderReportPreview() {
+      const r = getFilteredReportData();
+      const box = document.getElementById('reportPreviewCard');
+      box.innerHTML = `
+        <div class="flex justify-between items-center border-b border-slate-200 pb-2">
+          <span class="font-extrabold text-slate-900">${r.isDaily ? 'Daily Report: ' + r.periodKey : 'Monthly Report: ' + r.periodKey}</span>
+          <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">${r.activeTrips.length} Trips</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div class="bg-white p-2.5 rounded-xl border border-slate-200">
+            <span class="text-[10px] text-slate-500 block">Kul Kamai (Billing)</span>
+            <strong class="text-sm font-extrabold text-slate-900">${formatINR(r.income)}</strong>
+          </div>
+          <div class="bg-white p-2.5 rounded-xl border border-slate-200">
+            <span class="text-[10px] text-slate-500 block">Kul Kharcha</span>
+            <strong class="text-sm font-extrabold text-rose-600">${formatINR(r.expenses)}</strong>
+          </div>
+          <div class="bg-emerald-50 p-2.5 rounded-xl border border-emerald-200">
+            <span class="text-[10px] text-emerald-800 block">Net Bachat (Profit)</span>
+            <strong class="text-sm font-extrabold text-emerald-700">${formatINR(r.profit)}</strong>
+          </div>
+          <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-200">
+            <span class="text-[10px] text-amber-800 block">Cash / Jama Received</span>
+            <strong class="text-sm font-extrabold text-amber-900">${formatINR(r.advanceTotal + r.jamaTotal)}</strong>
+          </div>
+        </div>
+        <p class="text-[11px] text-slate-600 pt-1">
+          Total Market Udhaar Baaki: <strong class="text-slate-900">${formatINR(r.totalMarketUdhaar)}</strong>
+        </p>
+      `;
+    }
+
+    function downloadReportPDF() {
+      const r = getFilteredReportData();
+      const bizName = appState.auth?.businessName || 'Fleet Hisab Pro';
+      const titleLabel = r.isDaily ? `DAILY HISAB REPORT (${r.periodKey})` : `MONTHLY HISAB REPORT (${r.periodKey})`;
+
+      const printArea = document.getElementById('printReportArea');
+      printArea.innerHTML = `
+        <div style="font-family: Inter, sans-serif; color: #0f172a; max-width: 780px; margin: 0 auto;">
+          <div style="border-bottom: 2px solid #0f172a; padding-bottom: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h1 style="font-size: 20px; font-weight: 800; margin: 0;">${bizName}</h1>
+              <p style="font-size: 12px; color: #475569; margin: 4px 0 0;">${titleLabel}</p>
+            </div>
+            <div style="text-align: right; font-size: 11px; color: #475569;">
+              Generated: ${getTodayISO()}
+            </div>
+          </div>
+
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 18px; font-size: 12px;">
+            <tr>
+              <td style="border: 1px solid #cbd5e1; padding: 10px; background: #f8fafc;"><strong>Kul Kamai (Billing):</strong><br/><span style="font-size: 16px; font-weight: 800;">${formatINR(r.income)}</span></td>
+              <td style="border: 1px solid #cbd5e1; padding: 10px; background: #f8fafc;"><strong>Kul Kharcha:</strong><br/><span style="font-size: 16px; font-weight: 800; color: #dc2626;">${formatINR(r.expenses)}</span></td>
+              <td style="border: 1px solid #cbd5e1; padding: 10px; background: #ecfdf5;"><strong>Net Profit:</strong><br/><span style="font-size: 16px; font-weight: 800; color: #059669;">${formatINR(r.profit)}</span></td>
+              <td style="border: 1px solid #cbd5e1; padding: 10px; background: #fffbeb;"><strong>Total Market Udhaar:</strong><br/><span style="font-size: 16px; font-weight: 800; color: #b45309;">${formatINR(r.totalMarketUdhaar)}</span></td>
+            </tr>
+          </table>
+
+          <h3 style="font-size: 14px; font-weight: 800; margin-bottom: 8px;">1. Trips Ka Hisab (${r.activeTrips.length})</h3>
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 18px; font-size: 11px;">
+            <thead>
+              <tr style="background: #0f172a; color: #ffffff;">
+                <th style="padding: 8px; text-align: left;">Date</th>
+                <th style="padding: 8px; text-align: left;">Gaadi</th>
+                <th style="padding: 8px; text-align: left;">Party & Route</th>
+                <th style="padding: 8px; text-align: right;">Kiraya</th>
+                <th style="padding: 8px; text-align: right;">Advance</th>
+                <th style="padding: 8px; text-align: right;">Kharcha</th>
+                <th style="padding: 8px; text-align: right;">Bachat</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${r.activeTrips.length === 0 ? `<tr><td colspan="7" style="padding: 10px; border: 1px solid #cbd5e1; text-align: center;">Is avadhi mein koi active trip nahi hai.</td></tr>` : r.activeTrips.map(t => {
+                const exp = Number(t.diesel) + Number(t.toll) + Number(t.bhatta);
+                const prof = Number(t.fare) - exp;
+                return `
+                  <tr>
+                    <td style="padding: 7px; border: 1px solid #cbd5e1;">${t.date}</td>
+                    <td style="padding: 7px; border: 1px solid #cbd5e1;">${getVehicle(t.vehicleId).number}</td>
+                    <td style="padding: 7px; border: 1px solid #cbd5e1;"><strong>${getCustomer(t.customerId).name}</strong><br/>${t.route}</td>
+                    <td style="padding: 7px; border: 1px solid #cbd5e1; text-align: right;">${formatINR(t.fare)}</td>
+                    <td style="padding: 7px; border: 1px solid #cbd5e1; text-align: right;">${formatINR(t.advance)}</td>
+                    <td style="padding: 7px; border: 1px solid #cbd5e1; text-align: right;">${formatINR(exp)}</td>
+                    <td style="padding: 7px; border: 1px solid #cbd5e1; text-align: right; font-weight: 700;">${formatINR(prof)}</td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+
+          <h3 style="font-size: 14px; font-weight: 800; margin-bottom: 8px;">2. Jama Payments (${r.activePayments.length})</h3>
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 18px; font-size: 11px;">
+            <thead>
+              <tr style="background: #f1f5f9;">
+                <th style="padding: 7px; border: 1px solid #cbd5e1; text-align: left;">Date</th>
+                <th style="padding: 7px; border: 1px solid #cbd5e1; text-align: left;">Customer</th>
+                <th style="padding: 7px; border: 1px solid #cbd5e1; text-align: left;">Mode / Note</th>
+                <th style="padding: 7px; border: 1px solid #cbd5e1; text-align: right;">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${r.activePayments.length === 0 ? `<tr><td colspan="4" style="padding: 8px; border: 1px solid #cbd5e1; text-align: center;">Koi alag jama entry nahi.</td></tr>` : r.activePayments.map(p => `
+                <tr>
+                  <td style="padding: 7px; border: 1px solid #cbd5e1;">${p.date}</td>
+                  <td style="padding: 7px; border: 1px solid #cbd5e1;">${getCustomer(p.customerId).name}</td>
+                  <td style="padding: 7px; border: 1px solid #cbd5e1;">${p.note || '-'}</td>
+                  <td style="padding: 7px; border: 1px solid #cbd5e1; text-align: right; font-weight: 700;">${formatINR(p.amount)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+
+          ${r.voidTrips.length > 0 ? `
+            <h3 style="font-size: 13px; font-weight: 800; color: #dc2626; margin-bottom: 6px;">3. Cancelled / Void Audit Log (${r.voidTrips.length})</h3>
+            <ul style="font-size: 11px; color: #7f1d1d; margin: 0; padding-left: 18px;">
+              ${r.voidTrips.map(vt => `<li>${vt.date} — ${vt.route} (${formatINR(vt.fare)}) — Kaaran: ${vt.voidReason}</li>`).join('')}
+            </ul>
+          ` : ''}
+        </div>
+      `;
+
+      printArea.classList.remove('hidden');
+      showToast('Print / Save as PDF khul raha hai...');
+      setTimeout(() => {
+        window.print();
+        printArea.classList.add('hidden');
+      }, 250);
+    }
+
+    function shareReportWhatsApp() {
+      const r = getFilteredReportData();
+      const bizName = appState.auth?.businessName || 'Fleet Hisab Pro';
+      const heading = r.isDaily ? `📅 *DAILY HISAB (${r.periodKey})*` : `🗓️ *MONTHLY HISAB (${r.periodKey})*`;
+
+      let lines = [
+        `🚛 *${bizName}*`,
+        heading,
+        `━━━━━━━━━━━━━━`,
+        `• Total Trips: *${r.activeTrips.length}*`,
+        `• Kul Kamai: *${formatINR(r.income)}*`,
+        `• Kul Kharcha: *${formatINR(r.expenses)}*`,
+        `• Net Bachat: *${formatINR(r.profit)}*`,
+        `• Cash/Jama Mila: *${formatINR(r.advanceTotal + r.jamaTotal)}*`,
+        `• Total Market Udhaar: *${formatINR(r.totalMarketUdhaar)}*`,
+        `━━━━━━━━━━━━━━`
+      ];
+
+      if (r.activeTrips.length > 0) {
+        lines.push(`*Trips Summary:*`);
+        r.activeTrips.slice(0, 10).forEach((t, idx) => {
+          lines.push(`${idx + 1}. ${getVehicle(t.vehicleId).number} | ${getCustomer(t.customerId).name} (${t.route}) — ${formatINR(t.fare)}`);
+        });
+      }
+
+      const text = lines.join('\n');
+      const waUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+      window.open(waUrl, '_blank');
+    }
+
+    // ================= SETTINGS, CSV & JSON BACKUP =================
+    function handleUpdateCredentials(e) {
+      e.preventDefault();
+      appState.auth.businessName = document.getElementById('setBusinessInput').value.trim();
+      appState.auth.username = document.getElementById('setUserInput').value.trim();
+      appState.auth.password = document.getElementById('setPassInput').value.trim();
+      saveAppState();
+      document.getElementById('headerBusinessName').textContent = appState.auth.businessName;
+      closeModal('settingsModal');
+      showToast('Business Name aur Password Update Ho Gaya!');
+    }
+
+    function saveGpsConfig() {
+      appState.gpsConfig.provider = document.getElementById('gpsProviderInput').value.trim() || 'Custom GPS';
+      appState.gpsConfig.endpoint = document.getElementById('gpsEndpointInput').value.trim();
+      appState.gpsConfig.apiKey = document.getElementById('gpsKeyInput').value.trim();
+      saveAppState();
+      closeModal('settingsModal');
+      renderApp();
+      showToast('GPS API Details Saved!');
+    }
+
+    function exportTripsCSV() {
+      const headers = ['Date', 'Vehicle', 'Customer', 'Route', 'Fare', 'Advance', 'Diesel', 'Toll', 'Bhatta', 'Status', 'CancelReason'];
+      const rows = appState.trips.map(t => [
+        t.date,
+        `"${getVehicle(t.vehicleId).number}"`,
+        `"${getCustomer(t.customerId).name}"`,
+        `"${t.route}"`,
+        t.fare,
+        t.advance,
+        t.diesel,
+        t.toll,
+        t.bhatta,
+        t.voided ? 'Cancelled' : 'Active',
+        `"${t.voidReason || ''}"`
+      ].join(','));
+
+      const csv = [headers.join(','), ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `hisab-export-${getTodayISO()}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Excel (CSV) File Downloaded!');
+    }
+
+    function exportJsonBackup() {
+      const blob = new Blob([JSON.stringify(appState, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `fleet-hisab-backup-${getTodayISO()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Full JSON Backup Downloaded!');
+    }
+
+    function importJsonBackup(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (parsed && Array.isArray(parsed.vehicles) && Array.isArray(parsed.trips)) {
+            appState = parsed;
+            saveAppState();
+            closeModal('settingsModal');
+            renderApp();
+            showToast('Backup Successfully Restored!');
+          } else {
+            showToast('Invalid Backup File!');
+          }
+        } catch (err) {
+          showToast('Backup File Read Error!');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // ================= MAIN RENDER =================
+    function renderApp() {
+      updateNavHighlight();
+      const main = document.getElementById('mainContent');
+      if (activeTab === 'dashboard') {
+        main.innerHTML = renderDashboard();
+      } else if (activeTab === 'vehicles') {
+        main.innerHTML = renderVehicles();
+      } else if (activeTab === 'trips') {
+        main.innerHTML = renderTrips();
+      } else if (activeTab === 'customers') {
+        main.innerHTML = renderCustomers();
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      checkAuthBoot();
+    });
+  </script>
+</body>
+</html>
