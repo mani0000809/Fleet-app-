@@ -1,6 +1,6 @@
-const CACHE_NAME = 'mor-self-drive-v1';
+const CACHE_NAME = 'mor-self-drive-v2';
 const ASSETS = [
-  './fleet_hisab_gps_manager.html',
+  './fleet_hisab_manager.html',
   './manifest.json'
 ];
 
