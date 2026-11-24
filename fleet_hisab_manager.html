@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#070b14" />
+  <meta name="theme-color" content="#060a13" />
   <link rel="manifest" href="./manifest.json" />
-  <title>Mor self drive — Next-Gen Command Center</title>
+  <title>Mor self drive — Ultimate Command v8</title>
   <style>
     :root {
-      --bg: #f4f7fb;
+      --bg: #f1f5f9;
       --ink: #0f172a;
       --muted: #64748b;
       --line: #e2e8f0;
-      --navy: #070b14;
+      --navy: #060a13;
       --amber: #f59e0b;
       --green: #059669;
       --wa: #16a34a;
@@ -24,31 +24,45 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
     body { background: var(--bg); color: var(--ink); padding-bottom: 94px; }
 
-    header {
-      background: linear-gradient(135deg, #070b14 0%, #172554 100%);
-      color: #fff; padding: 16px; position: sticky; top: 0; z-index: 30;
-      box-shadow: 0 6px 22px rgba(7, 11, 20, 0.22);
+    /* LOGIN SCREEN */
+    #loginScreen {
+      position: fixed; inset: 0; z-index: 100;
+      background: linear-gradient(145deg, #060a13 0%, #172554 60%, #0f172a 100%);
+      display: flex; align-items: center; justify-content: center; padding: 20px;
     }
-    .hdr-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; max-width: 660px; margin: 0 auto; }
-    .brand-title { font-size: 19px; font-weight: 800; letter-spacing: 0.2px; display: flex; align-items: center; gap: 8px; }
+    .login-card {
+      width: 100%; max-width: 390px; background: #fff; border-radius: 24px;
+      padding: 26px 22px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    }
+    .login-brand { font-size: 22px; font-weight: 900; color: var(--navy); display: flex; align-items: center; gap: 8px; }
+    .login-sub { font-size: 12px; color: var(--muted); margin: 4px 0 18px; }
+
+    header {
+      background: linear-gradient(135deg, #060a13 0%, #172554 100%);
+      color: #fff; padding: 14px 16px; position: sticky; top: 0; z-index: 30;
+      box-shadow: 0 6px 22px rgba(6, 10, 19, 0.25);
+    }
+    .hdr-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; max-width: 700px; margin: 0 auto; }
+    .brand-title { font-size: 18px; font-weight: 900; letter-spacing: 0.2px; display: flex; align-items: center; gap: 7px; }
     .brand-sub { font-size: 11px; color: #cbd5e1; margin-top: 2px; }
-    .pill-next {
-      background: linear-gradient(90deg, rgba(245,158,11,0.22), rgba(13,148,136,0.25));
-      color: #fde68a; border: 1px solid rgba(253, 230, 138, 0.45);
-      font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 999px; white-space: nowrap;
+    .pill-v8 {
+      background: linear-gradient(90deg, rgba(245,158,11,0.28), rgba(13,148,136,0.32));
+      color: #fde68a; border: 1px solid rgba(253, 230, 138, 0.5);
+      font-size: 10px; font-weight: 800; padding: 4px 9px; border-radius: 999px; white-space: nowrap;
     }
 
-    .wrap { max-width: 660px; margin: 0 auto; padding: 14px; }
+    .wrap { max-width: 700px; margin: 0 auto; padding: 14px; }
 
     .hero {
-      background: linear-gradient(135deg, #070b14 0%, #1e1b4b 55%, #0f172a 100%);
+      background: linear-gradient(135deg, #060a13 0%, #1e1b4b 55%, #0f172a 100%);
       color: #fff; border-radius: 22px; padding: 18px; margin-bottom: 14px;
-      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.2);
+      border: 1px solid rgba(255,255,255,0.08);
     }
-    .hero-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 8px; flex-wrap: wrap; }
-    .hero-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: #93c5fd; font-weight: 700; }
-    .hero-main { font-size: 26px; font-weight: 800; margin: 4px 0 6px; }
-    .hero-sub { font-size: 13px; color: #e2e8f0; margin-bottom: 14px; }
+    .hero-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 8px; flex-wrap: wrap; }
+    .hero-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: #93c5fd; font-weight: 800; }
+    .hero-main { font-size: 27px; font-weight: 900; margin: 2px 0 4px; }
+    .hero-sub { font-size: 12px; color: #e2e8f0; margin-bottom: 14px; line-height: 1.5; }
 
     .card {
       background: #fff; border: 1px solid var(--line); border-radius: 16px;
@@ -57,8 +71,9 @@
     .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 
-    .kpi-title { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; }
-    .kpi-val { font-size: 20px; font-weight: 800; margin-top: 5px; }
+    .kpi-title { font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.3px; }
+    .kpi-val { font-size: 20px; font-weight: 900; margin-top: 4px; }
+    .kpi-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
 
     .btn {
       border: none; border-radius: 12px; padding: 11px 12px;
@@ -82,11 +97,16 @@
     .drawer {
       display: none; background: #fff; border: 2px solid var(--navy);
       border-radius: 18px; padding: 16px; margin-bottom: 14px;
-      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.14);
     }
     .drawer.open { display: block; }
     .drawer-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .drawer-hdr h3 { font-size: 16px; font-weight: 800; }
+
+    .sec-head {
+      font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px;
+      color: var(--blue); margin: 12px 0 8px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0;
+    }
 
     .field { margin-bottom: 10px; }
     .field label { display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px; }
@@ -94,6 +114,7 @@
       width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1;
       border-radius: 10px; font-size: 14px; background: #fff; color: var(--ink);
     }
+    .upper-input { text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; }
     .search-box { margin-bottom: 10px; background: #fff; }
 
     .chips { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
@@ -113,13 +134,20 @@
 
     .badge {
       display: inline-block; padding: 3px 9px; border-radius: 999px;
-      font-size: 11px; font-weight: 700; margin-top: 4px;
+      font-size: 11px; font-weight: 700; margin-top: 4px; margin-right: 4px;
     }
     .b-avail { background: #dcfce7; color: #166534; }
     .b-trip { background: #dbeafe; color: #1e40af; }
     .b-maint { background: #fee2e2; color: #991b1b; }
+    .b-own { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+    .b-friend { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+    .b-cat { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
     .b-late { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
     .b-due-today { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+    .b-doc-warn { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+    .b-doc-ok { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+    .b-vip { background: #ede9fe; color: #5b21b6; }
+    .b-alert { background: #fee2e2; color: #991b1b; }
 
     .status-box { border-radius: 12px; padding: 10px 6px; text-align: center; }
     .st-av { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
@@ -135,70 +163,123 @@
     .alert-banner {
       display: none; background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412;
       border-radius: 14px; padding: 11px 13px; font-size: 12px; margin-bottom: 12px;
-      line-height: 1.45;
+      line-height: 1.5;
     }
     .alert-banner.show { display: block; }
+
+    .check-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 6px 0 10px; font-size: 12px; font-weight: 700; color: #334155; }
+    .check-row label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
 
     .page { display: none; }
     .page.show { display: block; }
     .nav {
       position: fixed; bottom: 0; left: 0; right: 0; background: #fff;
-      border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(4, 1fr);
-      padding: 8px 6px; z-index: 30; box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.06);
+      border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(6, 1fr);
+      padding: 7px 2px; z-index: 30; box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.06);
     }
     .nav button {
-      background: none; border: none; padding: 8px 4px; font-size: 12px;
-      font-weight: 700; color: var(--muted); cursor: pointer; border-radius: 10px;
+      background: none; border: none; padding: 7px 2px; font-size: 10.5px;
+      font-weight: 800; color: var(--muted); cursor: pointer; border-radius: 9px;
     }
     .nav button.active { background: #fef3c7; color: var(--ink); }
 
+    /* DEDICATED PDF PRINT REPORT VIEW */
+    #printSheet { display: none; }
     @media print {
-      header, .nav, .drawer, .search-box, .chips, .alert-banner, .btn { display: none !important; }
-      body { background: #fff; padding-bottom: 0; }
-      .page { display: block !important; }
+      body * { visibility: hidden; }
+      #printSheet, #printSheet * { visibility: visible; }
+      #printSheet {
+        display: block !important; position: absolute; left: 0; top: 0; width: 100%;
+        background: #fff; color: #000; padding: 16px; font-size: 12px;
+      }
+      #printSheet table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+      #printSheet th, #printSheet td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: left; }
+      #printSheet th { background: #f1f5f9; }
     }
   </style>
 </head>
 <body>
 
+  <!-- CUSTOM LOGIN SCREEN -->
+  <div id="loginScreen">
+    <div class="login-card">
+      <div class="login-brand">🚗 Mor self drive</div>
+      <div class="login-sub">Surakshit Hisab & Fleet Command Login</div>
+      <div class="field">
+        <label>Username</label>
+        <input type="text" id="loginUser" placeholder="Username likhein" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="loginPass" placeholder="Password likhein" onkeydown="if(event.key==='Enter') doLogin()" />
+      </div>
+      <button class="btn btn-dark full" onclick="doLogin()">🔐 Login Karein</button>
+      <div id="loginErr" style="color:var(--red);font-size:12px;font-weight:700;margin-top:8px;"></div>
+      <div style="font-size:11px;color:var(--muted);margin-top:12px;text-align:center;">
+        First-time Default: <b>mor</b> / <b>1234</b> (Andar Settings se badal sakte hain)
+      </div>
+    </div>
+  </div>
+
+  <!-- PRINT / PDF REPORT AREA -->
+  <div id="printSheet"></div>
+
   <header>
     <div class="hdr-top">
       <div>
         <div class="brand-title">🚗 Mor self drive</div>
-        <div class="brand-sub">Next-Gen Fleet Command & Hisab</div>
+        <div class="brand-sub">Apni + Dost Gaadi • Docs, Security & Hisab</div>
       </div>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <span class="pill-next">NEXT-GEN</span>
+      <div style="display:flex;align-items:center;gap:5px;">
+        <span class="pill-v8">COMMAND v8</span>
         <button class="btn btn-light btn-sm" onclick="toggleDrawer('boxSettings')">⚙️</button>
+        <button class="btn btn-red btn-sm" onclick="doLogout()" title="Lock App">🔒</button>
       </div>
     </div>
   </header>
 
   <div class="wrap">
-    <!-- SETTINGS & BACKUP DRAWER -->
+    <!-- SETTINGS, LOGIN CHANGE & BACKUP DRAWER -->
     <div id="boxSettings" class="drawer">
       <div class="drawer-hdr">
-        <h3>⚙️ Settings, Backup & Shift Note</h3>
+        <h3>⚙️ Settings, Login, PDF & Backup</h3>
         <button class="btn btn-light btn-sm" onclick="closeDrawers()">✕</button>
       </div>
+
+      <div class="sec-head">Shift / Handover Note</div>
       <div class="field">
-        <label>Aaj Ki Shift / Handover Note</label>
         <input type="text" id="inShiftNote" placeholder="Key / Fastag / fuel / handover note..." oninput="saveShiftNote()" />
+      </div>
+
+      <div class="sec-head">PDF Reports & Backup Export</div>
+      <div class="grid2" style="margin-bottom:8px;">
+        <button class="btn btn-purple" onclick="generatePDFReport('daily')">📄 Daily Hisab PDF</button>
+        <button class="btn btn-blue" onclick="generatePDFReport('monthly')">📅 Monthly Hisab PDF</button>
       </div>
       <div class="grid2" style="margin-bottom:10px;">
         <button class="btn btn-green" onclick="exportJSON()">⬇ Backup JSON</button>
         <button class="btn btn-dark" onclick="exportCSV()">📊 Excel (CSV)</button>
       </div>
-      <div class="grid2" style="margin-bottom:10px;">
-        <button class="btn btn-purple" onclick="window.print()">🖨 Print / PDF View</button>
-        <button class="btn btn-blue" onclick="shareWhatsAppMonthly()">📅 Monthly WA</button>
+
+      <div class="sec-head">Custom Username & Password Badlein</div>
+      <div class="grid2">
+        <div class="field">
+          <label>Naya Username</label>
+          <input type="text" id="setNewUser" placeholder="Naya username" />
+        </div>
+        <div class="field">
+          <label>Naya Password</label>
+          <input type="text" id="setNewPass" placeholder="Naya password" />
+        </div>
       </div>
+      <button class="btn btn-amber full" style="margin-bottom:10px;" onclick="updateCredentials()">🔑 Login Details Save Karein</button>
+
+      <div class="sec-head">Restore Backup</div>
       <div class="field">
-        <label>Restore Backup File (.json)</label>
         <input type="file" accept=".json" onchange="importJSON(event)" />
       </div>
       <div style="border-top:1px solid #e2e8f0;padding-top:10px;margin-top:8px;">
-        <button class="btn btn-red full" onclick="resetData()">🗑 Saara Data Reset Karein</button>
+        <button class="btn btn-red full" onclick="resetData()">🗑 Saara Data Reset Karein (Double Lock)</button>
       </div>
     </div>
 
@@ -209,20 +290,38 @@
         <button class="btn btn-light btn-sm" onclick="closeDrawers()">✕</button>
       </div>
       <input type="hidden" id="editTripId" />
+
+      <div class="sec-head">1. Gaadi, Time & Auto-Rent Hisab</div>
+      <div class="field">
+        <label>Gaadi Chunein (Apni ya Dost Ki Gaadi)</label>
+        <select id="inVeh" onchange="onVehicleSelect()"></select>
+      </div>
       <div class="grid2">
         <div class="field">
-          <label>Booking Date</label>
-          <input type="date" id="inDate" />
+          <label>Gaadi Gayi (Date & Time)</label>
+          <input type="datetime-local" id="inStartDt" onchange="recalcBookingMath()" />
         </div>
         <div class="field">
-          <label>Expected Return Date</label>
-          <input type="date" id="inReturnDate" />
+          <label>Wapas Aane Ka Time</label>
+          <input type="datetime-local" id="inReturnDt" onchange="recalcBookingMath()" />
         </div>
       </div>
-      <div class="field">
-        <label>Gaadi Chunein</label>
-        <select id="inVeh" onchange="autoFillRate()"></select>
+      <div class="grid3">
+        <div class="field">
+          <label>Total Din (Days)</label>
+          <input type="number" step="0.5" id="inDays" value="1" oninput="recalcBookingMath(true)" />
+        </div>
+        <div class="field">
+          <label>Customer Rate/Day (₹)</label>
+          <input type="number" id="inCustRate" placeholder="3000" oninput="recalcBookingMath(true)" />
+        </div>
+        <div class="field">
+          <label>Dost Rate/Day (₹)</label>
+          <input type="number" id="inFriendRate" placeholder="0" oninput="recalcBookingMath(true)" />
+        </div>
       </div>
+
+      <div class="sec-head">2. Customer, Gaon & Tag</div>
       <div class="grid2">
         <div class="field">
           <label>Customer Name</label>
@@ -230,37 +329,47 @@
         </div>
         <div class="field">
           <label>Village / Gaon</label>
-          <input type="text" id="inCustVillage" placeholder="Gaon / Village ka naam" />
+          <input type="text" id="inCustVillage" placeholder="Gaon / Village" />
         </div>
       </div>
-      <div class="grid2">
+      <div class="grid3">
         <div class="field">
           <label>Mobile Number</label>
           <input type="tel" id="inCustPhone" placeholder="98XXXXXXXX" />
         </div>
         <div class="field">
-          <label>DL / Aadhaar / ID Note</label>
-          <input type="text" id="inCustNote" placeholder="Driving license / ID note" />
+          <label>Customer Tag</label>
+          <select id="inCustTag">
+            <option value="Normal">Normal</option>
+            <option value="VIP / Regular">VIP / Regular</option>
+            <option value="Alert / Late">Alert / Dhyan Rakhein</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>DL / Aadhaar Note</label>
+          <input type="text" id="inCustNote" placeholder="ID / DL note" />
+        </div>
+      </div>
+
+      <div class="sec-head">3. Rent, Extra Charge, Kharcha & KM</div>
+      <div class="grid3">
+        <div class="field">
+          <label>Base Rent (₹)</label>
+          <input type="number" id="inInc" placeholder="0" oninput="updateLiveProfitPreview()" />
+        </div>
+        <div class="field">
+          <label>Extra KM / Late (₹)</label>
+          <input type="number" id="inExtraCharge" placeholder="0" oninput="updateLiveProfitPreview()" />
+        </div>
+        <div class="field">
+          <label>Apna Kharcha (₹)</label>
+          <input type="number" id="inExp" placeholder="0" oninput="updateLiveProfitPreview()" />
         </div>
       </div>
       <div class="grid3">
-        <div class="field">
-          <label>Total Rent (₹)</label>
-          <input type="number" id="inInc" placeholder="0" />
-        </div>
-        <div class="field">
-          <label>Kharcha (₹)</label>
-          <input type="number" id="inExp" placeholder="0" />
-        </div>
         <div class="field">
           <label>Jama / Advance (₹)</label>
           <input type="number" id="inPaid" placeholder="0" />
-        </div>
-      </div>
-      <div class="grid3">
-        <div class="field">
-          <label>Security Deposit (₹)</label>
-          <input type="number" id="inSec" placeholder="0" />
         </div>
         <div class="field">
           <label>Start KM</label>
@@ -271,15 +380,45 @@
           <input type="number" id="inKmEnd" placeholder="0" />
         </div>
       </div>
-      <div class="grid2">
+      <div id="liveMarginBox" class="highlight-strip" style="margin-bottom:10px;">
+        <span>📊 <b>Apni Bachat Preview:</b> ₹<span id="prevMyProfit">0</span></span>
+        <span>🤝 <b>Dost Hisab:</b> ₹<span id="prevFriendShare">0</span></span>
+      </div>
+
+      <div class="sec-head">4. Security (Bike / Gaadi / Cash & Checklist)</div>
+      <div class="grid3">
+        <div class="field">
+          <label>Security Type</label>
+          <select id="inSecType">
+            <option value="Cash">Cash Deposit</option>
+            <option value="Bike / Scooty">Customer Bike / Scooty</option>
+            <option value="Car / Vehicle">Customer Gaadi / Car</option>
+            <option value="Documents / ID">Original ID / Paper</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Cash Security (₹)</label>
+          <input type="number" id="inSec" placeholder="0" />
+        </div>
         <div class="field">
           <label>Security Status</label>
           <select id="inSecStatus">
             <option value="Hold">Hold / Jama Hai</option>
             <option value="Returned">Wapas Kar Di</option>
-            <option value="Adjusted">Rent / Kharche Mein Adjust</option>
+            <option value="Adjusted">Rent Mein Adjust</option>
           </select>
         </div>
+      </div>
+      <div class="field">
+        <label>Security Bike / Gaadi Number (Auto Bade Akshar)</label>
+        <input type="text" id="inSecVehicle" class="upper-input" oninput="forceUpper(this)" placeholder="EX: SPLENDOR HR-10-XX-4567" />
+      </div>
+      <div class="check-row">
+        <label><input type="checkbox" id="chkKey" /> 🔑 Key Jama</label>
+        <label><input type="checkbox" id="chkRc" /> 📄 Original RC Jama</label>
+        <label><input type="checkbox" id="chkHelmet" /> 🪖 Helmet / Extra Jama</label>
+      </div>
+      <div class="grid2">
         <div class="field">
           <label>Gaadi Status Update</label>
           <select id="inVehStatus">
@@ -289,37 +428,60 @@
             <option value="Maintenance">Maintenance</option>
           </select>
         </div>
+        <div class="field">
+          <label>Route / Special Note</label>
+          <input type="text" id="inNote" placeholder="Route ya zaroori note" />
+        </div>
       </div>
-      <div class="field">
-        <label>Booking Days / Route Note</label>
-        <input type="text" id="inNote" placeholder="2 days / route note" />
-      </div>
+
       <div class="grid2">
         <button class="btn btn-amber" onclick="saveTrip()">✓ Save Booking</button>
         <button class="btn btn-light" onclick="closeDrawers()">Band Karein</button>
       </div>
     </div>
 
-    <!-- ADD VEHICLE DRAWER -->
+    <!-- ADD / EDIT VEHICLE & FRIEND OWNER DRAWER -->
     <div id="boxVeh" class="drawer">
       <div class="drawer-hdr">
-        <h3>🚗 Nayi Gaadi Jodein</h3>
+        <h3 id="vehDrawerTitle">🚗 Nayi Gaadi (Apni / Dost Ki)</h3>
         <button class="btn btn-light btn-sm" onclick="closeDrawers()">✕</button>
+      </div>
+      <input type="hidden" id="editVehId" />
+
+      <div class="sec-head">1. Gaadi Ownership & Rate Setup</div>
+      <div class="grid2">
+        <div class="field">
+          <label>Gaadi Kiski Hai?</label>
+          <select id="vOwnerType" onchange="toggleFriendFields()">
+            <option value="own">Apni Gaadi (Own Fleet)</option>
+            <option value="friend">Dost Ki Gaadi (Partner Fleet)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Category</label>
+          <select id="vCat">
+            <option value="SUV">SUV</option>
+            <option value="Sedan">Sedan</option>
+            <option value="Hatchback">Hatchback</option>
+            <option value="Luxury">Luxury</option>
+            <option value="Bike / Scooty">Bike / Scooty</option>
+          </select>
+        </div>
       </div>
       <div class="grid2">
         <div class="field">
-          <label>Gaadi Number</label>
-          <input type="text" id="vNo" placeholder="HR-10-AB-1234" />
+          <label>Gaadi Number (Auto Bade Akshar)</label>
+          <input type="text" id="vNo" class="upper-input" oninput="forceUpper(this)" placeholder="HR-10-AB-1234" />
         </div>
         <div class="field">
           <label>Model / Gaadi Naam</label>
-          <input type="text" id="vMod" placeholder="Swift / Ertiga / Thar" />
+          <input type="text" id="vMod" placeholder="Swift / Ertiga / Thar / Bullet" />
         </div>
       </div>
       <div class="grid2">
         <div class="field">
-          <label>Per Day Rent (₹)</label>
-          <input type="number" id="vRate" placeholder="1500" />
+          <label>Customer Rent / Day (₹)</label>
+          <input type="number" id="vRate" placeholder="3000" />
         </div>
         <div class="field">
           <label>Aaj Ki Sthiti</label>
@@ -330,17 +492,54 @@
           </select>
         </div>
       </div>
-      <div class="field">
-        <label>Insurance / PUC / Service / Paper Detail</label>
-        <input type="text" id="vDetail" placeholder="Insurance expiry / service km / color" />
+
+      <!-- FRIEND VEHICLE EXTRA FIELDS -->
+      <div id="friendFieldsBox" style="display:none;background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:10px;margin-bottom:10px;">
+        <div class="grid2">
+          <div class="field" style="margin-bottom:0;">
+            <label>Dost Ka Naam (Owner)</label>
+            <input type="text" id="vFriendName" placeholder="Dost ka naam" />
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label>Dost Ko Dene Wala Rate/Day (₹)</label>
+            <input type="number" id="vFriendRate" placeholder="1500" />
+          </div>
+        </div>
+      </div>
+
+      <div class="sec-head">2. Alag Se Gaadi Documents Expiry</div>
+      <div class="grid2">
+        <div class="field">
+          <label>RC / Fitness Expiry</label>
+          <input type="date" id="vRcExp" />
+        </div>
+        <div class="field">
+          <label>Insurance Expiry</label>
+          <input type="date" id="vInsExp" />
+        </div>
       </div>
       <div class="grid2">
-        <button class="btn btn-dark" onclick="addVeh()">✓ Save Gaadi</button>
+        <div class="field">
+          <label>PUC / Pollution Expiry</label>
+          <input type="date" id="vPucExp" />
+        </div>
+        <div class="field">
+          <label>Permit / Tax Expiry</label>
+          <input type="date" id="vPermExp" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Service / Paper Remarks</label>
+        <input type="text" id="vDetail" placeholder="Next service KM / policy note" />
+      </div>
+
+      <div class="grid2">
+        <button class="btn btn-dark" onclick="saveVeh()">✓ Save Gaadi</button>
         <button class="btn btn-light" onclick="closeDrawers()">Band Karein</button>
       </div>
     </div>
 
-    <!-- PAYMENT JAMA DRAWER -->
+    <!-- CUSTOMER PAYMENT JAMA DRAWER -->
     <div id="boxPay" class="drawer">
       <div class="drawer-hdr">
         <h3>💰 Customer Payment Jama</h3>
@@ -361,25 +560,59 @@
       </div>
     </div>
 
-    <!-- HOME PAGE -->
+    <!-- DOST PAYMENT SETTLEMENT DRAWER -->
+    <div id="boxFriendPay" class="drawer">
+      <div class="drawer-hdr">
+        <h3>🤝 Dost Ko Payment Diya (Settlement)</h3>
+        <button class="btn btn-light btn-sm" onclick="closeDrawers()">✕</button>
+      </div>
+      <div class="field">
+        <label>Dost Ka Naam</label>
+        <input type="text" id="fpName" list="friendSuggestions" placeholder="Dost ka naam chunein" />
+        <datalist id="friendSuggestions"></datalist>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>Di Gayi Rashi (₹)</label>
+          <input type="number" id="fpAmt" placeholder="0" />
+        </div>
+        <div class="field">
+          <label>Date</label>
+          <input type="date" id="fpDate" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Note (Cash / UPI / Gaadi No)</label>
+        <input type="text" id="fpNote" placeholder="UPI / Cash note" />
+      </div>
+      <div class="grid2">
+        <button class="btn btn-amber" onclick="addFriendPayment()">✓ Dost Payment Save</button>
+        <button class="btn btn-light" onclick="closeDrawers()">Band Karein</button>
+      </div>
+    </div>
+
+    <!-- HOME PREMIUM COMMAND DASHBOARD -->
     <div id="page-home" class="page show">
-      <div id="returnAlertBanner" class="alert-banner"></div>
+      <div id="alertBanner" class="alert-banner"></div>
 
       <div class="hero">
         <div class="hero-top">
-          <span class="hero-lbl">AAJ KA HISAB • <span id="lblToday"></span></span>
-          <span style="font-size:12px;color:#fde68a;font-weight:700;">Bachat: ₹<span id="sTodayProf">0</span></span>
+          <span class="hero-lbl">AAJ KA COMMAND • <span id="lblToday"></span></span>
+          <span style="font-size:12px;color:#fde68a;font-weight:800;">Apni Bachat: ₹<span id="sTodayProf">0</span></span>
         </div>
         <div class="hero-main">Kamai: ₹<span id="sTodayInc">0</span></div>
-        <div class="hero-sub">Kharcha: ₹<span id="sTodayExp">0</span> • Jama Mila: ₹<span id="sTodayPaid">0</span></div>
+        <div class="hero-sub">
+          Kharcha: ₹<span id="sTodayExp">0</span> • Dost Hisab: ₹<span id="sTodayFriend">0</span> • Jama Mila: ₹<span id="sTodayPaid">0</span>
+        </div>
 
         <div class="grid2" style="margin-bottom:8px;">
           <button class="btn btn-amber" onclick="openTripBox()">+ Nayi Booking</button>
-          <button class="btn btn-wa" onclick="shareWhatsAppDaily()">📲 WhatsApp Daily</button>
+          <button class="btn btn-wa" onclick="shareWhatsAppDaily()">📲 Daily WA Report</button>
         </div>
-        <div class="grid2">
-          <button class="btn btn-light" onclick="openVehBox()">+ Gaadi Jodein</button>
-          <button class="btn btn-blue" onclick="shareWhatsAppMonthly()">📅 Monthly Hisab WA</button>
+        <div class="grid3">
+          <button class="btn btn-light btn-sm" onclick="openVehBox()">+ Gaadi</button>
+          <button class="btn btn-purple btn-sm" onclick="generatePDFReport('daily')">📄 Daily PDF</button>
+          <button class="btn btn-blue btn-sm" onclick="generatePDFReport('monthly')">📅 Monthly PDF</button>
         </div>
       </div>
 
@@ -392,9 +625,10 @@
         <span>📌 <b>Shift Note:</b> <span id="shiftNoteDisplay"></span></span>
       </div>
 
+      <!-- LIVE FLEET PULSE -->
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-          <span class="kpi-title">Fleet Status (Gaadiyon Ki Sthiti)</span>
+          <span class="kpi-title">Live Fleet Pulse (Apni + Dost Gaadiyan)</span>
           <button class="btn btn-light btn-sm" onclick="goPage('fleet')">Sab Dekhein →</button>
         </div>
         <div class="grid3">
@@ -411,52 +645,89 @@
         <div id="fleetNumbersPreview" class="meta" style="margin-top:10px;"></div>
       </div>
 
+      <!-- APNI VS DOST BACHAT BREAKDOWN -->
       <div class="grid2">
         <div class="card">
-          <div class="kpi-title">Total Kamai</div>
-          <div class="kpi-val">₹<span id="sTotInc">0</span></div>
+          <div class="kpi-title">Apni Gaadi Net Bachat</div>
+          <div class="kpi-val" style="color:var(--green);">₹<span id="sOwnProfit">0</span></div>
+          <div class="kpi-sub">Apni Fleet Kamai - Kharcha</div>
         </div>
         <div class="card">
-          <div class="kpi-title">Total Kharcha</div>
-          <div class="kpi-val" style="color:var(--red);">₹<span id="sTotExp">0</span></div>
+          <div class="kpi-title">Dost Gaadi Se Bachat</div>
+          <div class="kpi-val" style="color:var(--teal);">₹<span id="sFriendMargin">0</span></div>
+          <div class="kpi-sub">Dost Baaki Dena: ₹<span id="sFriendDue">0</span></div>
         </div>
         <div class="card">
-          <div class="kpi-title">Net Bachat</div>
-          <div class="kpi-val" style="color:var(--green);">₹<span id="sNet">0</span></div>
+          <div class="kpi-title">Total Net Bachat</div>
+          <div class="kpi-val" style="color:var(--blue);">₹<span id="sNet">0</span></div>
+          <div class="kpi-sub">Kamai: ₹<span id="sTotInc">0</span> • Kharcha: ₹<span id="sTotExp">0</span></div>
         </div>
         <div class="card">
-          <div class="kpi-title">Baaki Udhaar</div>
+          <div class="kpi-title">Customer Baaki Udhaar</div>
           <div class="kpi-val" style="color:#b45309;">₹<span id="sDue">0</span></div>
+          <div class="kpi-sub">Pending Security: <span id="sSecHoldCount">0</span></div>
         </div>
       </div>
     </div>
 
-    <!-- FLEET PAGE -->
+    <!-- FLEET PAGE (OWN VS FRIEND SEPARATE) -->
     <div id="page-fleet" class="page">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-        <h3>🚗 Gaadiyan & Efficiency</h3>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <h3>🚗 Gaadiyan (Apni vs Dost)</h3>
         <button class="btn btn-dark btn-sm" onclick="openVehBox()">+ Gaadi Jodein</button>
+      </div>
+      <div class="chips" id="ownerChips">
+        <button class="chip active" onclick="setOwnerFilter('ALL')">Sabhi Gaadiyan</button>
+        <button class="chip" onclick="setOwnerFilter('own')">Apni Gaadiyan</button>
+        <button class="chip" onclick="setOwnerFilter('friend')">Dost Ki Gaadiyan</button>
+      </div>
+      <div class="chips" id="catChips">
+        <button class="chip active" onclick="setCatFilter('ALL')">All Category</button>
+        <button class="chip" onclick="setCatFilter('SUV')">SUV</button>
+        <button class="chip" onclick="setCatFilter('Sedan')">Sedan</button>
+        <button class="chip" onclick="setCatFilter('Hatchback')">Hatchback</button>
+        <button class="chip" onclick="setCatFilter('Luxury')">Luxury</button>
+        <button class="chip" onclick="setCatFilter('Bike / Scooty')">Bike / Scooty</button>
       </div>
       <div id="listVeh"></div>
     </div>
 
+    <!-- DOST HISAB (PARTNER LEDGER) PAGE -->
+    <div id="page-friends" class="page">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap;">
+        <h3>🤝 Dost Gaadi Hisab (Per-Day)</h3>
+        <button class="btn btn-amber btn-sm" onclick="openFriendPayBox()">💸 Dost Payment Diya</button>
+      </div>
+      <div id="listFriends"></div>
+    </div>
+
+    <!-- DOCUMENTS PAGE -->
+    <div id="page-docs" class="page">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h3>📄 Gaadi Documents (RC, Ins, PUC)</h3>
+        <button class="btn btn-teal btn-sm" onclick="openVehBox()">+ Update Docs</button>
+      </div>
+      <div id="listDocs"></div>
+    </div>
+
     <!-- HISAB PAGE -->
     <div id="page-hisab" class="page">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap;">
-        <h3>📒 Bookings & Hisab</h3>
-        <div style="display:flex;gap:6px;">
-          <button class="btn btn-wa btn-sm" onclick="shareWhatsAppDaily()">📲 Daily WA</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:6px;flex-wrap:wrap;">
+        <h3>📒 Bookings, Time & Security</h3>
+        <div style="display:flex;gap:5px;">
+          <button class="btn btn-purple btn-sm" onclick="generatePDFReport('daily')">📄 PDF</button>
+          <button class="btn btn-wa btn-sm" onclick="shareWhatsAppDaily()">📲 WA</button>
           <button class="btn btn-amber btn-sm" onclick="openTripBox()">+ Booking</button>
         </div>
       </div>
-      <input type="text" id="searchTrip" class="search-box" placeholder="🔍 Customer naam, village ya gaadi number se khojein..." oninput="render()" />
+      <input type="text" id="searchTrip" class="search-box" placeholder="🔍 Customer, village, gaadi, dost ya security bike se khojein..." oninput="render()" />
       <div id="listTrip"></div>
     </div>
 
-    <!-- CUSTOMERS PAGE -->
+    <!-- CUSTOMERS KHATA PAGE -->
     <div id="page-party" class="page">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <h3>👥 Customer Details & Khata</h3>
+        <h3>👥 Customer Khata & Tag</h3>
         <button class="btn btn-green btn-sm" onclick="openPayBox()">💰 Payment Jama</button>
       </div>
       <input type="text" id="searchCust" class="search-box" placeholder="🔍 Customer naam, village ya phone se khojein..." oninput="render()" />
@@ -469,17 +740,25 @@
     </div>
   </div>
 
+  <!-- 6-TAB BOTTOM NAVIGATION -->
   <div class="nav">
     <button id="tab-home" class="active" onclick="goPage('home')">🏠 Home</button>
-    <button id="tab-fleet" onclick="goPage('fleet')">🚗 Gaadiyan</button>
+    <button id="tab-fleet" onclick="goPage('fleet')">🚗 Gaadi</button>
+    <button id="tab-friends" onclick="goPage('friends')">🤝 Dost</button>
+    <button id="tab-docs" onclick="goPage('docs')">📄 Docs</button>
     <button id="tab-hisab" onclick="goPage('hisab')">📒 Hisab</button>
     <button id="tab-party" onclick="goPage('party')">👥 Khata</button>
   </div>
 
   <script>
-    var KEY = 'mor_self_drive_nextgen_v5';
+    var KEY = 'mor_self_drive_v8_command';
+    var AUTH_KEY = 'mor_self_drive_auth_v8';
+    var SESSION_KEY = 'mor_self_drive_unlocked_v8';
+
     var custFilter = 'all';
-    var data = { vehicles: [], trips: [], payments: [], shiftNote: '' };
+    var catFilter = 'ALL';
+    var ownerFilter = 'ALL';
+    var data = { vehicles: [], trips: [], payments: [], friendPayments: [], shiftNote: '' };
 
     try {
       var saved = JSON.parse(localStorage.getItem(KEY));
@@ -487,9 +766,58 @@
         data.vehicles = saved.vehicles || [];
         data.trips = saved.trips || [];
         data.payments = saved.payments || [];
+        data.friendPayments = saved.friendPayments || [];
         data.shiftNote = saved.shiftNote || '';
       }
     } catch (e) {}
+
+    function getAuth() {
+      try {
+        var a = JSON.parse(localStorage.getItem(AUTH_KEY));
+        if (a && a.user && a.pass) return a;
+      } catch (e) {}
+      return { user: 'mor', pass: '1234' };
+    }
+
+    function checkLockState() {
+      var unlocked = sessionStorage.getItem(SESSION_KEY) === '1';
+      document.getElementById('loginScreen').style.display = unlocked ? 'none' : 'flex';
+    }
+
+    function doLogin() {
+      var u = document.getElementById('loginUser').value.trim();
+      var p = document.getElementById('loginPass').value.trim();
+      var auth = getAuth();
+      if (u === auth.user && p === auth.pass) {
+        sessionStorage.setItem(SESSION_KEY, '1');
+        document.getElementById('loginErr').textContent = '';
+        document.getElementById('loginPass').value = '';
+        checkLockState();
+        render();
+      } else {
+        document.getElementById('loginErr').textContent = 'Galat Username ya Password!';
+      }
+    }
+
+    function doLogout() {
+      sessionStorage.removeItem(SESSION_KEY);
+      checkLockState();
+    }
+
+    function updateCredentials() {
+      var nu = document.getElementById('setNewUser').value.trim();
+      var np = document.getElementById('setNewPass').value.trim();
+      if (!nu || !np) return alert('Naya username aur password dono likhein');
+      localStorage.setItem(AUTH_KEY, JSON.stringify({ user: nu, pass: np }));
+      alert('Login username aur password update ho gaya! Agli baar naye login se khulega.');
+    }
+
+    function forceUpper(el) {
+      if (!el) return;
+      var pos = el.selectionStart;
+      el.value = el.value.toUpperCase();
+      if (typeof pos === 'number') el.setSelectionRange(pos, pos);
+    }
 
     function save() {
       try {
@@ -525,8 +853,30 @@
       return yr + '-' + mo + '-' + da;
     }
 
+    function nowLocalStr(addHours) {
+      var d = new Date(Date.now() + (addHours || 0) * 3600000);
+      var yr = d.getFullYear();
+      var mo = String(d.getMonth() + 1).padStart(2, '0');
+      var da = String(d.getDate()).padStart(2, '0');
+      var hr = String(d.getHours()).padStart(2, '0');
+      var mi = String(d.getMinutes()).padStart(2, '0');
+      return yr + '-' + mo + '-' + da + 'T' + hr + ':' + mi;
+    }
+
     function monthStr() {
       return todayStr().slice(0, 7);
+    }
+
+    function daysUntil(dateStr) {
+      if (!dateStr) return null;
+      var t0 = new Date(todayStr() + 'T00:00:00').getTime();
+      var t1 = new Date(dateStr.slice(0, 10) + 'T00:00:00').getTime();
+      return Math.round((t1 - t0) / 86400000);
+    }
+
+    function formatDtReadable(dtStr) {
+      if (!dtStr) return '';
+      return dtStr.replace('T', ' ');
     }
 
     function setCustFilter(mode) {
@@ -534,6 +884,25 @@
       ['all', 'due', 'clear'].forEach(function(m) {
         document.getElementById('chip-' + m).classList.toggle('active', m === mode);
       });
+      render();
+    }
+
+    function setOwnerFilter(mode) {
+      ownerFilter = mode;
+      var btns = document.querySelectorAll('#ownerChips .chip');
+      var map = ['ALL', 'own', 'friend'];
+      for (var i = 0; i < btns.length; i++) {
+        btns[i].classList.toggle('active', map[i] === mode);
+      }
+      render();
+    }
+
+    function setCatFilter(cat) {
+      catFilter = cat;
+      var btns = document.querySelectorAll('#catChips .chip');
+      for (var i = 0; i < btns.length; i++) {
+        btns[i].classList.toggle('active', btns[i].textContent.trim() === cat || (cat === 'ALL' && btns[i].textContent.trim() === 'All Category'));
+      }
       render();
     }
 
@@ -549,9 +918,17 @@
       if (!openNow) {
         if (id === 'boxSettings') {
           document.getElementById('inShiftNote').value = data.shiftNote || '';
+          var a = getAuth();
+          document.getElementById('setNewUser').value = a.user;
+          document.getElementById('setNewPass').value = a.pass;
         }
         el.classList.add('open');
       }
+    }
+
+    function toggleFriendFields() {
+      var isFriend = document.getElementById('vOwnerType').value === 'friend';
+      document.getElementById('friendFieldsBox').style.display = isFriend ? 'block' : 'none';
     }
 
     function populateVehicleDropdown(selectedVal) {
@@ -559,21 +936,54 @@
       var html = '<option value="General">General / Manual</option>';
       for (var i = 0; i < data.vehicles.length; i++) {
         var v = data.vehicles[i];
-        var selAttr = selectedVal === v.no ? ' selected' : '';
-        html += '<option value="' + v.no + '" data-rate="' + (v.rate || 0) + '"' + selAttr + '>' + v.no + ' — ' + v.mod + ' (' + v.st + ')</option>';
+        var vNoUp = (v.no || '').toUpperCase();
+        var selAttr = selectedVal === vNoUp ? ' selected' : '';
+        var tag = (v.ownerType === 'friend') ? 'Dost: ' + (v.friendName || 'Partner') : 'Apni';
+        html += '<option value="' + vNoUp + '" data-rate="' + (v.rate || 0) + '" data-frate="' + (v.friendRate || 0) + '" data-owner="' + (v.ownerType || 'own') + '"' + selAttr + '>' +
+                vNoUp + ' — ' + v.mod + ' [' + tag + '] (' + v.st + ')</option>';
       }
       sel.innerHTML = html;
-      autoFillRate();
     }
 
-    function autoFillRate() {
+    function onVehicleSelect() {
       var sel = document.getElementById('inVeh');
       var opt = sel.options[sel.selectedIndex];
       var rate = opt ? Number(opt.getAttribute('data-rate')) || 0 : 0;
-      var incEl = document.getElementById('inInc');
-      if (rate > 0 && !incEl.value) {
-        incEl.placeholder = 'Rate: ₹' + rate + '/day';
+      var frate = opt ? Number(opt.getAttribute('data-frate')) || 0 : 0;
+      document.getElementById('inCustRate').value = rate || '';
+      document.getElementById('inFriendRate').value = frate || 0;
+      recalcBookingMath(true);
+    }
+
+    function recalcBookingMath(keepManualDays) {
+      var s = document.getElementById('inStartDt').value;
+      var r = document.getElementById('inReturnDt').value;
+      var daysEl = document.getElementById('inDays');
+      if (!keepManualDays && s && r) {
+        var ms = new Date(r).getTime() - new Date(s).getTime();
+        if (ms > 0) {
+          var calcDays = Math.max(1, Math.ceil(ms / 86400000));
+          daysEl.value = calcDays;
+        }
       }
+      var days = Math.max(0, Number(daysEl.value) || 0);
+      var cRate = Number(document.getElementById('inCustRate').value) || 0;
+      if (days > 0 && cRate > 0) {
+        document.getElementById('inInc').value = Math.round(days * cRate);
+      }
+      updateLiveProfitPreview();
+    }
+
+    function updateLiveProfitPreview() {
+      var base = Number(document.getElementById('inInc').value) || 0;
+      var extra = Number(document.getElementById('inExtraCharge').value) || 0;
+      var exp = Number(document.getElementById('inExp').value) || 0;
+      var days = Math.max(0, Number(document.getElementById('inDays').value) || 0);
+      var fRate = Number(document.getElementById('inFriendRate').value) || 0;
+      var fShare = Math.round(days * fRate);
+      var myNet = (base + extra) - exp - fShare;
+      document.getElementById('prevMyProfit').textContent = myNet;
+      document.getElementById('prevFriendShare').textContent = fShare;
     }
 
     function openTripBox() {
@@ -581,13 +991,20 @@
       document.getElementById('editTripId').value = '';
       document.getElementById('tripDrawerTitle').textContent = '📝 Nayi Booking / Trip Hisab';
       populateVehicleDropdown('General');
-      document.getElementById('inDate').value = todayStr();
-      document.getElementById('inReturnDate').value = '';
-      ['inCustName', 'inCustVillage', 'inCustPhone', 'inCustNote', 'inInc', 'inExp', 'inPaid', 'inSec', 'inKmStart', 'inKmEnd', 'inNote'].forEach(function(id) {
+      document.getElementById('inStartDt').value = nowLocalStr(0);
+      document.getElementById('inReturnDt').value = nowLocalStr(24);
+      document.getElementById('inDays').value = 1;
+      ['inCustRate', 'inFriendRate', 'inCustName', 'inCustVillage', 'inCustPhone', 'inCustNote', 'inInc', 'inExtraCharge', 'inExp', 'inPaid', 'inSec', 'inKmStart', 'inKmEnd', 'inSecVehicle', 'inNote'].forEach(function(id) {
         document.getElementById(id).value = '';
       });
+      document.getElementById('inCustTag').value = 'Normal';
+      document.getElementById('inSecType').value = 'Cash';
       document.getElementById('inSecStatus').value = 'Hold';
       document.getElementById('inVehStatus').value = '';
+      document.getElementById('chkKey').checked = false;
+      document.getElementById('chkRc').checked = false;
+      document.getElementById('chkHelmet').checked = false;
+      updateLiveProfitPreview();
       document.getElementById('boxTrip').classList.add('open');
     }
 
@@ -600,33 +1017,121 @@
       closeDrawers();
       document.getElementById('editTripId').value = found.id;
       document.getElementById('tripDrawerTitle').textContent = '✏️ Booking Edit Karein';
-      populateVehicleDropdown(found.veh || 'General');
-      document.getElementById('inDate').value = found.dt || todayStr();
-      document.getElementById('inReturnDate').value = found.returnDate || '';
+      populateVehicleDropdown((found.veh || 'General').toUpperCase());
+      document.getElementById('inStartDt').value = found.startDt || (found.dt ? found.dt + 'T09:00' : nowLocalStr(0));
+      document.getElementById('inReturnDt').value = found.returnDt || (found.returnDate ? found.returnDate + 'T18:00' : '');
+      document.getElementById('inDays').value = found.days || 1;
+      document.getElementById('inCustRate').value = found.custRate || '';
+      document.getElementById('inFriendRate').value = found.friendRate || 0;
       document.getElementById('inCustName').value = found.custName || '';
       document.getElementById('inCustVillage').value = found.custVillage || '';
       document.getElementById('inCustPhone').value = found.custPhone || '';
+      document.getElementById('inCustTag').value = found.custTag || 'Normal';
       document.getElementById('inCustNote').value = found.custNote || '';
-      document.getElementById('inInc').value = found.inc || 0;
+      document.getElementById('inInc').value = found.baseInc !== undefined ? found.baseInc : (found.inc || 0);
+      document.getElementById('inExtraCharge').value = found.extraCharge || 0;
       document.getElementById('inExp').value = found.exp || 0;
       document.getElementById('inPaid').value = found.paid || 0;
       document.getElementById('inSec').value = found.sec || 0;
       document.getElementById('inKmStart').value = found.kmStart || 0;
       document.getElementById('inKmEnd').value = found.kmEnd || 0;
+      document.getElementById('inSecType').value = found.secType || 'Cash';
       document.getElementById('inSecStatus').value = found.secStatus || 'Hold';
+      document.getElementById('inSecVehicle').value = (found.secVehicle || '').toUpperCase();
+      document.getElementById('chkKey').checked = !!found.chkKey;
+      document.getElementById('chkRc').checked = !!found.chkRc;
+      document.getElementById('chkHelmet').checked = !!found.chkHelmet;
       document.getElementById('inVehStatus').value = '';
       document.getElementById('inNote').value = found.note || '';
+      updateLiveProfitPreview();
       document.getElementById('boxTrip').classList.add('open');
     }
 
-    function openVehBox() {
+    function quickReturnTrip(id) {
+      var found = null;
+      for (var i = 0; i < data.trips.length; i++) {
+        if (data.trips[i].id === id) { found = data.trips[i]; break; }
+      }
+      if (!found) return;
+      var endKmInput = prompt('Wapsi End KM likhein (Start KM: ' + (found.kmStart || 0) + '):', found.kmEnd || found.kmStart || '');
+      if (endKmInput === null) return;
+      var endKm = Number(endKmInput) || 0;
+      if (endKm > 0) {
+        found.kmEnd = endKm;
+        if ((found.kmStart || 0) > 0 && endKm > found.kmStart) {
+          found.kmRun = endKm - found.kmStart;
+        }
+      }
+      found.returnDt = nowLocalStr(0);
+      found.returnDate = todayStr();
+      if ((found.sec || 0) > 0 || found.secVehicle) {
+        if (confirm('Security (Cash/Bike/Gaadi) wapas kar di? OK dabane par "Returned" mark hoga.')) {
+          found.secStatus = 'Returned';
+        }
+      }
+      if (found.veh && found.veh !== 'GENERAL') {
+        for (var v = 0; v < data.vehicles.length; v++) {
+          if ((data.vehicles[v].no || '').toUpperCase() === found.veh.toUpperCase()) {
+            data.vehicles[v].st = 'Available';
+            break;
+          }
+        }
+      }
+      save();
+    }
+
+    function openVehBox(editId) {
       closeDrawers();
+      if (editId) {
+        var found = null;
+        for (var i = 0; i < data.vehicles.length; i++) {
+          if (data.vehicles[i].id === editId) { found = data.vehicles[i]; break; }
+        }
+        if (found) {
+          document.getElementById('editVehId').value = found.id;
+          document.getElementById('vehDrawerTitle').textContent = '✏️ Gaadi & Documents Edit';
+          document.getElementById('vOwnerType').value = found.ownerType || 'own';
+          toggleFriendFields();
+          document.getElementById('vNo').value = (found.no || '').toUpperCase();
+          document.getElementById('vMod').value = found.mod || '';
+          document.getElementById('vCat').value = found.cat || 'SUV';
+          document.getElementById('vRate').value = found.rate || 0;
+          document.getElementById('vSt').value = found.st || 'Available';
+          document.getElementById('vFriendName').value = found.friendName || '';
+          document.getElementById('vFriendRate').value = found.friendRate || 0;
+          document.getElementById('vRcExp').value = found.rcExp || '';
+          document.getElementById('vInsExp').value = found.insExp || '';
+          document.getElementById('vPucExp').value = found.pucExp || '';
+          document.getElementById('vPermExp').value = found.permExp || '';
+          document.getElementById('vDetail').value = found.detail || '';
+          document.getElementById('boxVeh').classList.add('open');
+          return;
+        }
+      }
+      document.getElementById('editVehId').value = '';
+      document.getElementById('vehDrawerTitle').textContent = '🚗 Nayi Gaadi (Apni / Dost Ki)';
+      document.getElementById('vOwnerType').value = 'own';
+      toggleFriendFields();
+      ['vNo', 'vMod', 'vRate', 'vFriendName', 'vFriendRate', 'vRcExp', 'vInsExp', 'vPucExp', 'vPermExp', 'vDetail'].forEach(function(id) {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('vCat').value = 'SUV';
+      document.getElementById('vSt').value = 'Available';
       document.getElementById('boxVeh').classList.add('open');
     }
 
     function openPayBox() {
       closeDrawers();
       document.getElementById('boxPay').classList.add('open');
+    }
+
+    function openFriendPayBox(prefillName) {
+      closeDrawers();
+      document.getElementById('fpName').value = prefillName || '';
+      document.getElementById('fpAmt').value = '';
+      document.getElementById('fpDate').value = todayStr();
+      document.getElementById('fpNote').value = '';
+      document.getElementById('boxFriendPay').classList.add('open');
     }
 
     function goPage(name) {
@@ -639,19 +1144,45 @@
       document.getElementById('tab-' + name).classList.add('active');
     }
 
-    function addVeh() {
+    function saveVeh() {
+      var editId = Number(document.getElementById('editVehId').value) || 0;
+      var ownerType = document.getElementById('vOwnerType').value || 'own';
       var no = document.getElementById('vNo').value.trim().toUpperCase();
       var mod = document.getElementById('vMod').value.trim() || 'Car';
+      var cat = document.getElementById('vCat').value || 'SUV';
       var rate = Number(document.getElementById('vRate').value) || 0;
       var st = document.getElementById('vSt').value;
+      var friendName = ownerType === 'friend' ? (document.getElementById('vFriendName').value.trim() || 'Dost Partner') : '';
+      var friendRate = ownerType === 'friend' ? (Number(document.getElementById('vFriendRate').value) || 0) : 0;
+      var rcExp = document.getElementById('vRcExp').value || '';
+      var insExp = document.getElementById('vInsExp').value || '';
+      var pucExp = document.getElementById('vPucExp').value || '';
+      var permExp = document.getElementById('vPermExp').value || '';
       var detail = document.getElementById('vDetail').value.trim();
+
       if (!no) return alert('Gaadi number likhein');
 
-      var exists = data.vehicles.some(function(item) { return item.no === no; });
-      if (exists) return alert('Yeh gaadi number pehle se list mein hai');
+      if (!editId) {
+        var exists = data.vehicles.some(function(item) { return (item.no || '').toUpperCase() === no; });
+        if (exists) return alert('Yeh gaadi number pehle se list mein hai');
+      }
 
-      data.vehicles.push({ id: Date.now(), no: no, mod: mod, rate: rate, st: st, detail: detail });
-      ['vNo', 'vMod', 'vRate', 'vDetail'].forEach(function(id) { document.getElementById(id).value = ''; });
+      var vPayload = {
+        id: editId || Date.now(),
+        ownerType: ownerType, friendName: friendName, friendRate: friendRate,
+        no: no, mod: mod, cat: cat, rate: rate, st: st,
+        rcExp: rcExp, insExp: insExp, pucExp: pucExp, permExp: permExp,
+        detail: detail
+      };
+
+      if (editId) {
+        for (var i = 0; i < data.vehicles.length; i++) {
+          if (data.vehicles[i].id === editId) { data.vehicles[i] = vPayload; break; }
+        }
+      } else {
+        data.vehicles.push(vPayload);
+      }
+
       closeDrawers();
       save();
     }
@@ -670,91 +1201,82 @@
 
     function delVeh(id) {
       if (!confirm('Is gaadi ko list se hatayein?')) return;
+      if (!confirm('Pakka delete karna hai? Gaadi list se hat jayegi.')) return;
       data.vehicles = data.vehicles.filter(function(x) { return x.id !== id; });
       save();
     }
 
     function saveTrip() {
       var editId = Number(document.getElementById('editTripId').value) || 0;
-      var dt = document.getElementById('inDate').value || todayStr();
-      var returnDate = document.getElementById('inReturnDate').value || '';
-      var veh = document.getElementById('inVeh').value || 'General';
+      var startDt = document.getElementById('inStartDt').value || nowLocalStr(0);
+      var returnDt = document.getElementById('inReturnDt').value || '';
+      var dt = startDt.slice(0, 10) || todayStr();
+      var returnDate = returnDt ? returnDt.slice(0, 10) : '';
+      var veh = (document.getElementById('inVeh').value || 'GENERAL').toUpperCase();
+      var vInfo = findVehicleInfo(veh);
+
+      var days = Math.max(0, Number(document.getElementById('inDays').value) || 1);
+      var custRate = Number(document.getElementById('inCustRate').value) || 0;
+      var friendRate = Number(document.getElementById('inFriendRate').value) || 0;
+      var friendShare = Math.round(days * friendRate);
+
+      var baseInc = Number(document.getElementById('inInc').value) || 0;
+      var extraCharge = Number(document.getElementById('inExtraCharge').value) || 0;
+      var inc = baseInc + extraCharge;
+      var exp = Number(document.getElementById('inExp').value) || 0;
+      var paid = Number(document.getElementById('inPaid').value) || 0;
+
       var custName = document.getElementById('inCustName').value.trim() || 'Walk-in Customer';
       var custVillage = document.getElementById('inCustVillage').value.trim();
       var custPhone = document.getElementById('inCustPhone').value.trim();
+      var custTag = document.getElementById('inCustTag').value || 'Normal';
       var custNote = document.getElementById('inCustNote').value.trim();
-      var inc = Number(document.getElementById('inInc').value) || 0;
-      var exp = Number(document.getElementById('inExp').value) || 0;
-      var paid = Number(document.getElementById('inPaid').value) || 0;
+
       var sec = Number(document.getElementById('inSec').value) || 0;
       var kmStart = Number(document.getElementById('inKmStart').value) || 0;
       var kmEnd = Number(document.getElementById('inKmEnd').value) || 0;
       var kmRun = (kmEnd > kmStart && kmStart > 0) ? (kmEnd - kmStart) : 0;
+      var secType = document.getElementById('inSecType').value || 'Cash';
       var secStatus = document.getElementById('inSecStatus').value || 'Hold';
+      var secVehicle = document.getElementById('inSecVehicle').value.trim().toUpperCase();
+      var chkKey = document.getElementById('chkKey').checked;
+      var chkRc = document.getElementById('chkRc').checked;
+      var chkHelmet = document.getElementById('chkHelmet').checked;
       var note = document.getElementById('inNote').value.trim();
       var newSt = document.getElementById('inVehStatus').value;
 
       var payload = {
         id: editId || Date.now(),
-        dt: dt, returnDate: returnDate, veh: veh,
-        custName: custName, custVillage: custVillage, custPhone: custPhone, custNote: custNote,
-        inc: inc, exp: exp, paid: paid, sec: sec, secStatus: secStatus,
+        dt: dt, returnDate: returnDate,
+        startDt: startDt, returnDt: returnDt,
+        veh: veh,
+        ownerType: vInfo ? (vInfo.ownerType || 'own') : (friendShare > 0 ? 'friend' : 'own'),
+        friendName: vInfo ? (vInfo.friendName || '') : (friendShare > 0 ? 'Dost Partner' : ''),
+        days: days, custRate: custRate, friendRate: friendRate, friendShare: friendShare,
+        custName: custName, custVillage: custVillage, custPhone: custPhone, custTag: custTag, custNote: custNote,
+        baseInc: baseInc, extraCharge: extraCharge, inc: inc, exp: exp, paid: paid,
+        sec: sec, secType: secType, secStatus: secStatus, secVehicle: secVehicle,
+        chkKey: chkKey, chkRc: chkRc, chkHelmet: chkHelmet,
         kmStart: kmStart, kmEnd: kmEnd, kmRun: kmRun,
         note: note
       };
 
       if (editId) {
         for (var k = 0; k < data.trips.length; k++) {
-          if (data.trips[k].id === editId) {
-            data.trips[k] = payload;
-            break;
-          }
+          if (data.trips[k].id === editId) { data.trips[k] = payload; break; }
         }
       } else {
         data.trips.unshift(payload);
       }
 
-      if (newSt && veh !== 'General') {
+      if (newSt && veh !== 'GENERAL') {
         for (var i = 0; i < data.vehicles.length; i++) {
-          if (data.vehicles[i].no === veh) {
-            data.vehicles[i].st = newSt;
-            break;
-          }
+          if ((data.vehicles[i].no || '').toUpperCase() === veh) { data.vehicles[i].st = newSt; break; }
         }
       }
 
       closeDrawers();
       save();
-    }
-
-    function shareBookingSlipWA(tripId) {
-      var tr = null;
-      for (var i = 0; i < data.trips.length; i++) {
-        if (data.trips[i].id === tripId) { tr = data.trips[i]; break; }
-      }
-      if (!tr) return;
-      var vInfo = findVehicleInfo(tr.veh);
-      var vLabel = tr.veh + (vInfo && vInfo.mod ? ' (' + vInfo.mod + ')' : '');
-      var due = Math.max(0, (tr.inc || 0) - (tr.paid || 0));
-      var cleanPhone = (tr.custPhone || '').replace(/[^0-9]/g, '');
-      if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
-
-      var msg = '*🧾 Mor self drive — Booking Slip*\n' +
-                '━━━━━━━━━━━━━━━\n' +
-                '🚗 Gaadi: ' + vLabel + '\n' +
-                '👤 Customer: ' + tr.custName + (tr.custVillage ? ' (' + tr.custVillage + ')' : '') + '\n' +
-                '📅 Booking Date: ' + tr.dt + (tr.returnDate ? '\n🔙 Return Date: ' + tr.returnDate : '') + '\n' +
-                (tr.kmStart ? '🛣️ Start KM: ' + tr.kmStart : '') + (tr.kmEnd ? ' | End KM: ' + tr.kmEnd : '') + (tr.kmRun ? ' (' + tr.kmRun + ' KM)' : '') + '\n' +
-                '💰 Total Rent: ₹' + (tr.inc || 0) + '\n' +
-                '💵 Jama / Advance: ₹' + (tr.paid || 0) + '\n' +
-                (due > 0 ? '⚠️ Baaki Rashi: ₹' + due + '\n' : '✅ Rent Clear\n') +
-                (tr.sec ? '🛡️ Security Deposit: ₹' + tr.sec + ' (' + (tr.secStatus || 'Hold') + ')\n' : '') +
-                (tr.note ? '📝 Note: ' + tr.note : '');
-
-      var link = cleanPhone
-        ? 'https://wa.me/' + cleanPhone + '?text=' + encodeURIComponent(msg)
-        : 'https://wa.me/?text=' + encodeURIComponent(msg);
-      window.open(link, '_blank');
     }
 
     function addPayment() {
@@ -768,22 +1290,36 @@
       save();
     }
 
+    function addFriendPayment() {
+      var name = document.getElementById('fpName').value.trim();
+      var amt = Number(document.getElementById('fpAmt').value) || 0;
+      var dt = document.getElementById('fpDate').value || todayStr();
+      var note = document.getElementById('fpNote').value.trim();
+      if (!name || amt <= 0) return alert('Dost ka naam aur sahi rashi likhein');
+      data.friendPayments.unshift({ id: Date.now(), name: name, amt: amt, dt: dt, note: note });
+      closeDrawers();
+      save();
+    }
+
     function delTrip(id) {
-      if (!confirm('Is entry ko delete karein?')) return;
+      if (!confirm('Is booking entry ko delete karein?')) return;
+      if (!confirm('Pakka delete karna hai? Data wapas nahi aayega.')) return;
       data.trips = data.trips.filter(function(x) { return x.id !== id; });
       save();
     }
 
     function findVehicleInfo(vehNo) {
+      var target = (vehNo || '').toUpperCase();
       for (var i = 0; i < data.vehicles.length; i++) {
-        if (data.vehicles[i].no === vehNo) return data.vehicles[i];
+        if ((data.vehicles[i].no || '').toUpperCase() === target) return data.vehicles[i];
       }
       return null;
     }
 
     function findLatestTripForVehicle(vehNo) {
+      var target = (vehNo || '').toUpperCase();
       for (var i = 0; i < data.trips.length; i++) {
-        if (data.trips[i].veh === vehNo) return data.trips[i];
+        if ((data.trips[i].veh || '').toUpperCase() === target) return data.trips[i];
       }
       return null;
     }
@@ -792,14 +1328,16 @@
       var onTrip = [], avail = [], maint = [];
       for (var i = 0; i < data.vehicles.length; i++) {
         var v = data.vehicles[i];
-        var label = v.no + (v.mod ? ' (' + v.mod + ')' : '');
+        var vNoUp = (v.no || '').toUpperCase();
+        var oTag = v.ownerType === 'friend' ? 'Dost: ' + (v.friendName || 'Partner') : 'Apni';
+        var label = vNoUp + ' (' + v.mod + ' • ' + oTag + ')';
         if (v.st === 'On Trip') {
-          var tr = findLatestTripForVehicle(v.no);
+          var tr = findLatestTripForVehicle(vNoUp);
           var extra = [];
           if (tr && tr.custName) extra.push(tr.custName);
           if (tr && tr.custVillage) extra.push('Gaon: ' + tr.custVillage);
-          if (tr && tr.returnDate) extra.push('Return: ' + tr.returnDate);
-          if (tr && tr.note) extra.push(tr.note);
+          if (tr && tr.returnDt) extra.push('Return: ' + formatDtReadable(tr.returnDt));
+          if (tr && tr.secVehicle) extra.push('Sec: ' + tr.secVehicle.toUpperCase());
           onTrip.push(label + (extra.length ? ' — ' + extra.join(' | ') : ''));
         } else if (v.st === 'Maintenance') {
           maint.push(label);
@@ -810,9 +1348,53 @@
       return { onTrip: onTrip, avail: avail, maint: maint };
     }
 
+    function shareBookingSlipWA(tripId) {
+      var tr = null;
+      for (var i = 0; i < data.trips.length; i++) {
+        if (data.trips[i].id === tripId) { tr = data.trips[i]; break; }
+      }
+      if (!tr) return;
+      var vInfo = findVehicleInfo(tr.veh);
+      var vLabel = (tr.veh || '').toUpperCase() + (vInfo && vInfo.mod ? ' (' + vInfo.mod + ')' : '');
+      var due = Math.max(0, (tr.inc || 0) - (tr.paid || 0));
+      var cleanPhone = (tr.custPhone || '').replace(/[^0-9]/g, '');
+      if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
+
+      var items = [];
+      if (tr.chkKey) items.push('Key');
+      if (tr.chkRc) items.push('RC');
+      if (tr.chkHelmet) items.push('Helmet/Extra');
+
+      var secLine = '';
+      if ((tr.sec || 0) > 0 || tr.secVehicle || items.length) {
+        secLine = '🛡️ Security: ' + (tr.secType || 'Cash') + (tr.sec ? ' ₹' + tr.sec : '') +
+                  (tr.secVehicle ? ' (' + tr.secVehicle.toUpperCase() + ')' : '') +
+                  (items.length ? ' [' + items.join(', ') + ']' : '') +
+                  ' — ' + (tr.secStatus || 'Hold') + '\n';
+      }
+
+      var msg = '*🧾 Mor self drive — Booking Slip*\n' +
+                '━━━━━━━━━━━━━━━\n' +
+                '🚗 Gaadi: ' + vLabel + '\n' +
+                '👤 Customer: ' + tr.custName + (tr.custVillage ? ' (' + tr.custVillage + ')' : '') + '\n' +
+                '🕒 Gayi: ' + formatDtReadable(tr.startDt || tr.dt) +
+                (tr.returnDt ? '\n🔙 Wapsi Time: ' + formatDtReadable(tr.returnDt) : '') + '\n' +
+                (tr.kmStart ? '🛣️ Start KM: ' + tr.kmStart : '') + (tr.kmEnd ? ' | End KM: ' + tr.kmEnd : '') + (tr.kmRun ? ' (' + tr.kmRun + ' KM)' : '') + '\n' +
+                '💰 Total Rent: ₹' + (tr.inc || 0) + '\n' +
+                '💵 Jama / Advance: ₹' + (tr.paid || 0) + '\n' +
+                (due > 0 ? '⚠️ Baaki Rashi: ₹' + due + '\n' : '✅ Rent Clear\n') +
+                secLine +
+                (tr.note ? '📝 Note: ' + tr.note : '');
+
+      var link = cleanPhone
+        ? 'https://wa.me/' + cleanPhone + '?text=' + encodeURIComponent(msg)
+        : 'https://wa.me/?text=' + encodeURIComponent(msg);
+      window.open(link, '_blank');
+    }
+
     function shareWhatsAppDaily() {
       var td = todayStr();
-      var tInc = 0, tExp = 0, tPaid = 0, tSec = 0, count = 0;
+      var tInc = 0, tExp = 0, tPaid = 0, tFriend = 0, count = 0;
       var lines = [];
 
       for (var i = 0; i < data.trips.length; i++) {
@@ -822,58 +1404,33 @@
           tInc += x.inc;
           tExp += x.exp;
           tPaid += x.paid;
-          tSec += (x.sec || 0);
+          tFriend += (x.friendShare || 0);
           var vInfo = findVehicleInfo(x.veh);
-          var vLabel = x.veh + (vInfo && vInfo.mod ? ' (' + vInfo.mod + ')' : '');
+          var vNoUp = (x.veh || '').toUpperCase();
+          var vLabel = vNoUp + (vInfo && vInfo.mod ? ' (' + vInfo.mod + ')' : '');
           var cLabel = x.custName + (x.custVillage ? ' [' + x.custVillage + ']' : '');
-          var kmPart = x.kmRun ? ' • ' + x.kmRun + ' KM' : '';
-          lines.push('• ' + vLabel + ' | ' + cLabel + ': Rent ₹' + x.inc + ', Kharcha ₹' + x.exp + kmPart);
+          var fPart = (x.friendShare > 0) ? ' | Dost: ₹' + x.friendShare : '';
+          lines.push('• ' + vLabel + ' | ' + cLabel + ': Rent ₹' + x.inc + fPart + ', Kharcha ₹' + x.exp);
         }
       }
 
       var fl = getFleetGroups();
-      var onTripText = fl.onTrip.length
-        ? '\n  - ' + fl.onTrip.join('\n  - ')
-        : ' Koi nahi';
+      var onTripText = fl.onTrip.length ? '\n  - ' + fl.onTrip.join('\n  - ') : ' Koi nahi';
 
       var msg = '*🚗 Mor self drive — Daily Hisab (' + td + ')*\n' +
                 '━━━━━━━━━━━━━━━\n' +
                 '📊 Entries: ' + count + '\n' +
                 '💰 Aaj Ki Kamai: ₹' + tInc + '\n' +
                 '💸 Aaj Ka Kharcha: ₹' + tExp + '\n' +
-                '✅ Net Bachat: ₹' + (tInc - tExp) + '\n' +
-                '💵 Jama Mila: ₹' + tPaid + (tSec > 0 ? '\n🛡️ Security: ₹' + tSec : '') + '\n' +
+                '🤝 Dost Gaadi Hisab: ₹' + tFriend + '\n' +
+                '✅ Apni Net Bachat: ₹' + (tInc - tExp - tFriend) + '\n' +
+                '💵 Jama Mila: ₹' + tPaid + '\n' +
                 '━━━━━━━━━━━━━━━\n' +
                 '*🚙 On Trip (Gayi Hui Gaadiyan):*' + onTripText + '\n' +
-                '*🟢 Available (Khali):* ' + (fl.avail.length ? fl.avail.join(', ') : 'Koi nahi') + '\n' +
+                '*🟢 Available:* ' + (fl.avail.length ? fl.avail.join(', ') : 'Koi nahi') + '\n' +
                 '*🔴 Maintenance:* ' + (fl.maint.length ? fl.maint.join(', ') : 'Koi nahi') +
                 (data.shiftNote ? '\n📌 *Shift Note:* ' + data.shiftNote : '') +
                 (lines.length ? '\n\n*📝 Aaj Ki Bookings:*\n' + lines.join('\n') : '');
-
-      window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
-    }
-
-    function shareWhatsAppMonthly() {
-      var ym = monthStr();
-      var mInc = 0, mExp = 0, mPaid = 0, mKm = 0, count = 0;
-      for (var i = 0; i < data.trips.length; i++) {
-        var x = data.trips[i];
-        if ((x.dt || '').slice(0, 7) === ym) {
-          count++;
-          mInc += x.inc;
-          mExp += x.exp;
-          mPaid += x.paid;
-          mKm += (x.kmRun || 0);
-        }
-      }
-      var msg = '*📅 Mor self drive — Monthly Hisab (' + ym + ')*\n' +
-                '━━━━━━━━━━━━━━━\n' +
-                'Total Bookings: ' + count + '\n' +
-                'Mahine Ki Kamai: ₹' + mInc + '\n' +
-                'Mahine Ka Kharcha: ₹' + mExp + '\n' +
-                'Net Bachat: ₹' + (mInc - mExp) + '\n' +
-                'Total Jama Mila: ₹' + mPaid + '\n' +
-                'Total Chali KM: ' + mKm + ' KM';
 
       window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
     }
@@ -889,9 +1446,63 @@
       window.open(link, '_blank');
     }
 
+    function generatePDFReport(mode) {
+      var td = todayStr();
+      var ym = monthStr();
+      var isDaily = (mode === 'daily');
+      var title = isDaily ? ('Daily Hisab Report — ' + td) : ('Monthly Hisab Report — ' + ym);
+
+      var rInc = 0, rExp = 0, rPaid = 0, rFriend = 0, rOwnNet = 0, rFriendNet = 0;
+      var rowsHtml = '';
+
+      for (var i = 0; i < data.trips.length; i++) {
+        var x = data.trips[i];
+        var match = isDaily ? (x.dt === td) : ((x.dt || '').slice(0, 7) === ym);
+        if (!match) continue;
+        var fSh = x.friendShare || 0;
+        var net = x.inc - x.exp - fSh;
+        rInc += x.inc;
+        rExp += x.exp;
+        rPaid += x.paid;
+        rFriend += fSh;
+        if (x.ownerType === 'friend' || fSh > 0) rFriendNet += net;
+        else rOwnNet += net;
+
+        rowsHtml += '<tr>' +
+          '<td>' + x.dt + '</td>' +
+          '<td><b>' + (x.veh || '').toUpperCase() + '</b><br><small>' + (x.ownerType === 'friend' ? 'Dost: ' + (x.friendName || '') : 'Apni') + '</small></td>' +
+          '<td>' + x.custName + (x.custVillage ? ' (' + x.custVillage + ')' : '') + '</td>' +
+          '<td>₹' + x.inc + '</td>' +
+          '<td>₹' + fSh + '</td>' +
+          '<td>₹' + x.exp + '</td>' +
+          '<td><b>₹' + net + '</b></td>' +
+        '</tr>';
+      }
+
+      var ps = document.getElementById('printSheet');
+      ps.innerHTML =
+        '<h2>🚗 Mor self drive — ' + title + '</h2>' +
+        '<p style="margin:6px 0 12px;">' +
+          '<b>Total Kamai:</b> ₹' + rInc + ' | ' +
+          '<b>Total Kharcha:</b> ₹' + rExp + ' | ' +
+          '<b>Dost Hisab:</b> ₹' + rFriend + ' | ' +
+          '<b>Apni Gaadi Bachat:</b> ₹' + rOwnNet + ' | ' +
+          '<b>Dost Gaadi Bachat:</b> ₹' + rFriendNet + ' | ' +
+          '<b>Total Net Bachat:</b> ₹' + (rInc - rExp - rFriend) +
+        '</p>' +
+        '<table>' +
+          '<thead><tr><th>Date</th><th>Gaadi</th><th>Customer / Gaon</th><th>Rent</th><th>Dost Hisab</th><th>Kharcha</th><th>Bachat</th></tr></thead>' +
+          '<tbody>' + (rowsHtml || '<tr><td colspan="7">Is samay ki koi entry nahi hai.</td></tr>') + '</tbody>' +
+        '</table>';
+
+      window.print();
+    }
+
     function resetData() {
-      if (!confirm('Saara data delete karke zero se shuru karein?')) return;
-      data = { vehicles: [], trips: [], payments: [], shiftNote: '' };
+      if (!confirm('Kya aap sach mein saara data reset karna chahte hain?')) return;
+      var code = prompt('Confirm karne ke liye DELETE likhein:');
+      if (code !== 'DELETE') return alert('Reset cancel kar diya gaya. Data safe hai.');
+      data = { vehicles: [], trips: [], payments: [], friendPayments: [], shiftNote: '' };
       closeDrawers();
       save();
     }
@@ -905,10 +1516,18 @@
     }
 
     function exportCSV() {
-      var rows = [['Date', 'ReturnDate', 'Vehicle', 'Customer', 'Village', 'Phone', 'Rent', 'Expense', 'Paid', 'Security', 'SecStatus', 'KM', 'Note']];
+      var rows = [['Date', 'StartTime', 'ReturnTime', 'Vehicle', 'OwnerType', 'FriendName', 'Days', 'Customer', 'Village', 'Phone', 'Rent', 'FriendShare', 'Expense', 'MyProfit', 'Paid', 'SecurityAmt', 'SecType', 'SecVehicle', 'SecStatus', 'KM', 'Note']];
       for (var i = 0; i < data.trips.length; i++) {
         var t = data.trips[i];
-        rows.push([t.dt, t.returnDate || '', t.veh, t.custName, t.custVillage || '', t.custPhone || '', t.inc, t.exp, t.paid, t.sec || 0, t.secStatus || 'Hold', t.kmRun || 0, t.note || '']);
+        var fSh = t.friendShare || 0;
+        rows.push([
+          t.dt, t.startDt || '', t.returnDt || '', (t.veh || '').toUpperCase(),
+          t.ownerType || 'own', t.friendName || '', t.days || 1,
+          t.custName, t.custVillage || '', t.custPhone || '',
+          t.inc, fSh, t.exp, (t.inc - t.exp - fSh), t.paid,
+          t.sec || 0, t.secType || 'Cash', (t.secVehicle || '').toUpperCase(),
+          t.secStatus || 'Hold', t.kmRun || 0, t.note || ''
+        ]);
       }
       var csv = rows.map(function(r) { return r.join(','); }).join('\n');
       var blob = new Blob([csv], { type: 'text/csv' });
@@ -929,6 +1548,7 @@
             vehicles: p.vehicles || [],
             trips: p.trips || [],
             payments: p.payments || [],
+            friendPayments: p.friendPayments || [],
             shiftNote: p.shiftNote || ''
           };
           closeDrawers();
@@ -941,41 +1561,90 @@
       r.readAsText(f);
     }
 
+    function docBadgeHtml(label, dateVal) {
+      if (!dateVal) return '<span class="badge b-cat">' + label + ': N/A</span>';
+      var d = daysUntil(dateVal);
+      if (d < 0) return '<span class="badge b-late">' + label + ' Expired (' + dateVal + ')</span>';
+      if (d <= 7) return '<span class="badge b-late">' + label + ' ' + d + 'd mein (' + dateVal + ')</span>';
+      if (d <= 30) return '<span class="badge b-doc-warn">' + label + ' ' + d + 'd mein (' + dateVal + ')</span>';
+      return '<span class="badge b-doc-ok">' + label + ': ' + dateVal + '</span>';
+    }
+
     function render() {
       var td = todayStr();
       document.getElementById('lblToday').textContent = td;
       renderShiftNote();
 
-      var tInc = 0, tExp = 0, tPaid = 0;
+      var tInc = 0, tExp = 0, tPaid = 0, tFriend = 0;
       var inc = 0, exp = 0, paid = 0, allKm = 0;
+      var ownNet = 0, friendNet = 0, totalFriendShare = 0, secHoldCount = 0;
       var custMap = {};
       var vehStats = {};
+      var friendMap = {};
       var dueToday = [], overdueList = [];
+
+      // Seed friendMap from vehicles
+      for (var fv = 0; fv < data.vehicles.length; fv++) {
+        var vItem = data.vehicles[fv];
+        if (vItem.ownerType === 'friend') {
+          var fn = vItem.friendName || 'Dost Partner';
+          var fk = fn.toLowerCase();
+          if (!friendMap[fk]) friendMap[fk] = { name: fn, vehicles: [], trips: 0, days: 0, custRent: 0, friendPayable: 0, paidToFriend: 0, myMargin: 0 };
+          friendMap[fk].vehicles.push((vItem.no || '').toUpperCase() + ' (₹' + (vItem.friendRate || 0) + '/d)');
+        }
+      }
 
       for (var i = 0; i < data.trips.length; i++) {
         var x = data.trips[i];
+        var vNoUp = (x.veh || 'GENERAL').toUpperCase();
+        var fSh = x.friendShare || 0;
+        var netProfit = x.inc - x.exp - fSh;
+
         inc += x.inc;
         exp += x.exp;
         paid += x.paid;
         allKm += (x.kmRun || 0);
+        totalFriendShare += fSh;
+
+        if ((x.secStatus || 'Hold') === 'Hold' && ((x.sec || 0) > 0 || x.secVehicle)) {
+          secHoldCount++;
+        }
+
+        if (x.ownerType === 'friend' || fSh > 0) {
+          friendNet += netProfit;
+          var fName = x.friendName || 'Dost Partner';
+          var fKey = fName.toLowerCase();
+          if (!friendMap[fKey]) friendMap[fKey] = { name: fName, vehicles: [], trips: 0, days: 0, custRent: 0, friendPayable: 0, paidToFriend: 0, myMargin: 0 };
+          friendMap[fKey].trips += 1;
+          friendMap[fKey].days += (x.days || 1);
+          friendMap[fKey].custRent += x.inc;
+          friendMap[fKey].friendPayable += fSh;
+          friendMap[fKey].myMargin += netProfit;
+        } else {
+          ownNet += netProfit;
+        }
 
         if (x.dt === td) {
           tInc += x.inc;
           tExp += x.exp;
           tPaid += x.paid;
+          tFriend += fSh;
         }
 
-        var vInfoCheck = findVehicleInfo(x.veh);
-        if (vInfoCheck && vInfoCheck.st === 'On Trip' && x.returnDate) {
-          if (x.returnDate < td) overdueList.push(x.veh + ' (' + x.custName + ')');
-          else if (x.returnDate === td) dueToday.push(x.veh + ' (' + x.custName + ')');
+        var vInfoCheck = findVehicleInfo(vNoUp);
+        var rDate = (x.returnDt ? x.returnDt.slice(0, 10) : x.returnDate);
+        if (vInfoCheck && vInfoCheck.st === 'On Trip' && rDate) {
+          if (rDate < td) overdueList.push(vNoUp + ' (' + x.custName + ')');
+          else if (rDate === td) dueToday.push(vNoUp + ' (' + x.custName + ')');
         }
 
-        if (!vehStats[x.veh]) vehStats[x.veh] = { inc: 0, exp: 0, trips: 0, km: 0 };
-        vehStats[x.veh].inc += x.inc;
-        vehStats[x.veh].exp += x.exp;
-        vehStats[x.veh].trips += 1;
-        vehStats[x.veh].km += (x.kmRun || 0);
+        if (!vehStats[vNoUp]) vehStats[vNoUp] = { inc: 0, exp: 0, friendShare: 0, net: 0, trips: 0, km: 0 };
+        vehStats[vNoUp].inc += x.inc;
+        vehStats[vNoUp].exp += x.exp;
+        vehStats[vNoUp].friendShare += fSh;
+        vehStats[vNoUp].net += netProfit;
+        vehStats[vNoUp].trips += 1;
+        vehStats[vNoUp].km += (x.kmRun || 0);
 
         var key = (x.custName || 'Customer').toLowerCase();
         if (!custMap[key]) {
@@ -983,22 +1652,55 @@
             name: x.custName,
             village: x.custVillage || '',
             phone: x.custPhone || '',
+            tag: x.custTag || 'Normal',
             note: x.custNote || '',
+            tripsCount: 0,
             bill: 0,
             paid: 0
           };
         }
         if (x.custVillage) custMap[key].village = x.custVillage;
         if (x.custPhone) custMap[key].phone = x.custPhone;
+        if (x.custTag && x.custTag !== 'Normal') custMap[key].tag = x.custTag;
         if (x.custNote) custMap[key].note = x.custNote;
+        custMap[key].tripsCount += 1;
         custMap[key].bill += x.inc;
         custMap[key].paid += x.paid;
       }
 
-      var alertBox = document.getElementById('returnAlertBanner');
+      var totalPaidToFriends = 0;
+      for (var fp = 0; fp < data.friendPayments.length; fp++) {
+        var fpItem = data.friendPayments[fp];
+        totalPaidToFriends += fpItem.amt;
+        var fk2 = fpItem.name.toLowerCase();
+        if (!friendMap[fk2]) friendMap[fk2] = { name: fpItem.name, vehicles: [], trips: 0, days: 0, custRent: 0, friendPayable: 0, paidToFriend: 0, myMargin: 0 };
+        friendMap[fk2].paidToFriend += fpItem.amt;
+      }
+
+      var docAlerts = [];
+      for (var dv = 0; dv < data.vehicles.length; dv++) {
+        var vDoc = data.vehicles[dv];
+        var vDocNo = (vDoc.no || '').toUpperCase();
+        var checks = [
+          { n: 'RC', dt: vDoc.rcExp },
+          { n: 'Insurance', dt: vDoc.insExp },
+          { n: 'PUC', dt: vDoc.pucExp },
+          { n: 'Permit', dt: vDoc.permExp }
+        ];
+        for (var c = 0; c < checks.length; c++) {
+          if (checks[c].dt) {
+            var left = daysUntil(checks[c].dt);
+            if (left < 0) docAlerts.push(vDocNo + ' ' + checks[c].n + ' EXPIRED');
+            else if (left <= 30) docAlerts.push(vDocNo + ' ' + checks[c].n + ' (' + left + 'd)');
+          }
+        }
+      }
+
+      var alertBox = document.getElementById('alertBanner');
       var alertParts = [];
       if (overdueList.length) alertParts.push('🚨 <b>Late Return:</b> ' + overdueList.join(', '));
       if (dueToday.length) alertParts.push('⏰ <b>Aaj Return Due:</b> ' + dueToday.join(', '));
+      if (docAlerts.length) alertParts.push('📄 <b>Document Alert:</b> ' + docAlerts.join(' • '));
       if (alertParts.length) {
         alertBox.innerHTML = alertParts.join('<br>');
         alertBox.classList.add('show');
@@ -1012,31 +1714,34 @@
         extraPaid += pm.amt;
         var pKey = pm.cust.toLowerCase();
         if (!custMap[pKey]) {
-          custMap[pKey] = { name: pm.cust, village: '', phone: '', note: '', bill: 0, paid: 0 };
+          custMap[pKey] = { name: pm.cust, village: '', phone: '', tag: 'Normal', note: '', tripsCount: 0, bill: 0, paid: 0 };
         }
         custMap[pKey].paid += pm.amt;
       }
 
       document.getElementById('sTodayInc').textContent = tInc;
       document.getElementById('sTodayExp').textContent = tExp;
+      document.getElementById('sTodayFriend').textContent = tFriend;
       document.getElementById('sTodayPaid').textContent = tPaid;
-      document.getElementById('sTodayProf').textContent = (tInc - tExp);
+      document.getElementById('sTodayProf').textContent = (tInc - tExp - tFriend);
+
+      document.getElementById('sOwnProfit').textContent = ownNet;
+      document.getElementById('sFriendMargin').textContent = friendNet;
+      document.getElementById('sFriendDue').textContent = Math.max(0, totalFriendShare - totalPaidToFriends);
       document.getElementById('sTotInc').textContent = inc;
       document.getElementById('sTotExp').textContent = exp;
-      document.getElementById('sNet').textContent = (inc - exp);
+      document.getElementById('sNet').textContent = (inc - exp - totalFriendShare);
       document.getElementById('sDue').textContent = Math.max(0, inc - (paid + extraPaid));
+      document.getElementById('sSecHoldCount').textContent = secHoldCount;
       document.getElementById('totalKmTxt').textContent = allKm + ' KM';
 
       var bestVeh = '';
       var bestNet = -Infinity;
       var vKeys = Object.keys(vehStats);
       for (var bk = 0; bk < vKeys.length; bk++) {
-        if (vKeys[bk] !== 'General') {
-          var vNet = vehStats[vKeys[bk]].inc - vehStats[vKeys[bk]].exp;
-          if (vNet > bestNet) {
-            bestNet = vNet;
-            bestVeh = vKeys[bk];
-          }
+        if (vKeys[bk] !== 'GENERAL' && vehStats[vKeys[bk]].net > bestNet) {
+          bestNet = vehStats[vKeys[bk]].net;
+          bestVeh = vKeys[bk];
         }
       }
       document.getElementById('topVehicleTxt').textContent = bestVeh ? (bestVeh + ' (Net ₹' + bestNet + ')') : 'Abhi data nahi';
@@ -1052,52 +1757,150 @@
       if (fl.maint.length) prevHtml += '<div><b>Maintenance:</b> ' + fl.maint.join(', ') + '</div>';
       document.getElementById('fleetNumbersPreview').innerHTML = prevHtml || 'Abhi koi gaadi add nahi hai.';
 
+      // Render Vehicles (Owner + Category Filtered)
       var vHtml = '';
-      if (!data.vehicles.length) {
-        vHtml = '<div class="card">Abhi koi gaadi add nahi hai. Upar "+ Gaadi Jodein" dabakar gaadi save karein.</div>';
-      } else {
-        for (var v = 0; v < data.vehicles.length; v++) {
-          var itemV = data.vehicles[v];
-          var stClass = itemV.st === 'Available' ? 'b-avail' : itemV.st === 'On Trip' ? 'b-trip' : 'b-maint';
-          var vs = vehStats[itemV.no] || { inc: 0, exp: 0, trips: 0, km: 0 };
-          var vProfit = vs.inc - vs.exp;
-          var perKm = vs.km > 0 ? ' • Avg: <b>₹' + (vs.inc / vs.km).toFixed(1) + '/KM</b>' : '';
-          vHtml += '<div class="item">' +
-            '<div class="item-top">' +
-              '<div>' +
-                '<b style="font-size:15px;">' + itemV.no + '</b> — ' + itemV.mod +
-                (itemV.rate ? ' <span style="color:var(--green);font-weight:700;">(₹' + itemV.rate + '/day)</span>' : '') +
-                '<br><span class="badge ' + stClass + '">' + itemV.st + '</span>' +
-                (itemV.detail ? '<div class="meta">📄 ' + itemV.detail + '</div>' : '') +
-                '<div class="meta">Trips: <b>' + vs.trips + '</b> • KM: <b>' + vs.km + '</b>' + perKm + '</div>' +
-                '<div class="meta">Kamai: <b style="color:var(--green);">₹' + vs.inc + '</b> • Kharcha: <b style="color:var(--red);">₹' + vs.exp + '</b> • Net: <b style="color:var(--blue);">₹' + vProfit + '</b></div>' +
-              '</div>' +
+      var shownVeh = 0;
+      for (var v = 0; v < data.vehicles.length; v++) {
+        var itemV = data.vehicles[v];
+        var oType = itemV.ownerType || 'own';
+        if (ownerFilter !== 'ALL' && oType !== ownerFilter) continue;
+        if (catFilter !== 'ALL' && (itemV.cat || 'SUV') !== catFilter) continue;
+        shownVeh++;
+        var vNoUp = (itemV.no || '').toUpperCase();
+        var stClass = itemV.st === 'Available' ? 'b-avail' : itemV.st === 'On Trip' ? 'b-trip' : 'b-maint';
+        var ownBadge = oType === 'friend'
+          ? '<span class="badge b-friend">Dost: ' + (itemV.friendName || 'Partner') + ' (₹' + (itemV.friendRate || 0) + '/d)</span>'
+          : '<span class="badge b-own">Apni Gaadi</span>';
+        var vs = vehStats[vNoUp] || { inc: 0, exp: 0, friendShare: 0, net: 0, trips: 0, km: 0 };
+
+        vHtml += '<div class="item">' +
+          '<div class="item-top">' +
+            '<div>' +
+              '<b style="font-size:15px;">' + vNoUp + '</b> — ' + itemV.mod +
+              (itemV.rate ? ' <span style="color:var(--green);font-weight:700;">(Rent ₹' + itemV.rate + '/d)</span>' : '') +
+              '<br>' + ownBadge +
+              '<span class="badge b-cat">' + (itemV.cat || 'SUV') + '</span>' +
+              '<span class="badge ' + stClass + '">' + itemV.st + '</span>' +
+              (itemV.detail ? '<div class="meta">📝 ' + itemV.detail + '</div>' : '') +
+              '<div class="meta">Trips: <b>' + vs.trips + '</b> • KM: <b>' + vs.km + '</b></div>' +
+              '<div class="meta">Kamai: <b style="color:var(--green);">₹' + vs.inc + '</b>' +
+              (oType === 'friend' ? ' • Dost Hisab: <b style="color:#b45309;">₹' + vs.friendShare + '</b>' : '') +
+              ' • Kharcha: <b style="color:var(--red);">₹' + vs.exp + '</b> • Apni Bachat: <b style="color:var(--blue);">₹' + vs.net + '</b></div>' +
+            '</div>' +
+            '<div style="display:flex;gap:5px;">' +
+              '<button class="btn btn-light btn-sm" onclick="openVehBox(' + itemV.id + ')">✏️</button>' +
               '<button class="btn btn-red btn-sm" onclick="delVeh(' + itemV.id + ')">✕</button>' +
             '</div>' +
+          '</div>' +
+          '<div class="row-actions">' +
+            '<button class="btn btn-light btn-sm" onclick="cycleStatus(' + itemV.id + ')">Status Badlein ↻</button>' +
+          '</div>' +
+        '</div>';
+      }
+      if (!shownVeh) {
+        vHtml = '<div class="card">Is filter mein abhi koi gaadi nahi hai.</div>';
+      }
+      document.getElementById('listVeh').innerHTML = vHtml;
+
+      // Render Dost Partner Ledger
+      var fHtml = '';
+      var fDlHtml = '';
+      var fKeys = Object.keys(friendMap);
+      if (!fKeys.length) {
+        fHtml = '<div class="card">Abhi koi Dost Ki Gaadi add nahi hai. "+ Gaadi" mein jaakar "Dost Ki Gaadi" chunein aur per-day rate set karein.</div>';
+      } else {
+        for (var fi = 0; fi < fKeys.length; fi++) {
+          var fr = friendMap[fKeys[fi]];
+          fDlHtml += '<option value="' + fr.name + '">';
+          var fDue = Math.max(0, fr.friendPayable - fr.paidToFriend);
+          fHtml += '<div class="item">' +
+            '<div class="item-top">' +
+              '<div>' +
+                '<b style="font-size:15px;">🤝 ' + fr.name + '</b>' +
+                (fr.vehicles.length ? '<div class="meta">Gaadiyan: <b>' + fr.vehicles.join(', ') + '</b></div>' : '') +
+                '<div class="meta">Total Bookings: <b>' + fr.trips + '</b> (' + fr.days + ' din) • Customer Kamai: <b>₹' + fr.custRent + '</b></div>' +
+                '<div class="meta">Dost Ka Total Hisab: <b>₹' + fr.friendPayable + '</b> • Diya Gaya: <b style="color:var(--green);">₹' + fr.paidToFriend + '</b></div>' +
+                '<div class="meta">Apni Net Bachat (Margin): <b style="color:var(--blue);">₹' + fr.myMargin + '</b></div>' +
+              '</div>' +
+              '<b style="color:' + (fDue > 0 ? 'var(--red)' : 'var(--green)') + ';">' +
+                (fDue > 0 ? 'Dena Baaki: ₹' + fDue : 'Hisab Clear') +
+              '</b>' +
+            '</div>' +
             '<div class="row-actions">' +
-              '<button class="btn btn-light btn-sm" onclick="cycleStatus(' + itemV.id + ')">Status Badlein ↻</button>' +
+              '<button class="btn btn-amber btn-sm" onclick="openFriendPayBox(\'' + fr.name.replace(/'/g, '') + '\')">💸 Payment Diya</button>' +
             '</div>' +
           '</div>';
         }
       }
-      document.getElementById('listVeh').innerHTML = vHtml;
+      document.getElementById('friendSuggestions').innerHTML = fDlHtml;
+      document.getElementById('listFriends').innerHTML = fHtml;
 
+      // Render Dedicated Documents Section
+      var dHtml = '';
+      if (!data.vehicles.length) {
+        dHtml = '<div class="card">Pehle gaadi add karein, uske baad RC, Insurance, PUC aur Permit dates yahan dikhengi.</div>';
+      } else {
+        for (var dIdx = 0; dIdx < data.vehicles.length; dIdx++) {
+          var vd = data.vehicles[dIdx];
+          dHtml += '<div class="item">' +
+            '<div class="item-top">' +
+              '<div>' +
+                '<b>' + (vd.no || '').toUpperCase() + '</b> — ' + vd.mod +
+                ' <span class="badge b-cat">' + (vd.cat || 'SUV') + '</span>' +
+                '<div style="margin-top:6px;">' +
+                  docBadgeHtml('RC', vd.rcExp) +
+                  docBadgeHtml('Insurance', vd.insExp) +
+                  docBadgeHtml('PUC', vd.pucExp) +
+                  docBadgeHtml('Permit', vd.permExp) +
+                '</div>' +
+                (vd.detail ? '<div class="meta">Note: ' + vd.detail + '</div>' : '') +
+              '</div>' +
+              '<button class="btn btn-light btn-sm" onclick="openVehBox(' + vd.id + ')">✏️ Edit Docs</button>' +
+            '</div>' +
+          '</div>';
+        }
+      }
+      document.getElementById('listDocs').innerHTML = dHtml;
+
+      // Render Trips
       var qTrip = (document.getElementById('searchTrip').value || '').trim().toLowerCase();
       var trHtml = '';
       var shownTrips = 0;
       for (var t = 0; t < data.trips.length; t++) {
         var itemT = data.trips[t];
-        var hay = (itemT.custName + ' ' + (itemT.custVillage || '') + ' ' + itemT.veh + ' ' + itemT.dt + ' ' + (itemT.note || '')).toLowerCase();
+        var vNoUp = (itemT.veh || '').toUpperCase();
+        var hay = (itemT.custName + ' ' + (itemT.custVillage || '') + ' ' + vNoUp + ' ' + (itemT.friendName || '') + ' ' + (itemT.secVehicle || '') + ' ' + (itemT.note || '')).toLowerCase();
         if (qTrip && hay.indexOf(qTrip) === -1) continue;
         shownTrips++;
+
+        var fSh = itemT.friendShare || 0;
+        var myProfit = itemT.inc - itemT.exp - fSh;
         var itemDue = Math.max(0, itemT.inc - itemT.paid);
-        var vObj = findVehicleInfo(itemT.veh);
+        var vObj = findVehicleInfo(vNoUp);
+        var rDateStr = (itemT.returnDt ? itemT.returnDt.slice(0, 10) : itemT.returnDate);
         var retBadge = '';
-        if (vObj && vObj.st === 'On Trip' && itemT.returnDate) {
-          if (itemT.returnDate < td) retBadge = ' <span class="badge b-late">Late Return (' + itemT.returnDate + ')</span>';
-          else if (itemT.returnDate === td) retBadge = ' <span class="badge b-due-today">Return Aaj</span>';
-          else retBadge = ' <span class="badge b-trip">Return: ' + itemT.returnDate + '</span>';
+        if (vObj && vObj.st === 'On Trip' && rDateStr) {
+          if (rDateStr < td) retBadge = '<span class="badge b-late">Late Return</span>';
+          else if (rDateStr === td) retBadge = '<span class="badge b-due-today">Return Aaj</span>';
         }
+
+        var checkItems = [];
+        if (itemT.chkKey) checkItems.push('Key');
+        if (itemT.chkRc) checkItems.push('RC');
+        if (itemT.chkHelmet) checkItems.push('Helmet/Extra');
+
+        var secTxt = '';
+        if ((itemT.sec || 0) > 0 || itemT.secVehicle || checkItems.length) {
+          secTxt = '<div class="meta">🛡️ Security (' + (itemT.secType || 'Cash') + '): ' +
+                   (itemT.sec ? '<b>₹' + itemT.sec + '</b> ' : '') +
+                   (itemT.secVehicle ? '• <b>' + itemT.secVehicle.toUpperCase() + '</b> ' : '') +
+                   (checkItems.length ? '• [' + checkItems.join(', ') + '] ' : '') +
+                   '(' + (itemT.secStatus || 'Hold') + ')</div>';
+        }
+
+        var returnBtnHtml = (vObj && vObj.st === 'On Trip')
+          ? '<button class="btn btn-teal btn-sm" onclick="quickReturnTrip(' + itemT.id + ')">↩️ Gaadi Wapsi</button>'
+          : '';
 
         trHtml += '<div class="item">' +
           '<div class="item-top">' +
@@ -1105,14 +1908,18 @@
               '<b>' + itemT.custName + '</b>' +
               (itemT.custVillage ? ' • <b>Gaon: ' + itemT.custVillage + '</b>' : '') +
               (itemT.custPhone ? ' • <small>' + itemT.custPhone + '</small>' : '') +
-              retBadge +
-              '<div class="meta">📅 ' + itemT.dt + ' • 🚗 <b>' + itemT.veh + '</b>' +
+              '<br>' + retBadge +
+              (itemT.ownerType === 'friend' || fSh > 0 ? '<span class="badge b-friend">Dost: ' + (itemT.friendName || 'Partner') + '</span>' : '<span class="badge b-own">Apni Gaadi</span>') +
+              '<div class="meta">🚗 <b>' + vNoUp + '</b> (' + (itemT.days || 1) + 'd)' +
               (itemT.kmRun ? ' • 🛣️ ' + itemT.kmRun + ' KM' : '') +
-              (itemT.sec ? ' • 🛡️ Sec: ₹' + itemT.sec + ' (' + (itemT.secStatus || 'Hold') + ')' : '') +
               (itemT.note ? ' • ' + itemT.note : '') + '</div>' +
-              '<div class="meta">Kamai: <b style="color:var(--green);">₹' + itemT.inc + '</b> • ' +
-              'Kharcha: <b style="color:var(--red);">₹' + itemT.exp + '</b> • ' +
-              'Jama: <b>₹' + itemT.paid + '</b>' +
+              '<div class="meta">🕒 ' + formatDtReadable(itemT.startDt || itemT.dt) +
+              (itemT.returnDt ? ' → ' + formatDtReadable(itemT.returnDt) : '') + '</div>' +
+              secTxt +
+              '<div class="meta">Rent: <b style="color:var(--green);">₹' + itemT.inc + '</b>' +
+              (fSh > 0 ? ' • Dost Hisab: <b style="color:#b45309;">₹' + fSh + '</b>' : '') +
+              ' • Kharcha: <b style="color:var(--red);">₹' + itemT.exp + '</b>' +
+              ' • Apni Bachat: <b style="color:var(--blue);">₹' + myProfit + '</b>' +
               (itemDue > 0 ? ' • <span style="color:#b45309;font-weight:700;">Baaki: ₹' + itemDue + '</span>' : '') + '</div>' +
             '</div>' +
             '<div style="display:flex;gap:5px;">' +
@@ -1121,6 +1928,7 @@
             '</div>' +
           '</div>' +
           '<div class="row-actions">' +
+            returnBtnHtml +
             '<button class="btn btn-wa btn-sm" onclick="shareBookingSlipWA(' + itemT.id + ')">🧾 Booking Slip WA</button>' +
           '</div>' +
         '</div>';
@@ -1130,6 +1938,7 @@
       }
       document.getElementById('listTrip').innerHTML = trHtml;
 
+      // Render Customers
       var qCust = (document.getElementById('searchCust').value || '').trim().toLowerCase();
       var pHtml = '';
       var dlHtml = '';
@@ -1147,6 +1956,10 @@
         if (qCust && cHay.indexOf(qCust) === -1) continue;
         shownCust++;
 
+        var tagBadge = '';
+        if (pr.tag === 'VIP / Regular') tagBadge = ' <span class="badge b-vip">VIP / Regular</span>';
+        else if (pr.tag === 'Alert / Late') tagBadge = ' <span class="badge b-alert">Alert / Late</span>';
+
         var cleanTel = (pr.phone || '').replace(/[^0-9+]/g, '');
         pHtml += '<div class="item">' +
           '<div class="item-top">' +
@@ -1154,8 +1967,9 @@
               '<b>' + pr.name + '</b>' +
               (pr.village ? ' • <b>Gaon: ' + pr.village + '</b>' : '') +
               (pr.phone ? ' • <small>' + pr.phone + '</small>' : '') +
+              tagBadge +
               (pr.note ? '<div class="meta">' + pr.note + '</div>' : '') +
-              '<div class="meta">Total Bill: ₹' + pr.bill + ' • Jama: ₹' + pr.paid + '</div>' +
+              '<div class="meta">Trips: <b>' + pr.tripsCount + '</b> • Total Bill: ₹' + pr.bill + ' • Jama: ₹' + pr.paid + '</div>' +
             '</div>' +
             '<b style="color:' + (due > 0 ? 'var(--red)' : 'var(--green)') + ';">' +
               (due > 0 ? 'Baaki: ₹' + due : 'Clear') +
@@ -1174,6 +1988,7 @@
       document.getElementById('listParty').innerHTML = pHtml;
     }
 
+    checkLockState();
     render();
   </script>
 </body>
