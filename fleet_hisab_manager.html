@@ -3,46 +3,49 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0b1120" />
+  <meta name="theme-color" content="#070b14" />
   <link rel="manifest" href="./manifest.json" />
-  <title>Mor self drive — Premium Fleet & Hisab</title>
+  <title>Mor self drive — Next-Gen Command Center</title>
   <style>
     :root {
-      --bg: #f8fafc;
+      --bg: #f4f7fb;
       --ink: #0f172a;
       --muted: #64748b;
       --line: #e2e8f0;
-      --navy: #0b1120;
+      --navy: #070b14;
       --amber: #f59e0b;
       --green: #059669;
       --wa: #16a34a;
       --red: #dc2626;
       --blue: #2563eb;
+      --purple: #7c3aed;
+      --teal: #0d9488;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
-    body { background: var(--bg); color: var(--ink); padding-bottom: 88px; }
+    body { background: var(--bg); color: var(--ink); padding-bottom: 94px; }
 
     header {
-      background: linear-gradient(135deg, #0b1120 0%, #1e293b 100%);
+      background: linear-gradient(135deg, #070b14 0%, #172554 100%);
       color: #fff; padding: 16px; position: sticky; top: 0; z-index: 30;
-      box-shadow: 0 4px 18px rgba(11, 17, 32, 0.18);
+      box-shadow: 0 6px 22px rgba(7, 11, 20, 0.22);
     }
-    .hdr-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; max-width: 600px; margin: 0 auto; }
+    .hdr-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; max-width: 660px; margin: 0 auto; }
     .brand-title { font-size: 19px; font-weight: 800; letter-spacing: 0.2px; display: flex; align-items: center; gap: 8px; }
     .brand-sub { font-size: 11px; color: #cbd5e1; margin-top: 2px; }
-    .pill-live {
-      background: rgba(16, 185, 129, 0.16); color: #6ee7b7; border: 1px solid rgba(110, 231, 183, 0.35);
-      font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 999px; white-space: nowrap;
+    .pill-next {
+      background: linear-gradient(90deg, rgba(245,158,11,0.22), rgba(13,148,136,0.25));
+      color: #fde68a; border: 1px solid rgba(253, 230, 138, 0.45);
+      font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 999px; white-space: nowrap;
     }
 
-    .wrap { max-width: 600px; margin: 0 auto; padding: 14px; }
+    .wrap { max-width: 660px; margin: 0 auto; padding: 14px; }
 
     .hero {
-      background: linear-gradient(135deg, #0b1120 0%, #172554 100%);
-      color: #fff; border-radius: 20px; padding: 18px; margin-bottom: 14px;
-      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.16);
+      background: linear-gradient(135deg, #070b14 0%, #1e1b4b 55%, #0f172a 100%);
+      color: #fff; border-radius: 22px; padding: 18px; margin-bottom: 14px;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
     }
-    .hero-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .hero-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 8px; flex-wrap: wrap; }
     .hero-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: #93c5fd; font-weight: 700; }
     .hero-main { font-size: 26px; font-weight: 800; margin: 4px 0 6px; }
     .hero-sub { font-size: 13px; color: #e2e8f0; margin-bottom: 14px; }
@@ -59,7 +62,7 @@
 
     .btn {
       border: none; border-radius: 12px; padding: 11px 12px;
-      font-weight: 700; cursor: pointer; font-size: 13px;
+      font-weight: 700; cursor: pointer; font-size: 13px; text-decoration: none;
       display: inline-flex; align-items: center; justify-content: center; gap: 6px;
       transition: transform 0.08s ease;
     }
@@ -68,6 +71,8 @@
     .btn-green { background: var(--green); color: #fff; }
     .btn-wa { background: var(--wa); color: #fff; }
     .btn-blue { background: var(--blue); color: #fff; }
+    .btn-purple { background: var(--purple); color: #fff; }
+    .btn-teal { background: var(--teal); color: #fff; }
     .btn-red { background: var(--red); color: #fff; }
     .btn-dark { background: var(--navy); color: #fff; }
     .btn-light { background: #f1f5f9; color: var(--ink); border: 1px solid #cbd5e1; }
@@ -89,7 +94,14 @@
       width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1;
       border-radius: 10px; font-size: 14px; background: #fff; color: var(--ink);
     }
-    .search-box { margin-bottom: 12px; background: #fff; }
+    .search-box { margin-bottom: 10px; background: #fff; }
+
+    .chips { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+    .chip {
+      border: 1px solid #cbd5e1; background: #fff; color: var(--ink);
+      padding: 6px 11px; border-radius: 999px; font-size: 12px; font-weight: 700; cursor: pointer;
+    }
+    .chip.active { background: var(--navy); color: #fff; border-color: var(--navy); }
 
     .item {
       background: #fff; border: 1px solid var(--line); border-radius: 15px;
@@ -106,11 +118,26 @@
     .b-avail { background: #dcfce7; color: #166534; }
     .b-trip { background: #dbeafe; color: #1e40af; }
     .b-maint { background: #fee2e2; color: #991b1b; }
+    .b-late { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+    .b-due-today { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
 
     .status-box { border-radius: 12px; padding: 10px 6px; text-align: center; }
     .st-av { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
     .st-tr { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
     .st-mt { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+    .highlight-strip {
+      background: #f5f3ff; border: 1px solid #ddd6fe; color: #4c1d95;
+      border-radius: 14px; padding: 11px 13px; font-size: 12px; margin-bottom: 12px;
+      display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;
+    }
+
+    .alert-banner {
+      display: none; background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412;
+      border-radius: 14px; padding: 11px 13px; font-size: 12px; margin-bottom: 12px;
+      line-height: 1.45;
+    }
+    .alert-banner.show { display: block; }
 
     .page { display: none; }
     .page.show { display: block; }
@@ -124,6 +151,12 @@
       font-weight: 700; color: var(--muted); cursor: pointer; border-radius: 10px;
     }
     .nav button.active { background: #fef3c7; color: var(--ink); }
+
+    @media print {
+      header, .nav, .drawer, .search-box, .chips, .alert-banner, .btn { display: none !important; }
+      body { background: #fff; padding-bottom: 0; }
+      .page { display: block !important; }
+    }
   </style>
 </head>
 <body>
@@ -132,10 +165,10 @@
     <div class="hdr-top">
       <div>
         <div class="brand-title">🚗 Mor self drive</div>
-        <div class="brand-sub">Self-Drive Fleet, Customer & Hisab</div>
+        <div class="brand-sub">Next-Gen Fleet Command & Hisab</div>
       </div>
       <div style="display:flex;align-items:center;gap:6px;">
-        <span class="pill-live">Offline Safe</span>
+        <span class="pill-next">NEXT-GEN</span>
         <button class="btn btn-light btn-sm" onclick="toggleDrawer('boxSettings')">⚙️</button>
       </div>
     </div>
@@ -145,12 +178,20 @@
     <!-- SETTINGS & BACKUP DRAWER -->
     <div id="boxSettings" class="drawer">
       <div class="drawer-hdr">
-        <h3>⚙️ Settings & Backup</h3>
+        <h3>⚙️ Settings, Backup & Shift Note</h3>
         <button class="btn btn-light btn-sm" onclick="closeDrawers()">✕</button>
+      </div>
+      <div class="field">
+        <label>Aaj Ki Shift / Handover Note</label>
+        <input type="text" id="inShiftNote" placeholder="Key / Fastag / fuel / handover note..." oninput="saveShiftNote()" />
       </div>
       <div class="grid2" style="margin-bottom:10px;">
         <button class="btn btn-green" onclick="exportJSON()">⬇ Backup JSON</button>
         <button class="btn btn-dark" onclick="exportCSV()">📊 Excel (CSV)</button>
+      </div>
+      <div class="grid2" style="margin-bottom:10px;">
+        <button class="btn btn-purple" onclick="window.print()">🖨 Print / PDF View</button>
+        <button class="btn btn-blue" onclick="shareWhatsAppMonthly()">📅 Monthly WA</button>
       </div>
       <div class="field">
         <label>Restore Backup File (.json)</label>
@@ -161,21 +202,26 @@
       </div>
     </div>
 
-    <!-- ADD BOOKING / TRIP DRAWER -->
+    <!-- ADD / EDIT BOOKING DRAWER -->
     <div id="boxTrip" class="drawer">
       <div class="drawer-hdr">
-        <h3>📝 Nayi Booking / Trip Hisab</h3>
+        <h3 id="tripDrawerTitle">📝 Nayi Booking / Trip Hisab</h3>
         <button class="btn btn-light btn-sm" onclick="closeDrawers()">✕</button>
       </div>
+      <input type="hidden" id="editTripId" />
       <div class="grid2">
         <div class="field">
-          <label>Date (Calendar)</label>
+          <label>Booking Date</label>
           <input type="date" id="inDate" />
         </div>
         <div class="field">
-          <label>Gaadi Chunein</label>
-          <select id="inVeh" onchange="autoFillRate()"></select>
+          <label>Expected Return Date</label>
+          <input type="date" id="inReturnDate" />
         </div>
+      </div>
+      <div class="field">
+        <label>Gaadi Chunein</label>
+        <select id="inVeh" onchange="autoFillRate()"></select>
       </div>
       <div class="grid2">
         <div class="field">
@@ -211,10 +257,28 @@
           <input type="number" id="inPaid" placeholder="0" />
         </div>
       </div>
+      <div class="grid3">
+        <div class="field">
+          <label>Security Deposit (₹)</label>
+          <input type="number" id="inSec" placeholder="0" />
+        </div>
+        <div class="field">
+          <label>Start KM</label>
+          <input type="number" id="inKmStart" placeholder="0" />
+        </div>
+        <div class="field">
+          <label>End KM</label>
+          <input type="number" id="inKmEnd" placeholder="0" />
+        </div>
+      </div>
       <div class="grid2">
         <div class="field">
-          <label>Booking Days / Route Note</label>
-          <input type="text" id="inNote" placeholder="2 days / route note" />
+          <label>Security Status</label>
+          <select id="inSecStatus">
+            <option value="Hold">Hold / Jama Hai</option>
+            <option value="Returned">Wapas Kar Di</option>
+            <option value="Adjusted">Rent / Kharche Mein Adjust</option>
+          </select>
         </div>
         <div class="field">
           <label>Gaadi Status Update</label>
@@ -226,8 +290,12 @@
           </select>
         </div>
       </div>
+      <div class="field">
+        <label>Booking Days / Route Note</label>
+        <input type="text" id="inNote" placeholder="2 days / route note" />
+      </div>
       <div class="grid2">
-        <button class="btn btn-amber" onclick="addTrip()">✓ Save Booking</button>
+        <button class="btn btn-amber" onclick="saveTrip()">✓ Save Booking</button>
         <button class="btn btn-light" onclick="closeDrawers()">Band Karein</button>
       </div>
     </div>
@@ -263,8 +331,8 @@
         </div>
       </div>
       <div class="field">
-        <label>Insurance / Fastag / Service Detail</label>
-        <input type="text" id="vDetail" placeholder="Insurance / service / color detail" />
+        <label>Insurance / PUC / Service / Paper Detail</label>
+        <input type="text" id="vDetail" placeholder="Insurance expiry / service km / color" />
       </div>
       <div class="grid2">
         <button class="btn btn-dark" onclick="addVeh()">✓ Save Gaadi</button>
@@ -295,6 +363,8 @@
 
     <!-- HOME PAGE -->
     <div id="page-home" class="page show">
+      <div id="returnAlertBanner" class="alert-banner"></div>
+
       <div class="hero">
         <div class="hero-top">
           <span class="hero-lbl">AAJ KA HISAB • <span id="lblToday"></span></span>
@@ -311,6 +381,15 @@
           <button class="btn btn-light" onclick="openVehBox()">+ Gaadi Jodein</button>
           <button class="btn btn-blue" onclick="shareWhatsAppMonthly()">📅 Monthly Hisab WA</button>
         </div>
+      </div>
+
+      <div class="highlight-strip">
+        <span>🏆 <b>Top Gaadi:</b> <span id="topVehicleTxt">Abhi data nahi</span></span>
+        <span>🛣️ <b>Total KM:</b> <span id="totalKmTxt">0</span></span>
+      </div>
+
+      <div id="shiftNoteStrip" class="highlight-strip" style="background:#f0fdfa;border-color:#99f6e4;color:#115e59;display:none;">
+        <span>📌 <b>Shift Note:</b> <span id="shiftNoteDisplay"></span></span>
       </div>
 
       <div class="card">
@@ -355,7 +434,7 @@
     <!-- FLEET PAGE -->
     <div id="page-fleet" class="page">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-        <h3>🚗 Gaadiyan & Performance</h3>
+        <h3>🚗 Gaadiyan & Efficiency</h3>
         <button class="btn btn-dark btn-sm" onclick="openVehBox()">+ Gaadi Jodein</button>
       </div>
       <div id="listVeh"></div>
@@ -381,6 +460,11 @@
         <button class="btn btn-green btn-sm" onclick="openPayBox()">💰 Payment Jama</button>
       </div>
       <input type="text" id="searchCust" class="search-box" placeholder="🔍 Customer naam, village ya phone se khojein..." oninput="render()" />
+      <div class="chips">
+        <button id="chip-all" class="chip active" onclick="setCustFilter('all')">Sabhi</button>
+        <button id="chip-due" class="chip" onclick="setCustFilter('due')">Baaki Udhaar</button>
+        <button id="chip-clear" class="chip" onclick="setCustFilter('clear')">Clear</button>
+      </div>
       <div id="listParty"></div>
     </div>
   </div>
@@ -393,8 +477,9 @@
   </div>
 
   <script>
-    var KEY = 'mor_self_drive_premium_v2';
-    var data = { vehicles: [], trips: [], payments: [] };
+    var KEY = 'mor_self_drive_nextgen_v5';
+    var custFilter = 'all';
+    var data = { vehicles: [], trips: [], payments: [], shiftNote: '' };
 
     try {
       var saved = JSON.parse(localStorage.getItem(KEY));
@@ -402,6 +487,7 @@
         data.vehicles = saved.vehicles || [];
         data.trips = saved.trips || [];
         data.payments = saved.payments || [];
+        data.shiftNote = saved.shiftNote || '';
       }
     } catch (e) {}
 
@@ -410,6 +496,25 @@
         localStorage.setItem(KEY, JSON.stringify(data));
       } catch (e) {}
       render();
+    }
+
+    function saveShiftNote() {
+      data.shiftNote = document.getElementById('inShiftNote').value;
+      try {
+        localStorage.setItem(KEY, JSON.stringify(data));
+      } catch (e) {}
+      renderShiftNote();
+    }
+
+    function renderShiftNote() {
+      var el = document.getElementById('shiftNoteStrip');
+      var disp = document.getElementById('shiftNoteDisplay');
+      if (data.shiftNote && data.shiftNote.trim()) {
+        disp.textContent = data.shiftNote.trim();
+        el.style.display = 'flex';
+      } else {
+        el.style.display = 'none';
+      }
     }
 
     function todayStr() {
@@ -424,6 +529,14 @@
       return todayStr().slice(0, 7);
     }
 
+    function setCustFilter(mode) {
+      custFilter = mode;
+      ['all', 'due', 'clear'].forEach(function(m) {
+        document.getElementById('chip-' + m).classList.toggle('active', m === mode);
+      });
+      render();
+    }
+
     function closeDrawers() {
       var list = document.querySelectorAll('.drawer');
       for (var i = 0; i < list.length; i++) list[i].classList.remove('open');
@@ -433,15 +546,21 @@
       var el = document.getElementById(id);
       var openNow = el.classList.contains('open');
       closeDrawers();
-      if (!openNow) el.classList.add('open');
+      if (!openNow) {
+        if (id === 'boxSettings') {
+          document.getElementById('inShiftNote').value = data.shiftNote || '';
+        }
+        el.classList.add('open');
+      }
     }
 
-    function populateVehicleDropdown() {
+    function populateVehicleDropdown(selectedVal) {
       var sel = document.getElementById('inVeh');
       var html = '<option value="General">General / Manual</option>';
       for (var i = 0; i < data.vehicles.length; i++) {
         var v = data.vehicles[i];
-        html += '<option value="' + v.no + '" data-rate="' + (v.rate || 0) + '">' + v.no + ' — ' + v.mod + ' (' + v.st + ')</option>';
+        var selAttr = selectedVal === v.no ? ' selected' : '';
+        html += '<option value="' + v.no + '" data-rate="' + (v.rate || 0) + '"' + selAttr + '>' + v.no + ' — ' + v.mod + ' (' + v.st + ')</option>';
       }
       sel.innerHTML = html;
       autoFillRate();
@@ -459,8 +578,44 @@
 
     function openTripBox() {
       closeDrawers();
-      populateVehicleDropdown();
+      document.getElementById('editTripId').value = '';
+      document.getElementById('tripDrawerTitle').textContent = '📝 Nayi Booking / Trip Hisab';
+      populateVehicleDropdown('General');
       document.getElementById('inDate').value = todayStr();
+      document.getElementById('inReturnDate').value = '';
+      ['inCustName', 'inCustVillage', 'inCustPhone', 'inCustNote', 'inInc', 'inExp', 'inPaid', 'inSec', 'inKmStart', 'inKmEnd', 'inNote'].forEach(function(id) {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('inSecStatus').value = 'Hold';
+      document.getElementById('inVehStatus').value = '';
+      document.getElementById('boxTrip').classList.add('open');
+    }
+
+    function openEditTrip(id) {
+      var found = null;
+      for (var i = 0; i < data.trips.length; i++) {
+        if (data.trips[i].id === id) { found = data.trips[i]; break; }
+      }
+      if (!found) return;
+      closeDrawers();
+      document.getElementById('editTripId').value = found.id;
+      document.getElementById('tripDrawerTitle').textContent = '✏️ Booking Edit Karein';
+      populateVehicleDropdown(found.veh || 'General');
+      document.getElementById('inDate').value = found.dt || todayStr();
+      document.getElementById('inReturnDate').value = found.returnDate || '';
+      document.getElementById('inCustName').value = found.custName || '';
+      document.getElementById('inCustVillage').value = found.custVillage || '';
+      document.getElementById('inCustPhone').value = found.custPhone || '';
+      document.getElementById('inCustNote').value = found.custNote || '';
+      document.getElementById('inInc').value = found.inc || 0;
+      document.getElementById('inExp').value = found.exp || 0;
+      document.getElementById('inPaid').value = found.paid || 0;
+      document.getElementById('inSec').value = found.sec || 0;
+      document.getElementById('inKmStart').value = found.kmStart || 0;
+      document.getElementById('inKmEnd').value = found.kmEnd || 0;
+      document.getElementById('inSecStatus').value = found.secStatus || 'Hold';
+      document.getElementById('inVehStatus').value = '';
+      document.getElementById('inNote').value = found.note || '';
       document.getElementById('boxTrip').classList.add('open');
     }
 
@@ -519,8 +674,10 @@
       save();
     }
 
-    function addTrip() {
+    function saveTrip() {
+      var editId = Number(document.getElementById('editTripId').value) || 0;
       var dt = document.getElementById('inDate').value || todayStr();
+      var returnDate = document.getElementById('inReturnDate').value || '';
       var veh = document.getElementById('inVeh').value || 'General';
       var custName = document.getElementById('inCustName').value.trim() || 'Walk-in Customer';
       var custVillage = document.getElementById('inCustVillage').value.trim();
@@ -529,14 +686,33 @@
       var inc = Number(document.getElementById('inInc').value) || 0;
       var exp = Number(document.getElementById('inExp').value) || 0;
       var paid = Number(document.getElementById('inPaid').value) || 0;
+      var sec = Number(document.getElementById('inSec').value) || 0;
+      var kmStart = Number(document.getElementById('inKmStart').value) || 0;
+      var kmEnd = Number(document.getElementById('inKmEnd').value) || 0;
+      var kmRun = (kmEnd > kmStart && kmStart > 0) ? (kmEnd - kmStart) : 0;
+      var secStatus = document.getElementById('inSecStatus').value || 'Hold';
       var note = document.getElementById('inNote').value.trim();
       var newSt = document.getElementById('inVehStatus').value;
 
-      data.trips.unshift({
-        id: Date.now(), dt: dt, veh: veh,
+      var payload = {
+        id: editId || Date.now(),
+        dt: dt, returnDate: returnDate, veh: veh,
         custName: custName, custVillage: custVillage, custPhone: custPhone, custNote: custNote,
-        inc: inc, exp: exp, paid: paid, note: note
-      });
+        inc: inc, exp: exp, paid: paid, sec: sec, secStatus: secStatus,
+        kmStart: kmStart, kmEnd: kmEnd, kmRun: kmRun,
+        note: note
+      };
+
+      if (editId) {
+        for (var k = 0; k < data.trips.length; k++) {
+          if (data.trips[k].id === editId) {
+            data.trips[k] = payload;
+            break;
+          }
+        }
+      } else {
+        data.trips.unshift(payload);
+      }
 
       if (newSt && veh !== 'General') {
         for (var i = 0; i < data.vehicles.length; i++) {
@@ -547,12 +723,38 @@
         }
       }
 
-      ['inCustName', 'inCustVillage', 'inCustPhone', 'inCustNote', 'inInc', 'inExp', 'inPaid', 'inNote'].forEach(function(id) {
-        document.getElementById(id).value = '';
-      });
-      document.getElementById('inVehStatus').value = '';
       closeDrawers();
       save();
+    }
+
+    function shareBookingSlipWA(tripId) {
+      var tr = null;
+      for (var i = 0; i < data.trips.length; i++) {
+        if (data.trips[i].id === tripId) { tr = data.trips[i]; break; }
+      }
+      if (!tr) return;
+      var vInfo = findVehicleInfo(tr.veh);
+      var vLabel = tr.veh + (vInfo && vInfo.mod ? ' (' + vInfo.mod + ')' : '');
+      var due = Math.max(0, (tr.inc || 0) - (tr.paid || 0));
+      var cleanPhone = (tr.custPhone || '').replace(/[^0-9]/g, '');
+      if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
+
+      var msg = '*🧾 Mor self drive — Booking Slip*\n' +
+                '━━━━━━━━━━━━━━━\n' +
+                '🚗 Gaadi: ' + vLabel + '\n' +
+                '👤 Customer: ' + tr.custName + (tr.custVillage ? ' (' + tr.custVillage + ')' : '') + '\n' +
+                '📅 Booking Date: ' + tr.dt + (tr.returnDate ? '\n🔙 Return Date: ' + tr.returnDate : '') + '\n' +
+                (tr.kmStart ? '🛣️ Start KM: ' + tr.kmStart : '') + (tr.kmEnd ? ' | End KM: ' + tr.kmEnd : '') + (tr.kmRun ? ' (' + tr.kmRun + ' KM)' : '') + '\n' +
+                '💰 Total Rent: ₹' + (tr.inc || 0) + '\n' +
+                '💵 Jama / Advance: ₹' + (tr.paid || 0) + '\n' +
+                (due > 0 ? '⚠️ Baaki Rashi: ₹' + due + '\n' : '✅ Rent Clear\n') +
+                (tr.sec ? '🛡️ Security Deposit: ₹' + tr.sec + ' (' + (tr.secStatus || 'Hold') + ')\n' : '') +
+                (tr.note ? '📝 Note: ' + tr.note : '');
+
+      var link = cleanPhone
+        ? 'https://wa.me/' + cleanPhone + '?text=' + encodeURIComponent(msg)
+        : 'https://wa.me/?text=' + encodeURIComponent(msg);
+      window.open(link, '_blank');
     }
 
     function addPayment() {
@@ -596,7 +798,9 @@
           var extra = [];
           if (tr && tr.custName) extra.push(tr.custName);
           if (tr && tr.custVillage) extra.push('Gaon: ' + tr.custVillage);
-          onTrip.push(label + (extra.length ? ' — ' + extra.join(', ') : ''));
+          if (tr && tr.returnDate) extra.push('Return: ' + tr.returnDate);
+          if (tr && tr.note) extra.push(tr.note);
+          onTrip.push(label + (extra.length ? ' — ' + extra.join(' | ') : ''));
         } else if (v.st === 'Maintenance') {
           maint.push(label);
         } else {
@@ -608,7 +812,7 @@
 
     function shareWhatsAppDaily() {
       var td = todayStr();
-      var tInc = 0, tExp = 0, tPaid = 0, count = 0;
+      var tInc = 0, tExp = 0, tPaid = 0, tSec = 0, count = 0;
       var lines = [];
 
       for (var i = 0; i < data.trips.length; i++) {
@@ -618,10 +822,12 @@
           tInc += x.inc;
           tExp += x.exp;
           tPaid += x.paid;
+          tSec += (x.sec || 0);
           var vInfo = findVehicleInfo(x.veh);
           var vLabel = x.veh + (vInfo && vInfo.mod ? ' (' + vInfo.mod + ')' : '');
           var cLabel = x.custName + (x.custVillage ? ' [' + x.custVillage + ']' : '');
-          lines.push('• ' + vLabel + ' | ' + cLabel + ': Rent ₹' + x.inc + ', Kharcha ₹' + x.exp);
+          var kmPart = x.kmRun ? ' • ' + x.kmRun + ' KM' : '';
+          lines.push('• ' + vLabel + ' | ' + cLabel + ': Rent ₹' + x.inc + ', Kharcha ₹' + x.exp + kmPart);
         }
       }
 
@@ -636,11 +842,12 @@
                 '💰 Aaj Ki Kamai: ₹' + tInc + '\n' +
                 '💸 Aaj Ka Kharcha: ₹' + tExp + '\n' +
                 '✅ Net Bachat: ₹' + (tInc - tExp) + '\n' +
-                '💵 Jama Mila: ₹' + tPaid + '\n' +
+                '💵 Jama Mila: ₹' + tPaid + (tSec > 0 ? '\n🛡️ Security: ₹' + tSec : '') + '\n' +
                 '━━━━━━━━━━━━━━━\n' +
                 '*🚙 On Trip (Gayi Hui Gaadiyan):*' + onTripText + '\n' +
                 '*🟢 Available (Khali):* ' + (fl.avail.length ? fl.avail.join(', ') : 'Koi nahi') + '\n' +
                 '*🔴 Maintenance:* ' + (fl.maint.length ? fl.maint.join(', ') : 'Koi nahi') +
+                (data.shiftNote ? '\n📌 *Shift Note:* ' + data.shiftNote : '') +
                 (lines.length ? '\n\n*📝 Aaj Ki Bookings:*\n' + lines.join('\n') : '');
 
       window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
@@ -648,7 +855,7 @@
 
     function shareWhatsAppMonthly() {
       var ym = monthStr();
-      var mInc = 0, mExp = 0, mPaid = 0, count = 0;
+      var mInc = 0, mExp = 0, mPaid = 0, mKm = 0, count = 0;
       for (var i = 0; i < data.trips.length; i++) {
         var x = data.trips[i];
         if ((x.dt || '').slice(0, 7) === ym) {
@@ -656,6 +863,7 @@
           mInc += x.inc;
           mExp += x.exp;
           mPaid += x.paid;
+          mKm += (x.kmRun || 0);
         }
       }
       var msg = '*📅 Mor self drive — Monthly Hisab (' + ym + ')*\n' +
@@ -664,7 +872,8 @@
                 'Mahine Ki Kamai: ₹' + mInc + '\n' +
                 'Mahine Ka Kharcha: ₹' + mExp + '\n' +
                 'Net Bachat: ₹' + (mInc - mExp) + '\n' +
-                'Total Jama Mila: ₹' + mPaid;
+                'Total Jama Mila: ₹' + mPaid + '\n' +
+                'Total Chali KM: ' + mKm + ' KM';
 
       window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
     }
@@ -682,7 +891,7 @@
 
     function resetData() {
       if (!confirm('Saara data delete karke zero se shuru karein?')) return;
-      data = { vehicles: [], trips: [], payments: [] };
+      data = { vehicles: [], trips: [], payments: [], shiftNote: '' };
       closeDrawers();
       save();
     }
@@ -696,10 +905,10 @@
     }
 
     function exportCSV() {
-      var rows = [['Date', 'Vehicle', 'Customer', 'Village', 'Phone', 'Rent', 'Expense', 'Paid', 'Note']];
+      var rows = [['Date', 'ReturnDate', 'Vehicle', 'Customer', 'Village', 'Phone', 'Rent', 'Expense', 'Paid', 'Security', 'SecStatus', 'KM', 'Note']];
       for (var i = 0; i < data.trips.length; i++) {
         var t = data.trips[i];
-        rows.push([t.dt, t.veh, t.custName, t.custVillage || '', t.custPhone || '', t.inc, t.exp, t.paid, t.note || '']);
+        rows.push([t.dt, t.returnDate || '', t.veh, t.custName, t.custVillage || '', t.custPhone || '', t.inc, t.exp, t.paid, t.sec || 0, t.secStatus || 'Hold', t.kmRun || 0, t.note || '']);
       }
       var csv = rows.map(function(r) { return r.join(','); }).join('\n');
       var blob = new Blob([csv], { type: 'text/csv' });
@@ -719,7 +928,8 @@
           data = {
             vehicles: p.vehicles || [],
             trips: p.trips || [],
-            payments: p.payments || []
+            payments: p.payments || [],
+            shiftNote: p.shiftNote || ''
           };
           closeDrawers();
           save();
@@ -734,17 +944,20 @@
     function render() {
       var td = todayStr();
       document.getElementById('lblToday').textContent = td;
+      renderShiftNote();
 
       var tInc = 0, tExp = 0, tPaid = 0;
-      var inc = 0, exp = 0, paid = 0;
+      var inc = 0, exp = 0, paid = 0, allKm = 0;
       var custMap = {};
       var vehStats = {};
+      var dueToday = [], overdueList = [];
 
       for (var i = 0; i < data.trips.length; i++) {
         var x = data.trips[i];
         inc += x.inc;
         exp += x.exp;
         paid += x.paid;
+        allKm += (x.kmRun || 0);
 
         if (x.dt === td) {
           tInc += x.inc;
@@ -752,10 +965,17 @@
           tPaid += x.paid;
         }
 
-        if (!vehStats[x.veh]) vehStats[x.veh] = { inc: 0, exp: 0, trips: 0 };
+        var vInfoCheck = findVehicleInfo(x.veh);
+        if (vInfoCheck && vInfoCheck.st === 'On Trip' && x.returnDate) {
+          if (x.returnDate < td) overdueList.push(x.veh + ' (' + x.custName + ')');
+          else if (x.returnDate === td) dueToday.push(x.veh + ' (' + x.custName + ')');
+        }
+
+        if (!vehStats[x.veh]) vehStats[x.veh] = { inc: 0, exp: 0, trips: 0, km: 0 };
         vehStats[x.veh].inc += x.inc;
         vehStats[x.veh].exp += x.exp;
         vehStats[x.veh].trips += 1;
+        vehStats[x.veh].km += (x.kmRun || 0);
 
         var key = (x.custName || 'Customer').toLowerCase();
         if (!custMap[key]) {
@@ -773,6 +993,17 @@
         if (x.custNote) custMap[key].note = x.custNote;
         custMap[key].bill += x.inc;
         custMap[key].paid += x.paid;
+      }
+
+      var alertBox = document.getElementById('returnAlertBanner');
+      var alertParts = [];
+      if (overdueList.length) alertParts.push('🚨 <b>Late Return:</b> ' + overdueList.join(', '));
+      if (dueToday.length) alertParts.push('⏰ <b>Aaj Return Due:</b> ' + dueToday.join(', '));
+      if (alertParts.length) {
+        alertBox.innerHTML = alertParts.join('<br>');
+        alertBox.classList.add('show');
+      } else {
+        alertBox.classList.remove('show');
       }
 
       var extraPaid = 0;
@@ -794,6 +1025,21 @@
       document.getElementById('sTotExp').textContent = exp;
       document.getElementById('sNet').textContent = (inc - exp);
       document.getElementById('sDue').textContent = Math.max(0, inc - (paid + extraPaid));
+      document.getElementById('totalKmTxt').textContent = allKm + ' KM';
+
+      var bestVeh = '';
+      var bestNet = -Infinity;
+      var vKeys = Object.keys(vehStats);
+      for (var bk = 0; bk < vKeys.length; bk++) {
+        if (vKeys[bk] !== 'General') {
+          var vNet = vehStats[vKeys[bk]].inc - vehStats[vKeys[bk]].exp;
+          if (vNet > bestNet) {
+            bestNet = vNet;
+            bestVeh = vKeys[bk];
+          }
+        }
+      }
+      document.getElementById('topVehicleTxt').textContent = bestVeh ? (bestVeh + ' (Net ₹' + bestNet + ')') : 'Abhi data nahi';
 
       var fl = getFleetGroups();
       document.getElementById('cAvail').textContent = fl.avail.length;
@@ -813,15 +1059,18 @@
         for (var v = 0; v < data.vehicles.length; v++) {
           var itemV = data.vehicles[v];
           var stClass = itemV.st === 'Available' ? 'b-avail' : itemV.st === 'On Trip' ? 'b-trip' : 'b-maint';
-          var vs = vehStats[itemV.no] || { inc: 0, exp: 0, trips: 0 };
+          var vs = vehStats[itemV.no] || { inc: 0, exp: 0, trips: 0, km: 0 };
+          var vProfit = vs.inc - vs.exp;
+          var perKm = vs.km > 0 ? ' • Avg: <b>₹' + (vs.inc / vs.km).toFixed(1) + '/KM</b>' : '';
           vHtml += '<div class="item">' +
             '<div class="item-top">' +
               '<div>' +
                 '<b style="font-size:15px;">' + itemV.no + '</b> — ' + itemV.mod +
                 (itemV.rate ? ' <span style="color:var(--green);font-weight:700;">(₹' + itemV.rate + '/day)</span>' : '') +
                 '<br><span class="badge ' + stClass + '">' + itemV.st + '</span>' +
-                (itemV.detail ? '<div class="meta">' + itemV.detail + '</div>' : '') +
-                '<div class="meta">Trips: <b>' + vs.trips + '</b> • Kamai: <b style="color:var(--green);">₹' + vs.inc + '</b> • Kharcha: <b style="color:var(--red);">₹' + vs.exp + '</b></div>' +
+                (itemV.detail ? '<div class="meta">📄 ' + itemV.detail + '</div>' : '') +
+                '<div class="meta">Trips: <b>' + vs.trips + '</b> • KM: <b>' + vs.km + '</b>' + perKm + '</div>' +
+                '<div class="meta">Kamai: <b style="color:var(--green);">₹' + vs.inc + '</b> • Kharcha: <b style="color:var(--red);">₹' + vs.exp + '</b> • Net: <b style="color:var(--blue);">₹' + vProfit + '</b></div>' +
               '</div>' +
               '<button class="btn btn-red btn-sm" onclick="delVeh(' + itemV.id + ')">✕</button>' +
             '</div>' +
@@ -842,20 +1091,37 @@
         if (qTrip && hay.indexOf(qTrip) === -1) continue;
         shownTrips++;
         var itemDue = Math.max(0, itemT.inc - itemT.paid);
+        var vObj = findVehicleInfo(itemT.veh);
+        var retBadge = '';
+        if (vObj && vObj.st === 'On Trip' && itemT.returnDate) {
+          if (itemT.returnDate < td) retBadge = ' <span class="badge b-late">Late Return (' + itemT.returnDate + ')</span>';
+          else if (itemT.returnDate === td) retBadge = ' <span class="badge b-due-today">Return Aaj</span>';
+          else retBadge = ' <span class="badge b-trip">Return: ' + itemT.returnDate + '</span>';
+        }
+
         trHtml += '<div class="item">' +
           '<div class="item-top">' +
             '<div>' +
               '<b>' + itemT.custName + '</b>' +
               (itemT.custVillage ? ' • <b>Gaon: ' + itemT.custVillage + '</b>' : '') +
               (itemT.custPhone ? ' • <small>' + itemT.custPhone + '</small>' : '') +
+              retBadge +
               '<div class="meta">📅 ' + itemT.dt + ' • 🚗 <b>' + itemT.veh + '</b>' +
+              (itemT.kmRun ? ' • 🛣️ ' + itemT.kmRun + ' KM' : '') +
+              (itemT.sec ? ' • 🛡️ Sec: ₹' + itemT.sec + ' (' + (itemT.secStatus || 'Hold') + ')' : '') +
               (itemT.note ? ' • ' + itemT.note : '') + '</div>' +
               '<div class="meta">Kamai: <b style="color:var(--green);">₹' + itemT.inc + '</b> • ' +
               'Kharcha: <b style="color:var(--red);">₹' + itemT.exp + '</b> • ' +
               'Jama: <b>₹' + itemT.paid + '</b>' +
               (itemDue > 0 ? ' • <span style="color:#b45309;font-weight:700;">Baaki: ₹' + itemDue + '</span>' : '') + '</div>' +
             '</div>' +
-            '<button class="btn btn-red btn-sm" onclick="delTrip(' + itemT.id + ')">✕</button>' +
+            '<div style="display:flex;gap:5px;">' +
+              '<button class="btn btn-light btn-sm" onclick="openEditTrip(' + itemT.id + ')">✏️</button>' +
+              '<button class="btn btn-red btn-sm" onclick="delTrip(' + itemT.id + ')">✕</button>' +
+            '</div>' +
+          '</div>' +
+          '<div class="row-actions">' +
+            '<button class="btn btn-wa btn-sm" onclick="shareBookingSlipWA(' + itemT.id + ')">🧾 Booking Slip WA</button>' +
           '</div>' +
         '</div>';
       }
@@ -873,10 +1139,15 @@
       for (var p = 0; p < keys.length; p++) {
         var pr = custMap[keys[p]];
         dlHtml += '<option value="' + pr.name + '">';
+        var due = Math.max(0, pr.bill - pr.paid);
+        if (custFilter === 'due' && due <= 0) continue;
+        if (custFilter === 'clear' && due > 0) continue;
+
         var cHay = (pr.name + ' ' + (pr.village || '') + ' ' + (pr.phone || '') + ' ' + (pr.note || '')).toLowerCase();
         if (qCust && cHay.indexOf(qCust) === -1) continue;
         shownCust++;
-        var due = Math.max(0, pr.bill - pr.paid);
+
+        var cleanTel = (pr.phone || '').replace(/[^0-9+]/g, '');
         pHtml += '<div class="item">' +
           '<div class="item-top">' +
             '<div>' +
@@ -892,6 +1163,7 @@
           '</div>' +
           '<div class="row-actions">' +
             '<button class="btn btn-wa btn-sm" onclick="shareCustomerWA(\'' + pr.name.replace(/'/g, '') + '\', \'' + (pr.village || '').replace(/'/g, '') + '\', \'' + (pr.phone || '') + '\', ' + due + ')">📲 WhatsApp</button>' +
+            (cleanTel ? '<a class="btn btn-light btn-sm" href="tel:' + cleanTel + '">📞 Call</a>' : '') +
           '</div>' +
         '</div>';
       }
