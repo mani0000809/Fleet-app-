@@ -3,101 +3,157 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0f172a" />
+  <meta name="theme-color" content="#0b1120" />
   <link rel="manifest" href="./manifest.json" />
-  <title>Mor self drive - Hisab Ledger</title>
+  <title>Mor self drive — Premium Fleet & Hisab</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-    body { background: #f1f5f9; color: #0f172a; padding-bottom: 84px; }
+    :root {
+      --bg: #f8fafc;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --navy: #0b1120;
+      --amber: #f59e0b;
+      --green: #059669;
+      --wa: #16a34a;
+      --red: #dc2626;
+      --blue: #2563eb;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+    body { background: var(--bg); color: var(--ink); padding-bottom: 88px; }
+
     header {
-      background: #0f172a; color: #fff; padding: 14px 16px;
-      display: flex; justify-content: space-between; align-items: center;
-      position: sticky; top: 0; z-index: 20;
+      background: linear-gradient(135deg, #0b1120 0%, #1e293b 100%);
+      color: #fff; padding: 16px; position: sticky; top: 0; z-index: 30;
+      box-shadow: 0 4px 18px rgba(11, 17, 32, 0.18);
     }
-    header h1 { font-size: 18px; }
-    header small { font-size: 11px; color: #94a3b8; display: block; }
-    .wrap { max-width: 560px; margin: 0 auto; padding: 14px; }
+    .hdr-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; max-width: 600px; margin: 0 auto; }
+    .brand-title { font-size: 19px; font-weight: 800; letter-spacing: 0.2px; display: flex; align-items: center; gap: 8px; }
+    .brand-sub { font-size: 11px; color: #cbd5e1; margin-top: 2px; }
+    .pill-live {
+      background: rgba(16, 185, 129, 0.16); color: #6ee7b7; border: 1px solid rgba(110, 231, 183, 0.35);
+      font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 999px; white-space: nowrap;
+    }
+
+    .wrap { max-width: 600px; margin: 0 auto; padding: 14px; }
+
+    .hero {
+      background: linear-gradient(135deg, #0b1120 0%, #172554 100%);
+      color: #fff; border-radius: 20px; padding: 18px; margin-bottom: 14px;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.16);
+    }
+    .hero-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .hero-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: #93c5fd; font-weight: 700; }
+    .hero-main { font-size: 26px; font-weight: 800; margin: 4px 0 6px; }
+    .hero-sub { font-size: 13px; color: #e2e8f0; margin-bottom: 14px; }
+
     .card {
-      background: #fff; border: 1px solid #cbd5e1; border-radius: 14px;
-      padding: 14px; margin-bottom: 12px;
+      background: #fff; border: 1px solid var(--line); border-radius: 16px;
+      padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
     }
-    .dark-card { background: #0f172a; color: #fff; border-color: #0f172a; }
     .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+
+    .kpi-title { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+    .kpi-val { font-size: 20px; font-weight: 800; margin-top: 5px; }
+
     .btn {
-      border: none; border-radius: 10px; padding: 10px 12px;
-      font-weight: bold; cursor: pointer; font-size: 13px;
+      border: none; border-radius: 12px; padding: 11px 12px;
+      font-weight: 700; cursor: pointer; font-size: 13px;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      transition: transform 0.08s ease;
     }
-    .btn-amber { background: #f59e0b; color: #0f172a; }
-    .btn-green { background: #059669; color: #fff; }
-    .btn-wa { background: #16a34a; color: #fff; }
-    .btn-red { background: #dc2626; color: #fff; }
-    .btn-dark { background: #0f172a; color: #fff; }
-    .btn-light { background: #e2e8f0; color: #0f172a; }
+    .btn:active { transform: scale(0.98); }
+    .btn-amber { background: var(--amber); color: #0f172a; }
+    .btn-green { background: var(--green); color: #fff; }
+    .btn-wa { background: var(--wa); color: #fff; }
+    .btn-blue { background: var(--blue); color: #fff; }
+    .btn-red { background: var(--red); color: #fff; }
+    .btn-dark { background: var(--navy); color: #fff; }
+    .btn-light { background: #f1f5f9; color: var(--ink); border: 1px solid #cbd5e1; }
+    .btn-sm { padding: 7px 10px; font-size: 12px; border-radius: 9px; }
     .full { width: 100%; }
+
+    .drawer {
+      display: none; background: #fff; border: 2px solid var(--navy);
+      border-radius: 18px; padding: 16px; margin-bottom: 14px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+    }
+    .drawer.open { display: block; }
+    .drawer-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .drawer-hdr h3 { font-size: 16px; font-weight: 800; }
+
     .field { margin-bottom: 10px; }
-    .field label {
-      display: block; font-size: 12px; font-weight: bold;
-      margin-bottom: 4px; color: #475569;
+    .field label { display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px; }
+    .field input, .field select, .search-box {
+      width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1;
+      border-radius: 10px; font-size: 14px; background: #fff; color: var(--ink);
     }
-    .field input, .field select {
-      width: 100%; padding: 9px 10px; border: 1px solid #94a3b8;
-      border-radius: 8px; font-size: 14px; background: #fff; color: #0f172a;
-    }
+    .search-box { margin-bottom: 12px; background: #fff; }
+
     .item {
-      background: #fff; border: 1px solid #cbd5e1; border-radius: 12px;
-      padding: 12px; margin-bottom: 10px;
+      background: #fff; border: 1px solid var(--line); border-radius: 15px;
+      padding: 13px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
     }
-    .item-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
-    .tag {
-      display: inline-block; padding: 3px 8px; border-radius: 99px;
-      font-size: 11px; font-weight: bold; margin-top: 4px;
+    .item-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+    .meta { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.45; }
+    .row-actions { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+
+    .badge {
+      display: inline-block; padding: 3px 9px; border-radius: 999px;
+      font-size: 11px; font-weight: 700; margin-top: 4px;
     }
-    .t-avail { background: #d1fae5; color: #065f46; }
-    .t-trip { background: #dbeafe; color: #1e40af; }
-    .t-maint { background: #fee2e2; color: #991b1b; }
+    .b-avail { background: #dcfce7; color: #166534; }
+    .b-trip { background: #dbeafe; color: #1e40af; }
+    .b-maint { background: #fee2e2; color: #991b1b; }
+
+    .status-box { border-radius: 12px; padding: 10px 6px; text-align: center; }
+    .st-av { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+    .st-tr { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+    .st-mt { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
     .page { display: none; }
     .page.show { display: block; }
     .nav {
       position: fixed; bottom: 0; left: 0; right: 0; background: #fff;
-      border-top: 1px solid #cbd5e1; display: grid; grid-template-columns: repeat(4, 1fr);
-      padding: 8px 4px; z-index: 25;
+      border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(4, 1fr);
+      padding: 8px 6px; z-index: 30; box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.06);
     }
     .nav button {
       background: none; border: none; padding: 8px 4px; font-size: 12px;
-      font-weight: bold; color: #475569; cursor: pointer; border-radius: 8px;
+      font-weight: 700; color: var(--muted); cursor: pointer; border-radius: 10px;
     }
-    .nav button.active { background: #fef3c7; color: #0f172a; }
-    .box {
-      display: none; background: #fff; border: 2px solid #0f172a;
-      border-radius: 14px; padding: 14px; margin-bottom: 14px;
-    }
-    .box.open { display: block; }
-    .num { font-size: 20px; font-weight: bold; margin-top: 4px; }
-    .meta { font-size: 12px; color: #475569; margin-top: 4px; line-height: 1.45; }
-    .row-actions { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+    .nav button.active { background: #fef3c7; color: var(--ink); }
   </style>
 </head>
 <body>
 
   <header>
-    <div>
-      <h1>🚚 Mor self drive</h1>
-      <small>Offline Fleet, Customer & Hisab</small>
+    <div class="hdr-top">
+      <div>
+        <div class="brand-title">🚗 Mor self drive</div>
+        <div class="brand-sub">Self-Drive Fleet, Customer & Hisab</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span class="pill-live">Offline Safe</span>
+        <button class="btn btn-light btn-sm" onclick="toggleDrawer('boxSettings')">⚙️</button>
+      </div>
     </div>
-    <button class="btn btn-light" onclick="toggleBox('boxSettings')">⚙️ Backup</button>
   </header>
 
   <div class="wrap">
-    <!-- BACKUP & DATA BOX -->
-    <div id="boxSettings" class="box">
-      <h3 style="margin-bottom:10px;">Backup & Data Controls</h3>
+    <!-- SETTINGS & BACKUP DRAWER -->
+    <div id="boxSettings" class="drawer">
+      <div class="drawer-hdr">
+        <h3>⚙️ Settings & Backup</h3>
+        <button class="btn btn-light btn-sm" onclick="closeDrawers()">✕</button>
+      </div>
       <div class="grid2" style="margin-bottom:10px;">
         <button class="btn btn-green" onclick="exportJSON()">⬇ Backup JSON</button>
         <button class="btn btn-dark" onclick="exportCSV()">📊 Excel (CSV)</button>
       </div>
       <div class="field">
-        <label>Backup File Restore Karein (.json)</label>
+        <label>Restore Backup File (.json)</label>
         <input type="file" accept=".json" onchange="importJSON(event)" />
       </div>
       <div style="border-top:1px solid #e2e8f0;padding-top:10px;margin-top:8px;">
@@ -105,41 +161,100 @@
       </div>
     </div>
 
-    <!-- ADD BOOKING / TRIP -->
-    <div id="boxTrip" class="box">
-      <h3 style="margin-bottom:10px;">Nayi Booking / Trip Hisab</h3>
-      <div class="grid2">
-        <div class="field"><label>Date</label><input type="date" id="inDate" /></div>
-        <div class="field"><label>Gaadi Number</label><select id="inVeh"></select></div>
+    <!-- ADD BOOKING / TRIP DRAWER -->
+    <div id="boxTrip" class="drawer">
+      <div class="drawer-hdr">
+        <h3>📝 Nayi Booking / Trip Hisab</h3>
+        <button class="btn btn-light btn-sm" onclick="closeDrawers()">✕</button>
       </div>
       <div class="grid2">
-        <div class="field"><label>Customer Name</label><input type="text" id="inCustName" placeholder="Customer ka naam" /></div>
-        <div class="field"><label>Customer Phone</label><input type="tel" id="inCustPhone" placeholder="98XXXXXXXX" /></div>
+        <div class="field">
+          <label>Date (Calendar)</label>
+          <input type="date" id="inDate" />
+        </div>
+        <div class="field">
+          <label>Gaadi Chunein</label>
+          <select id="inVeh" onchange="autoFillRate()"></select>
+        </div>
       </div>
-      <div class="field"><label>Customer ID / License / Address</label><input type="text" id="inCustNote" placeholder="DL / Aadhaar / Address" /></div>
+      <div class="grid2">
+        <div class="field">
+          <label>Customer Name</label>
+          <input type="text" id="inCustName" placeholder="Customer ka naam" />
+        </div>
+        <div class="field">
+          <label>Village / Gaon</label>
+          <input type="text" id="inCustVillage" placeholder="Gaon / Village ka naam" />
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>Mobile Number</label>
+          <input type="tel" id="inCustPhone" placeholder="98XXXXXXXX" />
+        </div>
+        <div class="field">
+          <label>DL / Aadhaar / ID Note</label>
+          <input type="text" id="inCustNote" placeholder="Driving license / ID note" />
+        </div>
+      </div>
       <div class="grid3">
-        <div class="field"><label>Total Rent (₹)</label><input type="number" id="inInc" placeholder="0" /></div>
-        <div class="field"><label>Kharcha (₹)</label><input type="number" id="inExp" placeholder="0" /></div>
-        <div class="field"><label>Jama Mila (₹)</label><input type="number" id="inPaid" placeholder="0" /></div>
+        <div class="field">
+          <label>Total Rent (₹)</label>
+          <input type="number" id="inInc" placeholder="0" />
+        </div>
+        <div class="field">
+          <label>Kharcha (₹)</label>
+          <input type="number" id="inExp" placeholder="0" />
+        </div>
+        <div class="field">
+          <label>Jama / Advance (₹)</label>
+          <input type="number" id="inPaid" placeholder="0" />
+        </div>
       </div>
-      <div class="field"><label>Trip / Booking Note</label><input type="text" id="inNote" placeholder="Days / route / remarks" /></div>
       <div class="grid2">
-        <button class="btn btn-dark" onclick="addTrip()">Save Entry</button>
-        <button class="btn btn-light" onclick="closeBoxes()">Band Karein</button>
+        <div class="field">
+          <label>Booking Days / Route Note</label>
+          <input type="text" id="inNote" placeholder="2 days / route note" />
+        </div>
+        <div class="field">
+          <label>Gaadi Status Update</label>
+          <select id="inVehStatus">
+            <option value="">Same Rakhein</option>
+            <option value="On Trip">On Trip (Bahar Gayi)</option>
+            <option value="Available">Available (Wapas Aayi)</option>
+            <option value="Maintenance">Maintenance</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid2">
+        <button class="btn btn-amber" onclick="addTrip()">✓ Save Booking</button>
+        <button class="btn btn-light" onclick="closeDrawers()">Band Karein</button>
       </div>
     </div>
 
-    <!-- ADD VEHICLE -->
-    <div id="boxVeh" class="box">
-      <h3 style="margin-bottom:10px;">Nayi Gaadi Details</h3>
-      <div class="grid2">
-        <div class="field"><label>Gaadi Number</label><input type="text" id="vNo" placeholder="HR-10-XX-0000" /></div>
-        <div class="field"><label>Gaadi Model / Naam</label><input type="text" id="vMod" placeholder="Swift / Ertiga / Thar" /></div>
+    <!-- ADD VEHICLE DRAWER -->
+    <div id="boxVeh" class="drawer">
+      <div class="drawer-hdr">
+        <h3>🚗 Nayi Gaadi Jodein</h3>
+        <button class="btn btn-light btn-sm" onclick="closeDrawers()">✕</button>
       </div>
       <div class="grid2">
-        <div class="field"><label>Per Day Rate (₹)</label><input type="number" id="vRate" placeholder="0" /></div>
         <div class="field">
-          <label>Status</label>
+          <label>Gaadi Number</label>
+          <input type="text" id="vNo" placeholder="HR-10-AB-1234" />
+        </div>
+        <div class="field">
+          <label>Model / Gaadi Naam</label>
+          <input type="text" id="vMod" placeholder="Swift / Ertiga / Thar" />
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>Per Day Rent (₹)</label>
+          <input type="number" id="vRate" placeholder="1500" />
+        </div>
+        <div class="field">
+          <label>Aaj Ki Sthiti</label>
           <select id="vSt">
             <option value="Available">Available</option>
             <option value="On Trip">On Trip</option>
@@ -147,105 +262,140 @@
           </select>
         </div>
       </div>
-      <div class="field"><label>RC / Insurance / Service Detail</label><input type="text" id="vDetail" placeholder="Insurance / service note" /></div>
+      <div class="field">
+        <label>Insurance / Fastag / Service Detail</label>
+        <input type="text" id="vDetail" placeholder="Insurance / service / color detail" />
+      </div>
       <div class="grid2">
-        <button class="btn btn-dark" onclick="addVeh()">Save Gaadi</button>
-        <button class="btn btn-light" onclick="closeBoxes()">Band Karein</button>
+        <button class="btn btn-dark" onclick="addVeh()">✓ Save Gaadi</button>
+        <button class="btn btn-light" onclick="closeDrawers()">Band Karein</button>
       </div>
     </div>
 
-    <!-- PAYMENT JAMA -->
-    <div id="boxPay" class="box">
-      <h3 style="margin-bottom:10px;">Customer Payment Jama</h3>
-      <div class="field"><label>Customer Name</label><input type="text" id="pCust" placeholder="Exact customer name" /></div>
-      <div class="field"><label>Jama Rashi (₹)</label><input type="number" id="pAmt" placeholder="0" /></div>
+    <!-- PAYMENT JAMA DRAWER -->
+    <div id="boxPay" class="drawer">
+      <div class="drawer-hdr">
+        <h3>💰 Customer Payment Jama</h3>
+        <button class="btn btn-light btn-sm" onclick="closeDrawers()">✕</button>
+      </div>
+      <div class="field">
+        <label>Customer Name</label>
+        <input type="text" id="pCust" list="custSuggestions" placeholder="Customer naam chunein ya likhein" />
+        <datalist id="custSuggestions"></datalist>
+      </div>
+      <div class="field">
+        <label>Jama Rashi (₹)</label>
+        <input type="number" id="pAmt" placeholder="0" />
+      </div>
       <div class="grid2">
-        <button class="btn btn-green" onclick="addPayment()">Jama Karein</button>
-        <button class="btn btn-light" onclick="closeBoxes()">Band Karein</button>
+        <button class="btn btn-green" onclick="addPayment()">✓ Payment Jama Karein</button>
+        <button class="btn btn-light" onclick="closeDrawers()">Band Karein</button>
       </div>
     </div>
 
-    <!-- HOME -->
+    <!-- HOME PAGE -->
     <div id="page-home" class="page show">
-      <div class="card dark-card">
-        <div style="font-size:12px;color:#cbd5e1;">AAJ KA HISAB (<span id="lblToday"></span>)</div>
-        <div class="num" style="font-size:23px;margin:8px 0 12px;">
-          Kamai: ₹<span id="sTodayInc">0</span> | Bachat: ₹<span id="sTodayProf">0</span>
+      <div class="hero">
+        <div class="hero-top">
+          <span class="hero-lbl">AAJ KA HISAB • <span id="lblToday"></span></span>
+          <span style="font-size:12px;color:#fde68a;font-weight:700;">Bachat: ₹<span id="sTodayProf">0</span></span>
         </div>
+        <div class="hero-main">Kamai: ₹<span id="sTodayInc">0</span></div>
+        <div class="hero-sub">Kharcha: ₹<span id="sTodayExp">0</span> • Jama Mila: ₹<span id="sTodayPaid">0</span></div>
+
         <div class="grid2" style="margin-bottom:8px;">
           <button class="btn btn-amber" onclick="openTripBox()">+ Nayi Booking</button>
-          <button class="btn btn-wa" onclick="shareWhatsAppDaily()">📲 WhatsApp Daily Hisab</button>
+          <button class="btn btn-wa" onclick="shareWhatsAppDaily()">📲 WhatsApp Daily</button>
         </div>
         <div class="grid2">
-          <button class="btn btn-light" onclick="openVehBox()">+ Gaadi Detail</button>
-          <button class="btn btn-green" onclick="openPayBox()">💰 Payment Jama</button>
+          <button class="btn btn-light" onclick="openVehBox()">+ Gaadi Jodein</button>
+          <button class="btn btn-blue" onclick="shareWhatsAppMonthly()">📅 Monthly Hisab WA</button>
         </div>
-      </div>
-
-      <div class="grid2">
-        <div class="card"><div style="font-size:12px;color:#475569;">Total Kamai</div><div class="num">₹<span id="sTotInc">0</span></div></div>
-        <div class="card"><div style="font-size:12px;color:#475569;">Total Kharcha</div><div class="num" style="color:#dc2626;">₹<span id="sTotExp">0</span></div></div>
-        <div class="card"><div style="font-size:12px;color:#475569;">Net Bachat</div><div class="num" style="color:#059669;">₹<span id="sNet">0</span></div></div>
-        <div class="card"><div style="font-size:12px;color:#475569;">Market Udhaar</div><div class="num" style="color:#b45309;">₹<span id="sDue">0</span></div></div>
       </div>
 
       <div class="card">
-        <div style="font-size:12px;font-weight:bold;color:#475569;margin-bottom:8px;">GAADIYON KI STHITI</div>
-        <div class="grid3" style="text-align:center;">
-          <div style="background:#ecfdf5;padding:8px;border-radius:10px;color:#065f46;">
-            <b style="font-size:18px;" id="cAvail">0</b><br><small>Available</small>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <span class="kpi-title">Fleet Status (Gaadiyon Ki Sthiti)</span>
+          <button class="btn btn-light btn-sm" onclick="goPage('fleet')">Sab Dekhein →</button>
+        </div>
+        <div class="grid3">
+          <div class="status-box st-av">
+            <b style="font-size:19px;" id="cAvail">0</b><br><small>Available</small>
           </div>
-          <div style="background:#eff6ff;padding:8px;border-radius:10px;color:#1e40af;">
-            <b style="font-size:18px;" id="cTrip">0</b><br><small>On Trip</small>
+          <div class="status-box st-tr">
+            <b style="font-size:19px;" id="cTrip">0</b><br><small>On Trip</small>
           </div>
-          <div style="background:#fef2f2;padding:8px;border-radius:10px;color:#991b1b;">
-            <b style="font-size:18px;" id="cMaint">0</b><br><small>Maintenance</small>
+          <div class="status-box st-mt">
+            <b style="font-size:19px;" id="cMaint">0</b><br><small>Maintenance</small>
           </div>
+        </div>
+        <div id="fleetNumbersPreview" class="meta" style="margin-top:10px;"></div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <div class="kpi-title">Total Kamai</div>
+          <div class="kpi-val">₹<span id="sTotInc">0</span></div>
+        </div>
+        <div class="card">
+          <div class="kpi-title">Total Kharcha</div>
+          <div class="kpi-val" style="color:var(--red);">₹<span id="sTotExp">0</span></div>
+        </div>
+        <div class="card">
+          <div class="kpi-title">Net Bachat</div>
+          <div class="kpi-val" style="color:var(--green);">₹<span id="sNet">0</span></div>
+        </div>
+        <div class="card">
+          <div class="kpi-title">Baaki Udhaar</div>
+          <div class="kpi-val" style="color:#b45309;">₹<span id="sDue">0</span></div>
         </div>
       </div>
     </div>
 
-    <!-- FLEET -->
+    <!-- FLEET PAGE -->
     <div id="page-fleet" class="page">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <h3>Gaadi Details</h3>
-        <button class="btn btn-dark" onclick="openVehBox()">+ Gaadi Jodein</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h3>🚗 Gaadiyan & Performance</h3>
+        <button class="btn btn-dark btn-sm" onclick="openVehBox()">+ Gaadi Jodein</button>
       </div>
       <div id="listVeh"></div>
     </div>
 
-    <!-- HISAB -->
+    <!-- HISAB PAGE -->
     <div id="page-hisab" class="page">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap;">
-        <h3>Bookings & Hisab</h3>
+        <h3>📒 Bookings & Hisab</h3>
         <div style="display:flex;gap:6px;">
-          <button class="btn btn-wa" onclick="shareWhatsAppDaily()">📲 WhatsApp</button>
-          <button class="btn btn-amber" onclick="openTripBox()">+ Entry</button>
+          <button class="btn btn-wa btn-sm" onclick="shareWhatsAppDaily()">📲 Daily WA</button>
+          <button class="btn btn-amber btn-sm" onclick="openTripBox()">+ Booking</button>
         </div>
       </div>
+      <input type="text" id="searchTrip" class="search-box" placeholder="🔍 Customer naam, village ya gaadi number se khojein..." oninput="render()" />
       <div id="listTrip"></div>
     </div>
 
-    <!-- CUSTOMERS -->
+    <!-- CUSTOMERS PAGE -->
     <div id="page-party" class="page">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <h3>Customer Details & Khata</h3>
-        <button class="btn btn-green" onclick="openPayBox()">💰 Jama</button>
+        <h3>👥 Customer Details & Khata</h3>
+        <button class="btn btn-green btn-sm" onclick="openPayBox()">💰 Payment Jama</button>
       </div>
+      <input type="text" id="searchCust" class="search-box" placeholder="🔍 Customer naam, village ya phone se khojein..." oninput="render()" />
       <div id="listParty"></div>
     </div>
   </div>
 
   <div class="nav">
     <button id="tab-home" class="active" onclick="goPage('home')">🏠 Home</button>
-    <button id="tab-fleet" onclick="goPage('fleet')">🚚 Gaadiyan</button>
+    <button id="tab-fleet" onclick="goPage('fleet')">🚗 Gaadiyan</button>
     <button id="tab-hisab" onclick="goPage('hisab')">📒 Hisab</button>
-    <button id="tab-party" onclick="goPage('party')">👥 Customers</button>
+    <button id="tab-party" onclick="goPage('party')">👥 Khata</button>
   </div>
 
   <script>
-    var KEY = 'mor_self_drive_offline_v2';
+    var KEY = 'mor_self_drive_premium_v2';
     var data = { vehicles: [], trips: [], payments: [] };
+
     try {
       var saved = JSON.parse(localStorage.getItem(KEY));
       if (saved) {
@@ -263,50 +413,69 @@
     }
 
     function todayStr() {
-      return new Date().toISOString().slice(0, 10);
+      var d = new Date();
+      var yr = d.getFullYear();
+      var mo = String(d.getMonth() + 1).padStart(2, '0');
+      var da = String(d.getDate()).padStart(2, '0');
+      return yr + '-' + mo + '-' + da;
     }
 
-    function closeBoxes() {
-      var boxes = document.querySelectorAll('.box');
-      for (var i = 0; i < boxes.length; i++) boxes[i].classList.remove('open');
+    function monthStr() {
+      return todayStr().slice(0, 7);
     }
 
-    function toggleBox(id) {
+    function closeDrawers() {
+      var list = document.querySelectorAll('.drawer');
+      for (var i = 0; i < list.length; i++) list[i].classList.remove('open');
+    }
+
+    function toggleDrawer(id) {
       var el = document.getElementById(id);
-      var wasOpen = el.classList.contains('open');
-      closeBoxes();
-      if (!wasOpen) el.classList.add('open');
+      var openNow = el.classList.contains('open');
+      closeDrawers();
+      if (!openNow) el.classList.add('open');
     }
 
-    function populateVehicleSelect() {
+    function populateVehicleDropdown() {
       var sel = document.getElementById('inVeh');
-      var opts = '<option value="General">General / Manual</option>';
+      var html = '<option value="General">General / Manual</option>';
       for (var i = 0; i < data.vehicles.length; i++) {
         var v = data.vehicles[i];
-        opts += '<option value="' + v.no + '">' + v.no + ' (' + v.mod + ')</option>';
+        html += '<option value="' + v.no + '" data-rate="' + (v.rate || 0) + '">' + v.no + ' — ' + v.mod + ' (' + v.st + ')</option>';
       }
-      sel.innerHTML = opts;
+      sel.innerHTML = html;
+      autoFillRate();
+    }
+
+    function autoFillRate() {
+      var sel = document.getElementById('inVeh');
+      var opt = sel.options[sel.selectedIndex];
+      var rate = opt ? Number(opt.getAttribute('data-rate')) || 0 : 0;
+      var incEl = document.getElementById('inInc');
+      if (rate > 0 && !incEl.value) {
+        incEl.placeholder = 'Rate: ₹' + rate + '/day';
+      }
     }
 
     function openTripBox() {
-      closeBoxes();
-      populateVehicleSelect();
+      closeDrawers();
+      populateVehicleDropdown();
       document.getElementById('inDate').value = todayStr();
       document.getElementById('boxTrip').classList.add('open');
     }
 
     function openVehBox() {
-      closeBoxes();
+      closeDrawers();
       document.getElementById('boxVeh').classList.add('open');
     }
 
     function openPayBox() {
-      closeBoxes();
+      closeDrawers();
       document.getElementById('boxPay').classList.add('open');
     }
 
     function goPage(name) {
-      closeBoxes();
+      closeDrawers();
       var pages = document.querySelectorAll('.page');
       for (var i = 0; i < pages.length; i++) pages[i].classList.remove('show');
       var tabs = document.querySelectorAll('.nav button');
@@ -322,9 +491,13 @@
       var st = document.getElementById('vSt').value;
       var detail = document.getElementById('vDetail').value.trim();
       if (!no) return alert('Gaadi number likhein');
+
+      var exists = data.vehicles.some(function(item) { return item.no === no; });
+      if (exists) return alert('Yeh gaadi number pehle se list mein hai');
+
       data.vehicles.push({ id: Date.now(), no: no, mod: mod, rate: rate, st: st, detail: detail });
       ['vNo', 'vMod', 'vRate', 'vDetail'].forEach(function(id) { document.getElementById(id).value = ''; });
-      closeBoxes();
+      closeDrawers();
       save();
     }
 
@@ -341,7 +514,7 @@
     }
 
     function delVeh(id) {
-      if (!confirm('Gaadi hatayein?')) return;
+      if (!confirm('Is gaadi ko list se hatayein?')) return;
       data.vehicles = data.vehicles.filter(function(x) { return x.id !== id; });
       save();
     }
@@ -350,23 +523,35 @@
       var dt = document.getElementById('inDate').value || todayStr();
       var veh = document.getElementById('inVeh').value || 'General';
       var custName = document.getElementById('inCustName').value.trim() || 'Walk-in Customer';
+      var custVillage = document.getElementById('inCustVillage').value.trim();
       var custPhone = document.getElementById('inCustPhone').value.trim();
       var custNote = document.getElementById('inCustNote').value.trim();
       var inc = Number(document.getElementById('inInc').value) || 0;
       var exp = Number(document.getElementById('inExp').value) || 0;
       var paid = Number(document.getElementById('inPaid').value) || 0;
       var note = document.getElementById('inNote').value.trim();
+      var newSt = document.getElementById('inVehStatus').value;
 
       data.trips.unshift({
         id: Date.now(), dt: dt, veh: veh,
-        custName: custName, custPhone: custPhone, custNote: custNote,
+        custName: custName, custVillage: custVillage, custPhone: custPhone, custNote: custNote,
         inc: inc, exp: exp, paid: paid, note: note
       });
 
-      ['inCustName', 'inCustPhone', 'inCustNote', 'inInc', 'inExp', 'inPaid', 'inNote'].forEach(function(id) {
+      if (newSt && veh !== 'General') {
+        for (var i = 0; i < data.vehicles.length; i++) {
+          if (data.vehicles[i].no === veh) {
+            data.vehicles[i].st = newSt;
+            break;
+          }
+        }
+      }
+
+      ['inCustName', 'inCustVillage', 'inCustPhone', 'inCustNote', 'inInc', 'inExp', 'inPaid', 'inNote'].forEach(function(id) {
         document.getElementById(id).value = '';
       });
-      closeBoxes();
+      document.getElementById('inVehStatus').value = '';
+      closeDrawers();
       save();
     }
 
@@ -377,14 +562,48 @@
       data.payments.unshift({ id: Date.now(), dt: todayStr(), cust: cust, amt: amt });
       document.getElementById('pCust').value = '';
       document.getElementById('pAmt').value = '';
-      closeBoxes();
+      closeDrawers();
       save();
     }
 
     function delTrip(id) {
-      if (!confirm('Entry delete karein?')) return;
+      if (!confirm('Is entry ko delete karein?')) return;
       data.trips = data.trips.filter(function(x) { return x.id !== id; });
       save();
+    }
+
+    function findVehicleInfo(vehNo) {
+      for (var i = 0; i < data.vehicles.length; i++) {
+        if (data.vehicles[i].no === vehNo) return data.vehicles[i];
+      }
+      return null;
+    }
+
+    function findLatestTripForVehicle(vehNo) {
+      for (var i = 0; i < data.trips.length; i++) {
+        if (data.trips[i].veh === vehNo) return data.trips[i];
+      }
+      return null;
+    }
+
+    function getFleetGroups() {
+      var onTrip = [], avail = [], maint = [];
+      for (var i = 0; i < data.vehicles.length; i++) {
+        var v = data.vehicles[i];
+        var label = v.no + (v.mod ? ' (' + v.mod + ')' : '');
+        if (v.st === 'On Trip') {
+          var tr = findLatestTripForVehicle(v.no);
+          var extra = [];
+          if (tr && tr.custName) extra.push(tr.custName);
+          if (tr && tr.custVillage) extra.push('Gaon: ' + tr.custVillage);
+          onTrip.push(label + (extra.length ? ' — ' + extra.join(', ') : ''));
+        } else if (v.st === 'Maintenance') {
+          maint.push(label);
+        } else {
+          avail.push(label);
+        }
+      }
+      return { onTrip: onTrip, avail: avail, maint: maint };
     }
 
     function shareWhatsAppDaily() {
@@ -399,25 +618,62 @@
           tInc += x.inc;
           tExp += x.exp;
           tPaid += x.paid;
-          lines.push('- ' + x.custName + ' (' + x.veh + '): Kamai ₹' + x.inc + ', Kharcha ₹' + x.exp);
+          var vInfo = findVehicleInfo(x.veh);
+          var vLabel = x.veh + (vInfo && vInfo.mod ? ' (' + vInfo.mod + ')' : '');
+          var cLabel = x.custName + (x.custVillage ? ' [' + x.custVillage + ']' : '');
+          lines.push('• ' + vLabel + ' | ' + cLabel + ': Rent ₹' + x.inc + ', Kharcha ₹' + x.exp);
         }
       }
 
-      var msg = '*Mor self drive - Daily Hisab (' + td + ')*\n' +
-                'Total Entries: ' + count + '\n' +
-                'Aaj Ki Kamai: ₹' + tInc + '\n' +
-                'Aaj Ka Kharcha: ₹' + tExp + '\n' +
-                'Net Bachat: ₹' + (tInc - tExp) + '\n' +
-                'Jama Mila: ₹' + tPaid + '\n' +
-                (lines.length ? '\n*Entries:*\n' + lines.join('\n') : '');
+      var fl = getFleetGroups();
+      var onTripText = fl.onTrip.length
+        ? '\n  - ' + fl.onTrip.join('\n  - ')
+        : ' Koi nahi';
+
+      var msg = '*🚗 Mor self drive — Daily Hisab (' + td + ')*\n' +
+                '━━━━━━━━━━━━━━━\n' +
+                '📊 Entries: ' + count + '\n' +
+                '💰 Aaj Ki Kamai: ₹' + tInc + '\n' +
+                '💸 Aaj Ka Kharcha: ₹' + tExp + '\n' +
+                '✅ Net Bachat: ₹' + (tInc - tExp) + '\n' +
+                '💵 Jama Mila: ₹' + tPaid + '\n' +
+                '━━━━━━━━━━━━━━━\n' +
+                '*🚙 On Trip (Gayi Hui Gaadiyan):*' + onTripText + '\n' +
+                '*🟢 Available (Khali):* ' + (fl.avail.length ? fl.avail.join(', ') : 'Koi nahi') + '\n' +
+                '*🔴 Maintenance:* ' + (fl.maint.length ? fl.maint.join(', ') : 'Koi nahi') +
+                (lines.length ? '\n\n*📝 Aaj Ki Bookings:*\n' + lines.join('\n') : '');
 
       window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
     }
 
-    function shareCustomerWA(name, phone, due) {
+    function shareWhatsAppMonthly() {
+      var ym = monthStr();
+      var mInc = 0, mExp = 0, mPaid = 0, count = 0;
+      for (var i = 0; i < data.trips.length; i++) {
+        var x = data.trips[i];
+        if ((x.dt || '').slice(0, 7) === ym) {
+          count++;
+          mInc += x.inc;
+          mExp += x.exp;
+          mPaid += x.paid;
+        }
+      }
+      var msg = '*📅 Mor self drive — Monthly Hisab (' + ym + ')*\n' +
+                '━━━━━━━━━━━━━━━\n' +
+                'Total Bookings: ' + count + '\n' +
+                'Mahine Ki Kamai: ₹' + mInc + '\n' +
+                'Mahine Ka Kharcha: ₹' + mExp + '\n' +
+                'Net Bachat: ₹' + (mInc - mExp) + '\n' +
+                'Total Jama Mila: ₹' + mPaid;
+
+      window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+    }
+
+    function shareCustomerWA(name, village, phone, due) {
       var cleanPhone = (phone || '').replace(/[^0-9]/g, '');
       if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
-      var text = 'Namaste ' + name + ', Mor self drive se aapka baaki hisab ₹' + due + ' hai.';
+      var vPart = village ? ' (' + village + ')' : '';
+      var text = 'Namaste ' + name + vPart + ', Mor self drive se aapka baaki hisab ₹' + due + ' hai.';
       var link = cleanPhone
         ? 'https://wa.me/' + cleanPhone + '?text=' + encodeURIComponent(text)
         : 'https://wa.me/?text=' + encodeURIComponent(text);
@@ -427,7 +683,7 @@
     function resetData() {
       if (!confirm('Saara data delete karke zero se shuru karein?')) return;
       data = { vehicles: [], trips: [], payments: [] };
-      closeBoxes();
+      closeDrawers();
       save();
     }
 
@@ -440,10 +696,10 @@
     }
 
     function exportCSV() {
-      var rows = [['Date', 'Vehicle', 'Customer', 'Phone', 'Income', 'Expense', 'Paid', 'Note']];
+      var rows = [['Date', 'Vehicle', 'Customer', 'Village', 'Phone', 'Rent', 'Expense', 'Paid', 'Note']];
       for (var i = 0; i < data.trips.length; i++) {
         var t = data.trips[i];
-        rows.push([t.dt, t.veh, t.custName, t.custPhone || '', t.inc, t.exp, t.paid, t.note || '']);
+        rows.push([t.dt, t.veh, t.custName, t.custVillage || '', t.custPhone || '', t.inc, t.exp, t.paid, t.note || '']);
       }
       var csv = rows.map(function(r) { return r.join(','); }).join('\n');
       var blob = new Blob([csv], { type: 'text/csv' });
@@ -465,7 +721,7 @@
             trips: p.trips || [],
             payments: p.payments || []
           };
-          closeBoxes();
+          closeDrawers();
           save();
           alert('Backup restore ho gaya');
         } catch (err) {
@@ -479,28 +735,40 @@
       var td = todayStr();
       document.getElementById('lblToday').textContent = td;
 
-      var tInc = 0, tExp = 0, inc = 0, exp = 0, paid = 0;
+      var tInc = 0, tExp = 0, tPaid = 0;
+      var inc = 0, exp = 0, paid = 0;
       var custMap = {};
+      var vehStats = {};
 
       for (var i = 0; i < data.trips.length; i++) {
         var x = data.trips[i];
         inc += x.inc;
         exp += x.exp;
         paid += x.paid;
+
         if (x.dt === td) {
           tInc += x.inc;
           tExp += x.exp;
+          tPaid += x.paid;
         }
+
+        if (!vehStats[x.veh]) vehStats[x.veh] = { inc: 0, exp: 0, trips: 0 };
+        vehStats[x.veh].inc += x.inc;
+        vehStats[x.veh].exp += x.exp;
+        vehStats[x.veh].trips += 1;
+
         var key = (x.custName || 'Customer').toLowerCase();
         if (!custMap[key]) {
           custMap[key] = {
             name: x.custName,
+            village: x.custVillage || '',
             phone: x.custPhone || '',
             note: x.custNote || '',
             bill: 0,
             paid: 0
           };
         }
+        if (x.custVillage) custMap[key].village = x.custVillage;
         if (x.custPhone) custMap[key].phone = x.custPhone;
         if (x.custNote) custMap[key].note = x.custNote;
         custMap[key].bill += x.inc;
@@ -513,98 +781,123 @@
         extraPaid += pm.amt;
         var pKey = pm.cust.toLowerCase();
         if (!custMap[pKey]) {
-          custMap[pKey] = { name: pm.cust, phone: '', note: '', bill: 0, paid: 0 };
+          custMap[pKey] = { name: pm.cust, village: '', phone: '', note: '', bill: 0, paid: 0 };
         }
         custMap[pKey].paid += pm.amt;
       }
 
       document.getElementById('sTodayInc').textContent = tInc;
+      document.getElementById('sTodayExp').textContent = tExp;
+      document.getElementById('sTodayPaid').textContent = tPaid;
       document.getElementById('sTodayProf').textContent = (tInc - tExp);
       document.getElementById('sTotInc').textContent = inc;
       document.getElementById('sTotExp').textContent = exp;
       document.getElementById('sNet').textContent = (inc - exp);
       document.getElementById('sDue').textContent = Math.max(0, inc - (paid + extraPaid));
 
-      var av = 0, tr = 0, mt = 0;
+      var fl = getFleetGroups();
+      document.getElementById('cAvail').textContent = fl.avail.length;
+      document.getElementById('cTrip').textContent = fl.onTrip.length;
+      document.getElementById('cMaint').textContent = fl.maint.length;
+
+      var prevHtml = '';
+      if (fl.onTrip.length) prevHtml += '<div><b>On Trip:</b> ' + fl.onTrip.join(' • ') + '</div>';
+      if (fl.avail.length) prevHtml += '<div><b>Available:</b> ' + fl.avail.join(', ') + '</div>';
+      if (fl.maint.length) prevHtml += '<div><b>Maintenance:</b> ' + fl.maint.join(', ') + '</div>';
+      document.getElementById('fleetNumbersPreview').innerHTML = prevHtml || 'Abhi koi gaadi add nahi hai.';
+
       var vHtml = '';
       if (!data.vehicles.length) {
-        vHtml = '<div class="card">Abhi koi gaadi detail add nahi hai.</div>';
+        vHtml = '<div class="card">Abhi koi gaadi add nahi hai. Upar "+ Gaadi Jodein" dabakar gaadi save karein.</div>';
       } else {
         for (var v = 0; v < data.vehicles.length; v++) {
           var itemV = data.vehicles[v];
-          if (itemV.st === 'Available') av++;
-          else if (itemV.st === 'On Trip') tr++;
-          else mt++;
-
-          var badgeCls = itemV.st === 'Available' ? 't-avail' : itemV.st === 'On Trip' ? 't-trip' : 't-maint';
+          var stClass = itemV.st === 'Available' ? 'b-avail' : itemV.st === 'On Trip' ? 'b-trip' : 'b-maint';
+          var vs = vehStats[itemV.no] || { inc: 0, exp: 0, trips: 0 };
           vHtml += '<div class="item">' +
             '<div class="item-top">' +
               '<div>' +
-                '<b>' + itemV.no + '</b> — ' + itemV.mod +
-                (itemV.rate ? ' <span style="color:#059669;font-weight:bold;">(₹' + itemV.rate + '/day)</span>' : '') +
-                '<br><span class="tag ' + badgeCls + '">' + itemV.st + '</span>' +
+                '<b style="font-size:15px;">' + itemV.no + '</b> — ' + itemV.mod +
+                (itemV.rate ? ' <span style="color:var(--green);font-weight:700;">(₹' + itemV.rate + '/day)</span>' : '') +
+                '<br><span class="badge ' + stClass + '">' + itemV.st + '</span>' +
                 (itemV.detail ? '<div class="meta">' + itemV.detail + '</div>' : '') +
+                '<div class="meta">Trips: <b>' + vs.trips + '</b> • Kamai: <b style="color:var(--green);">₹' + vs.inc + '</b> • Kharcha: <b style="color:var(--red);">₹' + vs.exp + '</b></div>' +
               '</div>' +
-              '<button class="btn btn-red" onclick="delVeh(' + itemV.id + ')">X</button>' +
+              '<button class="btn btn-red btn-sm" onclick="delVeh(' + itemV.id + ')">✕</button>' +
             '</div>' +
-            '<div class="row-actions"><button class="btn btn-light" onclick="cycleStatus(' + itemV.id + ')">Status Badlein ↻</button></div>' +
+            '<div class="row-actions">' +
+              '<button class="btn btn-light btn-sm" onclick="cycleStatus(' + itemV.id + ')">Status Badlein ↻</button>' +
+            '</div>' +
           '</div>';
         }
       }
       document.getElementById('listVeh').innerHTML = vHtml;
-      document.getElementById('cAvail').textContent = av;
-      document.getElementById('cTrip').textContent = tr;
-      document.getElementById('cMaint').textContent = mt;
 
+      var qTrip = (document.getElementById('searchTrip').value || '').trim().toLowerCase();
       var trHtml = '';
-      if (!data.trips.length) {
-        trHtml = '<div class="card">Abhi koi booking ya trip entry nahi hai.</div>';
-      } else {
-        for (var t = 0; t < data.trips.length; t++) {
-          var itemT = data.trips[t];
-          trHtml += '<div class="item">' +
-            '<div class="item-top">' +
-              '<div>' +
-                '<b>' + itemT.custName + '</b>' +
-                (itemT.custPhone ? ' • <small>' + itemT.custPhone + '</small>' : '') +
-                '<div class="meta">' + itemT.dt + ' | Gaadi: <b>' + itemT.veh + '</b>' +
-                (itemT.note ? ' | ' + itemT.note : '') + '</div>' +
-                '<div class="meta">Kamai: <b style="color:#059669;">₹' + itemT.inc + '</b> | ' +
-                'Kharcha: <b style="color:#dc2626;">₹' + itemT.exp + '</b> | ' +
-                'Jama: <b>₹' + itemT.paid + '</b></div>' +
-              '</div>' +
-              '<button class="btn btn-red" onclick="delTrip(' + itemT.id + ')">X</button>' +
+      var shownTrips = 0;
+      for (var t = 0; t < data.trips.length; t++) {
+        var itemT = data.trips[t];
+        var hay = (itemT.custName + ' ' + (itemT.custVillage || '') + ' ' + itemT.veh + ' ' + itemT.dt + ' ' + (itemT.note || '')).toLowerCase();
+        if (qTrip && hay.indexOf(qTrip) === -1) continue;
+        shownTrips++;
+        var itemDue = Math.max(0, itemT.inc - itemT.paid);
+        trHtml += '<div class="item">' +
+          '<div class="item-top">' +
+            '<div>' +
+              '<b>' + itemT.custName + '</b>' +
+              (itemT.custVillage ? ' • <b>Gaon: ' + itemT.custVillage + '</b>' : '') +
+              (itemT.custPhone ? ' • <small>' + itemT.custPhone + '</small>' : '') +
+              '<div class="meta">📅 ' + itemT.dt + ' • 🚗 <b>' + itemT.veh + '</b>' +
+              (itemT.note ? ' • ' + itemT.note : '') + '</div>' +
+              '<div class="meta">Kamai: <b style="color:var(--green);">₹' + itemT.inc + '</b> • ' +
+              'Kharcha: <b style="color:var(--red);">₹' + itemT.exp + '</b> • ' +
+              'Jama: <b>₹' + itemT.paid + '</b>' +
+              (itemDue > 0 ? ' • <span style="color:#b45309;font-weight:700;">Baaki: ₹' + itemDue + '</span>' : '') + '</div>' +
             '</div>' +
-          '</div>';
-        }
+            '<button class="btn btn-red btn-sm" onclick="delTrip(' + itemT.id + ')">✕</button>' +
+          '</div>' +
+        '</div>';
+      }
+      if (!shownTrips) {
+        trHtml = '<div class="card">Koi booking entry nahi mili.</div>';
       }
       document.getElementById('listTrip').innerHTML = trHtml;
 
+      var qCust = (document.getElementById('searchCust').value || '').trim().toLowerCase();
       var pHtml = '';
+      var dlHtml = '';
       var keys = Object.keys(custMap);
-      if (!keys.length) {
-        pHtml = '<div class="card">Abhi kisi customer ki detail ya khata nahi hai.</div>';
-      } else {
-        for (var p = 0; p < keys.length; p++) {
-          var pr = custMap[keys[p]];
-          var due = Math.max(0, pr.bill - pr.paid);
-          pHtml += '<div class="item">' +
-            '<div class="item-top">' +
-              '<div>' +
-                '<b>' + pr.name + '</b>' +
-                (pr.phone ? ' • <small>' + pr.phone + '</small>' : '') +
-                (pr.note ? '<div class="meta">' + pr.note + '</div>' : '') +
-                '<div class="meta">Total Bill: ₹' + pr.bill + ' | Jama: ₹' + pr.paid + '</div>' +
-              '</div>' +
-              '<b style="color:' + (due > 0 ? '#dc2626' : '#059669') + ';">' +
-                (due > 0 ? 'Baaki: ₹' + due : 'Clear') +
-              '</b>' +
+      var shownCust = 0;
+
+      for (var p = 0; p < keys.length; p++) {
+        var pr = custMap[keys[p]];
+        dlHtml += '<option value="' + pr.name + '">';
+        var cHay = (pr.name + ' ' + (pr.village || '') + ' ' + (pr.phone || '') + ' ' + (pr.note || '')).toLowerCase();
+        if (qCust && cHay.indexOf(qCust) === -1) continue;
+        shownCust++;
+        var due = Math.max(0, pr.bill - pr.paid);
+        pHtml += '<div class="item">' +
+          '<div class="item-top">' +
+            '<div>' +
+              '<b>' + pr.name + '</b>' +
+              (pr.village ? ' • <b>Gaon: ' + pr.village + '</b>' : '') +
+              (pr.phone ? ' • <small>' + pr.phone + '</small>' : '') +
+              (pr.note ? '<div class="meta">' + pr.note + '</div>' : '') +
+              '<div class="meta">Total Bill: ₹' + pr.bill + ' • Jama: ₹' + pr.paid + '</div>' +
             '</div>' +
-            '<div class="row-actions">' +
-              '<button class="btn btn-wa" onclick="shareCustomerWA(\'' + pr.name.replace(/'/g, '') + '\', \'' + (pr.phone || '') + '\', ' + due + ')">📲 WhatsApp</button>' +
-            '</div>' +
-          '</div>';
-        }
+            '<b style="color:' + (due > 0 ? 'var(--red)' : 'var(--green)') + ';">' +
+              (due > 0 ? 'Baaki: ₹' + due : 'Clear') +
+            '</b>' +
+          '</div>' +
+          '<div class="row-actions">' +
+            '<button class="btn btn-wa btn-sm" onclick="shareCustomerWA(\'' + pr.name.replace(/'/g, '') + '\', \'' + (pr.village || '').replace(/'/g, '') + '\', \'' + (pr.phone || '') + '\', ' + due + ')">📲 WhatsApp</button>' +
+          '</div>' +
+        '</div>';
+      }
+      document.getElementById('custSuggestions').innerHTML = dlHtml;
+      if (!shownCust) {
+        pHtml = '<div class="card">Koi customer record nahi mila.</div>';
       }
       document.getElementById('listParty').innerHTML = pHtml;
     }
