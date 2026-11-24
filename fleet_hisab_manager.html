@@ -5,102 +5,180 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0f172a" />
   <link rel="manifest" href="./manifest.json" />
-  <title>Mor self drive</title>
+  <title>Mor self drive - Hisab & Fleet</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-    body { background: #f1f5f9; color: #0f172a; padding-bottom: 80px; }
-    header { background: #0f172a; color: #fff; padding: 16px; display: flex; justify-content: space-between; align-items: center; }
+    body { background: #f1f5f9; color: #0f172a; padding-bottom: 84px; }
+    header {
+      background: #0f172a; color: #fff; padding: 14px 16px;
+      display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 20;
+    }
     header h1 { font-size: 18px; }
-    .wrap { max-width: 520px; margin: 0 auto; padding: 14px; }
-    .card { background: #fff; border: 1px solid #cbd5e1; border-radius: 14px; padding: 14px; margin-bottom: 12px; }
+    header small { font-size: 11px; color: #94a3b8; display: block; }
+    .wrap { max-width: 560px; margin: 0 auto; padding: 14px; }
+    .card {
+      background: #fff; border: 1px solid #cbd5e1; border-radius: 14px;
+      padding: 14px; margin-bottom: 12px;
+    }
     .dark-card { background: #0f172a; color: #fff; border-color: #0f172a; }
     .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .btn { border: none; border-radius: 10px; padding: 11px 12px; font-weight: bold; cursor: pointer; font-size: 14px; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .btn {
+      border: none; border-radius: 10px; padding: 10px 12px;
+      font-weight: bold; cursor: pointer; font-size: 13px;
+    }
     .btn-amber { background: #f59e0b; color: #0f172a; }
     .btn-green { background: #059669; color: #fff; }
+    .btn-wa { background: #16a34a; color: #fff; }
     .btn-red { background: #dc2626; color: #fff; }
     .btn-dark { background: #0f172a; color: #fff; }
     .btn-light { background: #e2e8f0; color: #0f172a; }
     .full { width: 100%; }
     .field { margin-bottom: 10px; }
-    .field label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #475569; }
-    .field input, .field select { width: 100%; padding: 10px; border: 1px solid #94a3b8; border-radius: 8px; font-size: 14px; background: #fff; color: #0f172a; }
-    .item { background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .field label {
+      display: block; font-size: 12px; font-weight: bold;
+      margin-bottom: 4px; color: #475569;
+    }
+    .field input, .field select, .field textarea {
+      width: 100%; padding: 9px 10px; border: 1px solid #94a3b8;
+      border-radius: 8px; font-size: 14px; background: #fff; color: #0f172a;
+    }
+    .item {
+      background: #fff; border: 1px solid #cbd5e1; border-radius: 12px;
+      padding: 12px; margin-bottom: 10px;
+    }
+    .item-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .tag {
+      display: inline-block; padding: 3px 8px; border-radius: 99px;
+      font-size: 11px; font-weight: bold; margin-top: 4px;
+    }
+    .t-avail { background: #d1fae5; color: #065f46; }
+    .t-trip { background: #dbeafe; color: #1e40af; }
+    .t-maint { background: #fee2e2; color: #991b1b; }
     .page { display: none; }
     .page.show { display: block; }
-    .nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #cbd5e1; display: grid; grid-template-columns: repeat(4, 1fr); padding: 8px 4px; }
-    .nav button { background: none; border: none; padding: 8px 4px; font-size: 12px; font-weight: bold; color: #475569; cursor: pointer; border-radius: 8px; }
+    .nav {
+      position: fixed; bottom: 0; left: 0; right: 0; background: #fff;
+      border-top: 1px solid #cbd5e1; display: grid; grid-template-columns: repeat(4, 1fr);
+      padding: 8px 4px; z-index: 25;
+    }
+    .nav button {
+      background: none; border: none; padding: 8px 4px; font-size: 12px;
+      font-weight: bold; color: #475569; cursor: pointer; border-radius: 8px;
+    }
     .nav button.active { background: #fef3c7; color: #0f172a; }
-    .box { display: none; background: #fff; border: 2px solid #0f172a; border-radius: 14px; padding: 14px; margin-bottom: 14px; }
+    .box {
+      display: none; background: #fff; border: 2px solid #0f172a;
+      border-radius: 14px; padding: 14px; margin-bottom: 14px;
+    }
     .box.open { display: block; }
     .num { font-size: 20px; font-weight: bold; margin-top: 4px; }
+    .meta { font-size: 12px; color: #475569; margin-top: 4px; line-height: 1.45; }
+    .row-actions { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>🚚 Mor self drive</h1>
+    <div>
+      <h1>🚚 Mor self drive</h1>
+      <small>Fleet, Customer & Daily Hisab</small>
+    </div>
     <button class="btn btn-light" onclick="toggleBox('boxSettings')">⚙️ Settings</button>
   </header>
 
   <div class="wrap">
-    <!-- SETTINGS BOX -->
+    <!-- SETTINGS -->
     <div id="boxSettings" class="box">
-      <h3 style="margin-bottom:10px;">Settings & Data</h3>
+      <h3 style="margin-bottom:10px;">Backup & Data Controls</h3>
       <div class="grid2" style="margin-bottom:10px;">
         <button class="btn btn-green" onclick="exportJSON()">⬇ Backup JSON</button>
-        <button class="btn btn-red" onclick="resetData()">🗑 Reset All</button>
+        <button class="btn btn-dark" onclick="window.print()">🖨 Print / PDF</button>
       </div>
-      <div class="field" style="margin-bottom:0;">
+      <div class="field">
         <label>Restore Backup (.json)</label>
         <input type="file" accept=".json" onchange="importJSON(event)" />
       </div>
+      <div style="border-top:1px solid #e2e8f0;padding-top:10px;margin-top:8px;">
+        <button class="btn btn-red full" onclick="resetData()">🗑 Saara Data Reset Karein</button>
+      </div>
     </div>
 
-    <!-- ADD TRIP BOX -->
+    <!-- ADD / BOOKING / HISAB FORM -->
     <div id="boxTrip" class="box">
-      <h3 style="margin-bottom:10px;">Nayi Trip / Hisab</h3>
-      <div class="field"><label>Date</label><input type="date" id="inDate" /></div>
-      <div class="field"><label>Gaadi Number</label><input type="text" id="inVeh" placeholder="HR-10-AB-1234" /></div>
-      <div class="field"><label>Party Name</label><input type="text" id="inParty" placeholder="Customer / Party" /></div>
+      <h3 style="margin-bottom:10px;">Nayi Booking / Trip Hisab</h3>
       <div class="grid2">
-        <div class="field"><label>Kamai (₹)</label><input type="number" id="inInc" placeholder="0" /></div>
-        <div class="field"><label>Kharcha (₹)</label><input type="number" id="inExp" placeholder="0" /></div>
+        <div class="field"><label>Date</label><input type="date" id="inDate" /></div>
+        <div class="field"><label>Gaadi Number</label><select id="inVeh"></select></div>
       </div>
-      <div class="field"><label>Jama Mila (₹)</label><input type="number" id="inPaid" placeholder="0" /></div>
       <div class="grid2">
-        <button class="btn btn-dark" onclick="addTrip()">Save Entry</button>
+        <div class="field"><label>Customer Name</label><input type="text" id="inCustName" placeholder="Customer ka naam" /></div>
+        <div class="field"><label>Customer Phone</label><input type="tel" id="inCustPhone" placeholder="98XXXXXXXX" /></div>
+      </div>
+      <div class="field"><label>Customer ID / License / Address Note</label><input type="text" id="inCustNote" placeholder="DL / Aadhaar / Address" /></div>
+      <div class="grid3">
+        <div class="field"><label>Total Rent/Bhada (₹)</label><input type="number" id="inInc" placeholder="0" /></div>
+        <div class="field"><label>Kharcha (₹)</label><input type="number" id="inExp" placeholder="0" /></div>
+        <div class="field"><label>Advance/Jama (₹)</label><input type="number" id="inPaid" placeholder="0" /></div>
+      </div>
+      <div class="field"><label>Trip / Booking Note</label><input type="text" id="inNote" placeholder="Days / route / remarks" /></div>
+      <div class="grid2">
+        <button class="btn btn-dark" onclick="addTrip()">Save Hisab</button>
         <button class="btn btn-light" onclick="closeBoxes()">Band Karein</button>
       </div>
     </div>
 
-    <!-- ADD VEHICLE BOX -->
+    <!-- ADD VEHICLE FORM -->
     <div id="boxVeh" class="box">
-      <h3 style="margin-bottom:10px;">Nayi Gaadi</h3>
-      <div class="field"><label>Gaadi Number</label><input type="text" id="vNo" placeholder="HR-10-XX-0000" /></div>
-      <div class="field"><label>Model</label><input type="text" id="vMod" placeholder="Swift / Bolero" /></div>
-      <div class="field">
-        <label>Status</label>
-        <select id="vSt">
-          <option value="Available">Available</option>
-          <option value="On Trip">On Trip</option>
-          <option value="Maintenance">Maintenance</option>
-        </select>
+      <h3 style="margin-bottom:10px;">Nayi Gaadi Details</h3>
+      <div class="grid2">
+        <div class="field"><label>Gaadi Number</label><input type="text" id="vNo" placeholder="HR-10-XX-0000" /></div>
+        <div class="field"><label>Gaadi Model / Naam</label><input type="text" id="vMod" placeholder="Swift / Ertiga / Thar" /></div>
       </div>
+      <div class="grid2">
+        <div class="field"><label>Per Day Rate (₹)</label><input type="number" id="vRate" placeholder="0" /></div>
+        <div class="field">
+          <label>Status</label>
+          <select id="vSt">
+            <option value="Available">Available</option>
+            <option value="On Trip">On Trip</option>
+            <option value="Maintenance">Maintenance</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>RC / Insurance / Service Detail</label><input type="text" id="vDetail" placeholder="Insurance expiry / service km / color" /></div>
       <div class="grid2">
         <button class="btn btn-dark" onclick="addVeh()">Save Gaadi</button>
         <button class="btn btn-light" onclick="closeBoxes()">Band Karein</button>
       </div>
     </div>
 
-    <!-- HOME PAGE -->
+    <!-- PAYMENT JAMA FORM -->
+    <div id="boxPay" class="box">
+      <h3 style="margin-bottom:10px;">Customer Payment Jama</h3>
+      <div class="field"><label>Customer Name</label><input type="text" id="pCust" placeholder="Exact customer name" /></div>
+      <div class="field"><label>Jama Rashi (₹)</label><input type="number" id="pAmt" placeholder="0" /></div>
+      <div class="grid2">
+        <button class="btn btn-green" onclick="addPayment()">Jama Karein</button>
+        <button class="btn btn-light" onclick="closeBoxes()">Band Karein</button>
+      </div>
+    </div>
+
+    <!-- HOME -->
     <div id="page-home" class="page show">
       <div class="card dark-card">
         <div style="font-size:12px;color:#cbd5e1;">AAJ KA HISAB (<span id="lblToday"></span>)</div>
-        <div class="num" style="font-size:24px;margin:8px 0 12px;">Kamai: ₹<span id="sTodayInc">0</span> | Bachat: ₹<span id="sTodayProf">0</span></div>
+        <div class="num" style="font-size:23px;margin:8px 0 12px;">
+          Kamai: ₹<span id="sTodayInc">0</span> | Bachat: ₹<span id="sTodayProf">0</span>
+        </div>
+        <div class="grid2" style="margin-bottom:8px;">
+          <button class="btn btn-amber" onclick="openTripBox()">+ Nayi Booking / Trip</button>
+          <button class="btn btn-wa" onclick="shareWhatsAppDaily()">📲 WhatsApp Daily Hisab</button>
+        </div>
         <div class="grid2">
-          <button class="btn btn-amber" onclick="openTripBox()">+ Nayi Trip</button>
-          <button class="btn btn-light" onclick="openVehBox()">+ Gaadi Jodein</button>
+          <button class="btn btn-light" onclick="openVehBox()">+ Gaadi Detail</button>
+          <button class="btn btn-green" onclick="openPayBox()">💰 Payment Jama</button>
         </div>
       </div>
 
@@ -110,29 +188,50 @@
         <div class="card"><div style="font-size:12px;color:#475569;">Net Bachat</div><div class="num" style="color:#059669;">₹<span id="sNet">0</span></div></div>
         <div class="card"><div style="font-size:12px;color:#475569;">Market Udhaar</div><div class="num" style="color:#b45309;">₹<span id="sDue">0</span></div></div>
       </div>
+
+      <div class="card">
+        <div style="font-size:12px;font-weight:bold;color:#475569;margin-bottom:8px;">GAADIYON KI STHITI</div>
+        <div class="grid3" style="text-align:center;">
+          <div style="background:#ecfdf5;padding:8px;border-radius:10px;color:#065f46;">
+            <b style="font-size:18px;" id="cAvail">0</b><br><small>Available</small>
+          </div>
+          <div style="background:#eff6ff;padding:8px;border-radius:10px;color:#1e40af;">
+            <b style="font-size:18px;" id="cTrip">0</b><br><small>On Trip</small>
+          </div>
+          <div style="background:#fef2f2;padding:8px;border-radius:10px;color:#991b1b;">
+            <b style="font-size:18px;" id="cMaint">0</b><br><small>Maintenance</small>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- FLEET PAGE -->
+    <!-- FLEET -->
     <div id="page-fleet" class="page">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <h3>Apni Gaadiyan</h3>
-        <button class="btn btn-dark" onclick="openVehBox()">+ Gaadi</button>
+        <h3>Gaadi Details</h3>
+        <button class="btn btn-dark" onclick="openVehBox()">+ Gaadi Jodein</button>
       </div>
       <div id="listVeh"></div>
     </div>
 
-    <!-- HISAB PAGE -->
+    <!-- HISAB -->
     <div id="page-hisab" class="page">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <h3>Trip & Hisab</h3>
-        <button class="btn btn-amber" onclick="openTripBox()">+ Trip</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap;">
+        <h3>Bookings & Hisab</h3>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-wa" onclick="shareWhatsAppDaily()">📲 WhatsApp</button>
+          <button class="btn btn-amber" onclick="openTripBox()">+ Entry</button>
+        </div>
       </div>
       <div id="listTrip"></div>
     </div>
 
-    <!-- CUSTOMERS PAGE -->
+    <!-- CUSTOMERS -->
     <div id="page-party" class="page">
-      <h3 style="margin-bottom:10px;">Party Khata</h3>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <h3>Customer Details & Khata</h3>
+        <button class="btn btn-green" onclick="openPayBox()">💰 Jama</button>
+      </div>
       <div id="listParty"></div>
     </div>
   </div>
@@ -141,15 +240,19 @@
     <button id="tab-home" class="active" onclick="goPage('home')">🏠 Home</button>
     <button id="tab-fleet" onclick="goPage('fleet')">🚚 Gaadiyan</button>
     <button id="tab-hisab" onclick="goPage('hisab')">📒 Hisab</button>
-    <button id="tab-party" onclick="goPage('party')">👥 Khata</button>
+    <button id="tab-party" onclick="goPage('party')">👥 Customers</button>
   </div>
 
   <script>
-    var KEY = 'mor_simple_v1';
-    var data = { vehicles: [], trips: [] };
+    var KEY = 'mor_self_drive_full_v1';
+    var data = { vehicles: [], trips: [], payments: [] };
     try {
       var saved = JSON.parse(localStorage.getItem(KEY));
-      if (saved) data = saved;
+      if (saved) {
+        data.vehicles = saved.vehicles || [];
+        data.trips = saved.trips || [];
+        data.payments = saved.payments || [];
+      }
     } catch (e) {}
 
     function save() {
@@ -173,8 +276,19 @@
       if (!wasOpen) el.classList.add('open');
     }
 
+    function populateVehicleSelect() {
+      var sel = document.getElementById('inVeh');
+      var opts = '<option value="General">General / Manual</option>';
+      for (var i = 0; i < data.vehicles.length; i++) {
+        var v = data.vehicles[i];
+        opts += '<option value="' + v.no + '">' + v.no + ' (' + v.mod + ')</option>';
+      }
+      sel.innerHTML = opts;
+    }
+
     function openTripBox() {
       closeBoxes();
+      populateVehicleSelect();
       document.getElementById('inDate').value = todayStr();
       document.getElementById('boxTrip').classList.add('open');
     }
@@ -182,6 +296,11 @@
     function openVehBox() {
       closeBoxes();
       document.getElementById('boxVeh').classList.add('open');
+    }
+
+    function openPayBox() {
+      closeBoxes();
+      document.getElementById('boxPay').classList.add('open');
     }
 
     function goPage(name) {
@@ -196,13 +315,26 @@
 
     function addVeh() {
       var no = document.getElementById('vNo').value.trim().toUpperCase();
-      var mod = document.getElementById('vMod').value.trim() || 'Vehicle';
+      var mod = document.getElementById('vMod').value.trim() || 'Car';
+      var rate = Number(document.getElementById('vRate').value) || 0;
       var st = document.getElementById('vSt').value;
+      var detail = document.getElementById('vDetail').value.trim();
       if (!no) return alert('Gaadi number likhein');
-      data.vehicles.push({ id: Date.now(), no: no, mod: mod, st: st });
-      document.getElementById('vNo').value = '';
-      document.getElementById('vMod').value = '';
+      data.vehicles.push({ id: Date.now(), no: no, mod: mod, rate: rate, st: st, detail: detail });
+      ['vNo', 'vMod', 'vRate', 'vDetail'].forEach(function(id) { document.getElementById(id).value = ''; });
       closeBoxes();
+      save();
+    }
+
+    function cycleStatus(id) {
+      var order = ['Available', 'On Trip', 'Maintenance'];
+      for (var i = 0; i < data.vehicles.length; i++) {
+        if (data.vehicles[i].id === id) {
+          var idx = order.indexOf(data.vehicles[i].st);
+          data.vehicles[i].st = order[(idx + 1) % order.length];
+          break;
+        }
+      }
       save();
     }
 
@@ -214,17 +346,35 @@
 
     function addTrip() {
       var dt = document.getElementById('inDate').value || todayStr();
-      var veh = document.getElementById('inVeh').value.trim().toUpperCase() || '-';
-      var party = document.getElementById('inParty').value.trim() || 'Cash';
+      var veh = document.getElementById('inVeh').value || 'General';
+      var custName = document.getElementById('inCustName').value.trim() || 'Walk-in Customer';
+      var custPhone = document.getElementById('inCustPhone').value.trim();
+      var custNote = document.getElementById('inCustNote').value.trim();
       var inc = Number(document.getElementById('inInc').value) || 0;
       var exp = Number(document.getElementById('inExp').value) || 0;
       var paid = Number(document.getElementById('inPaid').value) || 0;
-      data.trips.unshift({ id: Date.now(), dt: dt, veh: veh, party: party, inc: inc, exp: exp, paid: paid });
-      document.getElementById('inVeh').value = '';
-      document.getElementById('inParty').value = '';
-      document.getElementById('inInc').value = '';
-      document.getElementById('inExp').value = '';
-      document.getElementById('inPaid').value = '';
+      var note = document.getElementById('inNote').value.trim();
+
+      data.trips.unshift({
+        id: Date.now(), dt: dt, veh: veh,
+        custName: custName, custPhone: custPhone, custNote: custNote,
+        inc: inc, exp: exp, paid: paid, note: note
+      });
+
+      ['inCustName', 'inCustPhone', 'inCustNote', 'inInc', 'inExp', 'inPaid', 'inNote'].forEach(function(id) {
+        document.getElementById(id).value = '';
+      });
+      closeBoxes();
+      save();
+    }
+
+    function addPayment() {
+      var cust = document.getElementById('pCust').value.trim();
+      var amt = Number(document.getElementById('pAmt').value) || 0;
+      if (!cust || amt <= 0) return alert('Customer naam aur sahi rashi likhein');
+      data.payments.unshift({ id: Date.now(), dt: todayStr(), cust: cust, amt: amt });
+      document.getElementById('pCust').value = '';
+      document.getElementById('pAmt').value = '';
       closeBoxes();
       save();
     }
@@ -235,9 +385,47 @@
       save();
     }
 
+    function shareWhatsAppDaily() {
+      var td = todayStr();
+      var tInc = 0, tExp = 0, tPaid = 0, count = 0;
+      var lines = [];
+
+      for (var i = 0; i < data.trips.length; i++) {
+        var x = data.trips[i];
+        if (x.dt === td) {
+          count++;
+          tInc += x.inc;
+          tExp += x.exp;
+          tPaid += x.paid;
+          lines.push('- ' + x.custName + ' (' + x.veh + '): Kamai ₹' + x.inc + ', Kharcha ₹' + x.exp);
+        }
+      }
+
+      var msg = '*Mor self drive - Daily Hisab (' + td + ')*\n' +
+                'Total Entries: ' + count + '\n' +
+                'Aaj Ki Kamai: ₹' + tInc + '\n' +
+                'Aaj Ka Kharcha: ₹' + tExp + '\n' +
+                'Net Bachat: ₹' + (tInc - tExp) + '\n' +
+                'Jama Mila: ₹' + tPaid + '\n' +
+                (lines.length ? '\n*Entries:*\n' + lines.join('\n') : '');
+
+      var url = 'https://wa.me/?text=' + encodeURIComponent(msg);
+      window.open(url, '_blank');
+    }
+
+    function shareCustomerWA(name, phone, due) {
+      var cleanPhone = (phone || '').replace(/[^0-9]/g, '');
+      if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
+      var text = 'Namaste ' + name + ', Mor self drive se aapka baaki hisab ₹' + due + ' hai.';
+      var link = cleanPhone
+        ? 'https://wa.me/' + cleanPhone + '?text=' + encodeURIComponent(text)
+        : 'https://wa.me/?text=' + encodeURIComponent(text);
+      window.open(link, '_blank');
+    }
+
     function resetData() {
-      if (!confirm('Saara data delete karein?')) return;
-      data = { vehicles: [], trips: [] };
+      if (!confirm('Saara data delete karke zero se shuru karein?')) return;
+      data = { vehicles: [], trips: [], payments: [] };
       closeBoxes();
       save();
     }
@@ -257,12 +445,16 @@
       r.onload = function() {
         try {
           var p = JSON.parse(r.result);
-          data = { vehicles: p.vehicles || [], trips: p.trips || [] };
+          data = {
+            vehicles: p.vehicles || [],
+            trips: p.trips || [],
+            payments: p.payments || []
+          };
           closeBoxes();
           save();
-          alert('Backup load ho gaya');
+          alert('Backup restore ho gaya');
         } catch (err) {
-          alert('Galat file');
+          alert('Galat backup file');
         }
       };
       r.readAsText(f);
@@ -273,7 +465,7 @@
       document.getElementById('lblToday').textContent = td;
 
       var tInc = 0, tExp = 0, inc = 0, exp = 0, paid = 0;
-      var parties = {};
+      var custMap = {};
 
       for (var i = 0; i < data.trips.length; i++) {
         var x = data.trips[i];
@@ -284,56 +476,10 @@
           tInc += x.inc;
           tExp += x.exp;
         }
-        var k = x.party.toLowerCase();
-        if (!parties[k]) parties[k] = { name: x.party, bill: 0, paid: 0 };
-        parties[k].bill += x.inc;
-        parties[k].paid += x.paid;
-      }
-
-      document.getElementById('sTodayInc').textContent = tInc;
-      document.getElementById('sTodayProf').textContent = (tInc - tExp);
-      document.getElementById('sTotInc').textContent = inc;
-      document.getElementById('sTotExp').textContent = exp;
-      document.getElementById('sNet').textContent = (inc - exp);
-      document.getElementById('sDue').textContent = Math.max(0, inc - paid);
-
-      var vHtml = '';
-      if (!data.vehicles.length) {
-        vHtml = '<div class="card">Koi gaadi add nahi hai.</div>';
-      } else {
-        for (var v = 0; v < data.vehicles.length; v++) {
-          var itemV = data.vehicles[v];
-          vHtml += '<div class="item"><div><b>' + itemV.no + '</b><br><small>' + itemV.mod + ' • ' + itemV.st + '</small></div><button class="btn btn-red" onclick="delVeh(' + itemV.id + ')">X</button></div>';
-        }
-      }
-      document.getElementById('listVeh').innerHTML = vHtml;
-
-      var trHtml = '';
-      if (!data.trips.length) {
-        trHtml = '<div class="card">Koi trip entry nahi hai.</div>';
-      } else {
-        for (var t = 0; t < data.trips.length; t++) {
-          var itemT = data.trips[t];
-          trHtml += '<div class="item"><div><b>' + itemT.party + '</b> (' + itemT.veh + ')<br><small>' + itemT.dt + ' | Kamai: ₹' + itemT.inc + ' | Kharcha: ₹' + itemT.exp + '</small></div><button class="btn btn-red" onclick="delTrip(' + itemT.id + ')">X</button></div>';
-        }
-      }
-      document.getElementById('listTrip').innerHTML = trHtml;
-
-      var pHtml = '';
-      var keys = Object.keys(parties);
-      if (!keys.length) {
-        pHtml = '<div class="card">Koi khata nahi hai.</div>';
-      } else {
-        for (var p = 0; p < keys.length; p++) {
-          var pr = parties[keys[p]];
-          var due = pr.bill - pr.paid;
-          pHtml += '<div class="item"><div><b>' + pr.name + '</b><br><small>Bill: ₹' + pr.bill + ' | Jama: ₹' + pr.paid + '</small></div><b>' + (due > 0 ? 'Baaki: ₹' + due : 'Clear') + '</b></div>';
-        }
-      }
-      document.getElementById('listParty').innerHTML = pHtml;
-    }
-
-    render();
-  </script>
-</body>
-  </html>
+        var key = (x.custName || 'Customer').toLowerCase();
+        if (!custMap[key]) {
+          custMap[key] = {
+            name: x.custName,
+            phone: x.custPhone || '',
+            note: x.custNote || '',
+    
